@@ -1,0 +1,776 @@
+---
+title: "Filtri"
+author: "Paolo Bosetti"
+date: "`r Sys.Date()`"
+format: 
+  html:
+    toc: TRUE
+  pdf:
+    toc: TRUE
+engine: knitr
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  fig.asp = 9/16
+)
+library(tidyverse)
+library(patchwork)
+library(knitr)
+library(gsignal)
+```
+
+# Filtri online
+
+Riutilizziamo la funzione `signal()`:
+
+```{r}
+signal <- function(t, pars, rad=FALSE) {
+  stopifnot(is.data.frame(pars))
+  if (!rad) {
+    pars$phi <- pars$phi/180*pi
+    pars$f <- 2*pi*pars$f
+  }
+  with(
+    pars,
+    map_dbl(t, \(t) map_vec(seq_along(w), ~ w[.]*sin(t*f[.]+phi[.])) %>% sum())
+  )
+}
+```
+
+Definiamo una sinusoide base con due disturbi armonici, più un disturbo normale:
+
+```{r}
+N <- 100
+pars <- tibble(
+  w = c(1, 0.1, 0.3),
+  f = c(1/25, 1/5, 1/3),
+  phi = c(0, 0, 0)
+)
+```
+
+Cominciamo con realizzare il grafico del segnale e delle sue componenti:
+
+```{r fig.cap="Segnale armonico con disturbo"}
+s <- tibble(
+  t = 0:N,
+  s = signal(t, pars[1,]),
+  y = signal(t, pars), 
+  yn = y + rnorm(length(t), 0, pars$w[1] / 10)
+)
+
+s %>% 
+  select(t, sine=s, signal=y, `signal+noise`=yn) %>% 
+  pivot_longer(-t) %>% 
+  ggplot(aes(x=t, y=value)) + 
+  geom_line(aes(color=name)) +
+  labs(x="time (s)")
+```
+
+La trasformata di Fourier mostra i tre picchi attesi:
+
+```{r fig.cap="FFT del segnale armonico di riferimento"}
+s %>% 
+  mutate(
+    f = 0:(n()-1)/max(t),
+    fft = fft(yn),
+    intensity = Mod(fft) / n()*2,
+    phase = Arg(fft)/pi*180
+  ) %>% 
+  slice_head(n=as.integer(nrow(.)/2)) %>%
+  ggplot(aes(x=f, y=intensity)) +
+  geom_spoke(aes(y=0, radius=intensity, angle=pi/2)) +
+  geom_point()
+```
+
+Il filtraggio online viene realizzato in due passi: prima si **progetta il filtro**, selezionando il tipo di filtro e i parametri che si adattano al segnale che si vuole filtrare e alla sua trasformata nel dominio delle frequenze, poi si applica il filtro al segnale.
+
+Nel nostro caso scegliamo un filtro di tipo *Butterworth* di ordine 3:
+
+```{r}
+ft <- 2/pars$f[1] / (1/2)
+# Doppio della frequenza base
+fn <- pars$f[1]*2
+# Frequenza di Nyquist
+fny <- 1/(s$t[2] - s$t[1]) / 2
+# Frequenza di taglio
+ft <- fn/fny
+# Filtro Butterworth di ordine 3 con cut-off al doppio della frequenza base
+# Il parametro w è normalizzato tra 0 e 1, con 1 = fny
+flt <- butter(3, w=ft)
+flt
+```
+Come si vede, l'oggetto filtro contiene i due vettori coi coefficienti polinomiali di un modello ARMA.
+
+La funzione `freqz()` consente di valutare le caratteristiche del filtro:
+
+```{r fig.cap="Caratteristiche del filtro Butterworth di ordine 3"}
+(fq <- freqz(flt))
+```
+
+Il grafico *Stop band* è lo stesso grafico *Pass band* ma con limiti dell'asse y più ampi, in modo da evidenziare come poco oltre 3 Hz c'è un'attenuazione completa.
+
+Grafici simili possono essere ottenuti in `ggplot` come segue, estraendo direttamente le componenti dall'oggetto restituito da `freqz`. Si noti che la componente `fq$h` va scomposta in modulo e fase; il modulo va poi convertito in decibel (dB) e la fase va "srotolata" (`unwrap`):
+
+```{r fig.cap="Caratteristiche del filtro Butterworth di ordine 3 (con GGplot)"}
+tibble(
+  h = fq$h,
+  mod = 20*log10(Mod(h)),
+  phase = Arg(h) %>% unwrap() / pi * 180,
+  frequency = fq$w,
+) %>% {
+  (ggplot(., aes(x=frequency)) + 
+     geom_line(aes(y=mod)) + 
+     coord_cartesian(ylim=c(-4, 0.5)) +
+     geom_vline(xintercept=ft, color="red", linetype=2) +
+     labs(y="Intensity (dB)", x="")) /
+  (ggplot(., aes(x=frequency)) + 
+     geom_line(aes(y=phase)) +
+     geom_vline(xintercept=ft, color="red", linetype=2) +
+     labs(y="phase (°)", x="frequency (Hz)"))
+}
+```
+
+
+Il filtro può poi essere applicato con `filter()`:
+
+```{r fig.cap="Segnale di riferimento filtrato"}
+s %>% 
+  mutate(
+    sflt = flt %>% filter(yn)
+  ) %>% 
+  select(t, `signal+noise`=yn, sine=s, filtered=sflt) %>% 
+  pivot_longer(-t) %>% 
+  ggplot(aes(x=t, y=value)) + 
+  geom_line(aes(color=name)) +
+  labs(x="time (s)")
+```
+
+Come si vede, il filtro ripulisce sia il disturbo casuale che le armoniche con frequenza superiore alla frequenza di taglio `r ft` Hz., seppure **introducendo un ritardo di fase**.
+
+Per eliminare il ritardo, se il filtro è applicato **offline**, si può ricorrere a `filtfilt()` al posto di `filter()`: questa funzione applica il filtraggio in avanti e indietro, compensando quindi il ritardo:
+
+
+```{r fig.cap="Segale di riferimento filtrato in avanti e indietro, eliminando il ritardo"}
+
+s %>% 
+  mutate(
+    sflt = flt %>% filtfilt(yn)
+  ) %>% 
+  select(t, `signal+noise`=yn, sine=s, filtered=sflt) %>% 
+  pivot_longer(-t) %>% 
+  ggplot(aes(x=t, y=value)) + 
+  geom_line(aes(color=name)) +
+  labs(x="time (s)")
+```
+
+## Ricorsione
+
+Il vantaggio dei filtri online è che possono essere calcolati direttamente durante l'acquisizione di un segnale, grazie al fatto che il filtro è esprimibile come una formula di ricorsione.
+
+La funzione `butter()` restituisce infatti un filtro in forma dei coefficienti di un modello $\mathrm{ARMA}(p, q)$, per cui è possibile calcolare la nuova osservazione filtrata $y_n$ in funzione delle precedenti osservazioni:
+
+$$
+a_1 y_n + a_2y_{n-1} + \dots + a_{n_a}y_{n-p+1} = b_1x_n + b_2 x_{n-1} + \dots + b_{n_b}x_{n-q+1}
+$$
+
+dove le $y_i$ sono i valori filtrati, le $x_i$ i valori originari, e i due vettori `A` e `B` contengono i termini $a_i$ e $b_i$, con $a_1 = 1$. Quindi:
+
+$$
+y_n = b_1x_n + b_2 x_{n-1} + \dots + b_{n_b}x_{n-n_b+1} - \left(a_2y_{n-1} + \dots + a_{n_a}y_{n-n_a+1}\right)
+$$ {#eq-IIR}
+
+Per un filtro Butterworth di ordine $m$, si ha che $p=q=m$ e i vettori `A` e `B` hanno entrambi $m+1$ elementi.
+
+È facile implementare la @eq-IIR in un qualsiasi linguaggio di programmazione. Ad esempio in R definiamo una funzione che prende in ingresso una tabella, una nuova osservazione e il filtro (con le componenti ARMA $A$ e $B$), e restituisce la stessa tabella con una riga in più (con il nuovo campione e il valore filtrato con la @eq-IIR). L'inizializzazione della formula ricorsiva viene fatta con una tabella vuota (o `NA`):
+
+```{r warning=FALSE}
+my_filter <- function(t = NA, sample, flt) {
+  # Inizializzazione o aggiornamento tabella:
+  if (!is.data.frame(t) || nrow(t) == 0)
+    t <- tibble(i=1, x=sample, y=0)
+  else
+    t <- add_row(t, i = tail(t, 1)$i + 1, x=sample)
+  A <- flt$a
+  B <- flt$b
+  n <- nrow(t)
+  nb <- min(n, length(B))
+  # Termini Moving Average:
+  MA <- rev(B[1:nb]) * tail(t$x, nb)
+  # Termini Auto-Regressive:
+  AR <- rev(A[1:nb]) * tail(t$y, nb)
+  # Nuova osservazione filtrata:
+  t$y[n] <- sum(MA) - sum(AR, na.rm=TRUE)
+  return(t)
+}
+```
+
+In questo modo il filtro può essere applicato **un'osservazione alla volta**, e per questo si chiama *filtro online*: può cioè essere aggiornato durante l'acquisizione del segnale, pena ovviamente un ritardo sul segnale filtrato:
+
+```{r warning=FALSE}
+tibble() %>% 
+  my_filter(1, flt) %>% 
+  my_filter(2, flt) %>% 
+  my_filter(3, flt) %>% 
+  my_filter(4, flt) %>% 
+  my_filter(5, flt) %>% 
+  my_filter(5, flt) %>% 
+  my_filter(5, flt) %>% 
+  kable()
+```
+
+Utilizziamolo sul segnale originale è più evidente il ritardo:
+
+```{r fig.cap="Segnale di riferimento filtrato con la funzione `my_filter()`"}
+filtered_signal <- tibble()
+
+for (sample in s$yn) {
+  filtered_signal <- my_filter(filtered_signal, sample, flt)
+}
+
+filtered_signal %>%
+  ggplot(aes(x=i)) +
+  geom_line(aes(y=y), color="red") +
+  geom_line(aes(y=x))
+
+```
+
+Sfruttando la programmazione funzionale di `purrr`:
+
+```{r fig.cap="Segnale di riferimento filtrato con la funzione `my_filter()`, usando `purrr`"}
+s$yn %>% 
+  reduce(\(tbl, obs) my_filter(tbl, obs, flt), .init=tibble()) %>% 
+  ggplot(aes(x=i)) +
+  geom_line(aes(y=y), color="red") +
+  geom_line(aes(y=x))
+```
+
+## Filtri IIR e FIR
+
+Tra i filtri online c'è un'importante differenza, che classifica filtri *Infinite Impulse Response (IIR)* e filtri *Finite Impulse Response (FIR)*: considerando un impulso unitario:
+
+$$
+y(x)=\begin{cases}
+0 & x < 0 \\
+1 & x \geqslant 0
+\end{cases}
+$$
+le due classi di filtri si comportano come segue:
+
+- **IIR**: sono filtri con memoria infinita: il valore filtrato dell'impulso mantiene memoria di ogni osservazione precedente e quindi non si stabilizza mai a 1 (seppure avvicinandosi sempre più). Corrispondono a **filtri ARMA**, in cui la parte AR ha un numero di coefficienti maggiore di uno;
+- **FIR**: sono filtri con memoria limitata: dopo un numero di osservazioni pari alla memoria del filtro il valore filtrato è uguale a 1. Corrispondono a **filtri MA** (che ha memoria **finita**), un cui manca la parte AR (che ha memoria **infinita**).
+
+Osserviamo la risposta al gradino dello stesso filtro `flt` sopra definito:
+
+```{r fig.cap="Risposta all'impulso di un filtro **IIR**"}
+tibble(i=1:100, x=1) %>% 
+  mutate(xf = filter(flt, x)) %>% 
+  pivot_longer(-i, names_to = "signal") %>% 
+  ggplot(aes(x=i)) + 
+  geom_line(aes(y=value, color=signal)) 
+```
+
+Se osserviamo un dettaglio della parte finale (`i>80`), possiamo verificare come in realtà il segnale filtrato non si stabilizzi mai a 1:
+
+```{r fig.cap="Risposta all'impulso di un filtro **IIR** (dettaglio)"}
+tibble(i=1:100, x=1) %>% 
+  mutate(xf = filter(flt, x)) %>% 
+  dplyr::filter(i>80) %>% 
+  pivot_longer(-i, names_to = "signal") %>% 
+  ggplot(aes(x=i)) + 
+  geom_line(aes(y=value-1, color=signal)) +
+  scale_y_continuous(
+    n.breaks = 10,
+    labels = scales::label_scientific(digits=6)
+  )
+```
+
+::: {.content-visible when-format="html"}
+:::column-margin
+**Attenzione**: sia il pacchetto `gsignal` che `dplyr` (parte di `tidyverse`) forniscono una funzione `filter()`. Siccome `gsignal` è stato caricato **dopo** `tidyverse`, è necessario disambiguare la funzione desiderata premettendo il nome del pacchetto. Per questo motivo scriviamo `dplyr::filter(i>80)` anziché semplicemente `filter(i>80)`.
+:::
+:::
+
+
+Ora creiamo invece un filtro FIR di ordine 3, con la stessa frequenza di taglio, osservando come possa essere rappresentato da un modello MA con 4 termini (3+1):
+
+```{r}
+(flt_fir <- fir1(3, w=ft))
+```
+
+Le caratteristiche del filtro sono le seguenti:
+
+```{r fig.cap="Caratteristiche di un filtro FIR di ordine 3"}
+freqz(flt_fir)
+```
+
+Si noti, in particolare, che la fase è lineare: ciò è un vantaggio perché può essere facilmente utilizzata per **compensare il ritardo**, come si vedrà più sotto.
+
+La risposta al gradino è la seguente, notando che dopo tre osservazioni il filtro è identico al segnale:
+
+```{r fig.cap="Risposta all'impulso di un filtro **FIR**"}
+tibble(i=1:100, x=1) %>% 
+  mutate(xf = filter(flt_fir, x)) %>% 
+  pivot_longer(-i, names_to = "signal") %>% 
+  ggplot(aes(x=i)) + 
+  geom_line(aes(y=value, color=signal)) 
+```
+
+Vediamo come si comporta un filtro FIR sul segnale armonico di riferimento. Anzitutto notiamo come la caratteristica del filtro FIR sia meno aggressiva del filtro IIR a parità di banda e di ordine. Pertanto utilizziamo un filtro di ordine superiore:
+
+```{r fig.cap="Segnale di riferimento filtrato con filtro FIR"}
+flt_fir <- fir1(6, w=ft)
+s %>% 
+  mutate(
+    sflt = flt_fir %>% filter(yn)
+  ) %>% 
+  select(t, `signal+noise`=yn, sine=s, filtered=sflt) %>% 
+  pivot_longer(-t) %>% 
+  ggplot(aes(x=t, y=value)) + 
+  geom_line(aes(color=name)) +
+  labs(x="time (s)")
+```
+
+Dato che il ritardo di fase è lineare, è facile compensarlo: la funzione `grpdelay()` valuta il ritardo, e la funzione `lead()` (cioè `lag()` per ritardi negativi) lo compensa:
+
+```{r fig.cap="Segnale di riferimento filtrato con filtro FIR, ritardo compensato", warning=FALSE}
+flt_fir <- fir1(6, w=ft)
+delay <- grpdelay(flt_fir)$gd %>% mean() %>% round() %>% as.integer()
+
+s %>% 
+  mutate(
+    sflt = flt_fir %>% filter(yn),
+    sflt_nd = sflt %>% lead(delay)
+  ) %>% 
+  select(t, `signal+noise`=yn, signal=s, `filtered nd`=sflt_nd) %>% 
+  pivot_longer(-t) %>% 
+  ggplot(aes(x=t, y=value)) + 
+  geom_line(aes(color=name)) +
+  labs(x="time (s)")
+```
+
+Ovviamente, la compensazione del ritardo rende un filtro FIR **offline**: se così non fosse, ci consentirebbe di conoscere il futuro.
+
+## Stabilità
+
+Come abbiamo visto un filtro può essere rappresentato come un processo ARMA. In quanto tale, può presentare problemi di stabilità. Un filtro è detto **stabile** se la sua risposta al gradino decade a zero indefinitamente, e viceversa.
+
+Per verificare la stabilità di un filtro lo si converte in formato *zero-pole-gain*, un formato che rappresenta il filtro come radici dei polinomi al numeratore della funzione di trasferimento (*zeroes*) e come radici del polinomio al denominatore (*poles*):
+
+```{r}
+# poles
+1/(polyroot(flt$a)) %>% zapsmall() %>% rev()
+# zeroes
+1/(polyroot(flt$b)) %>% zapsmall() %>% rev()
+```
+
+Mediante `gsignal` è più semplice convertire il filtro in formato `Zpg`:
+
+```{r}
+flt %>% as.Zpg()
+```
+
+**Un filtro è stabile quando tutti i poli sono all'interno del cerchio unitario sul piano immaginario**: 
+
+```{r}
+#| fig.cap = "Grafico *zero-pole* per fil filtro IIR"
+circle <- function(r=1, x0=0, y0=0, n=100, phi = 0) {
+  tibble(
+    i = 0:n,
+    theta = i * 2*pi / n,
+    x = x0 + r*cos(theta + phi),
+    y = y0 + r*sin(theta + phi)
+  )
+}
+
+flt %>% as.Zpg() %>% {
+  tibble(
+    zr = Re(.$z),
+    zi = Im(.$z),
+    pr = Re(.$p),
+    pi = Im(.$p)
+  )} %>% 
+  ggplot() +
+  geom_point(aes(x=zr, y=zi), shape=21) +
+  geom_point(aes(x=pr, y=pi), shape=4) +
+  geom_path(data=circle(), aes(x=x, y=y), color="red") +
+  coord_equal() +
+  labs(x="Real", y="Imaginary", title="Zero-Pole diagram")
+```
+
+
+
+
+
+# Filtri offline
+
+Se non è necessario applicare il filtro durante l'acquisizione ma si può farlo *ex-post*, è possibile ricorrere alla trasformata di Fourier. Il processo è il seguente:
+
+1. Si calcola la FFT del segnale (**senza applicare una finestra**)
+2. Si definisce una *funzione maschera* che, moltiplicata per lo spettro, riduca o annulli le bande di frequenza che si desidera attenuare
+3. si calcola la **trasformata inversa** della trasformata moltiplicata per la maschera.
+
+Vediamo ad esempio il caso di un segnale ottenuto da un elettrocardiogramma, con frequenza di 256 Hz per una durata di 10 s, disponibile nel data frame `gsignal::signals`:
+
+```{r fig.cap="Segnale di elettrocardiogramma"}
+signals %>% 
+  mutate(
+    t = seq(0, 10, length.out=n()),
+  ) %>% 
+  ggplot(aes(x=t, y=ecg)) +
+  geom_line() +
+  labs(color="segnale", x="tempo (s)", y="tensione (µV)")
+```
+
+Osserviamo il modulo della trasformata: decidiamo di filtrare le frequenze sopra 10 Hz.
+
+```{r fig.cap="FFT del segnale ECG"}
+signals %>% 
+  mutate(
+    i = (1:n())-1,
+    t = seq(0, 10, length.out=n()),
+    f = i / max(t),
+    fft = fft(ecg),
+    intensity = Mod(fft) / n() * 2
+  ) %>% 
+  ggplot(aes(x=f)) +
+  geom_line(aes(y=intensity)) +
+  scale_x_continuous(minor_breaks = scales::minor_breaks_n(11)) +
+  labs(x="frequenza (Hz)", y="tensione (µV)")
+```
+
+Per farlo definiamo una funzione filtro mediante una gaussiana `dnorm()` (anche se potremmo usare altre funzioni a piacere, a seconda del risultato desiderato). Si noti che la funzione maschera deve essere **simmetrica attorno alla frequenza di Nyquist** come lo è la trasformata.
+
+```{r fig.cap="FFT del segnale ECG e funzione maschera (in rosso)"}
+width <- 8
+off <- 0
+sig <- signals %>% 
+  mutate(
+    i = (1:n())-1,
+    t = seq(0, 10, length.out=n()),
+    f = i / max(t),
+    filter = 
+      (dnorm(f, mean=off, sd=width) + dnorm(f, mean=max(f)-off, sd=width)) / 
+      dnorm(0, mean=0, sd=width),
+    fft = fft(ecg),
+    fft_f = fft * filter,
+    intensity = Mod(fft) / n() * 2,
+    intensity_f = Mod(fft_f) / n() * 2,
+    phase = Arg(fft)/pi*180
+  ) 
+
+sf <- 30
+sig %>% 
+  ggplot(aes(x=f)) +
+  geom_line(aes(y=intensity)) +
+  geom_line(aes(y=filter*sf), color="red") +
+  scale_x_continuous(minor_breaks = scales::minor_breaks_n(11)) +
+  scale_y_continuous(
+    sec.axis = sec_axis(~ . / sf, name = "filter")
+  )+
+  labs(x="frequenza (Hz)", y="tensione (µV)")
+```
+
+La funzione maschera è stata riscalata in modo da valere 1 al suo massimo. Inoltre, l'ultimo grafico riporta la maschera sul secondo asse verticale, per leggibilità.
+
+La trasformata moltiplicata per la maschera risulta:
+
+```{r fig.cap="FFT del segnale ECG con applicata la funzione maschera"}
+sig %>% 
+  ggplot(aes(x=f)) +
+  geom_line(aes(y=intensity_f)) +
+  geom_line(aes(y=filter*sf), color="red") +
+  scale_x_continuous(minor_breaks = scales::minor_breaks_n(11)) +
+  scale_y_continuous(
+    sec.axis = sec_axis(~ . / sf, name = "filter")
+  )+
+  labs(x="frequenza (Hz)", y="tensione (µV)")
+```
+
+A questo punto possiamo anti-trasformare la trasformata mascherata, per ottenere il segnale filtrato e **privo di ritardo**:
+
+```{r warning=FALSE, fig.cap="Segnale ECG filtrato (dettaglio)"}
+
+sig %>% 
+  mutate(
+    ecg_f = Re(ifft(fft_f))
+  ) %>% 
+  select(t, ECG=ecg, `ECG (filt.)`=ecg_f) %>% 
+  pivot_longer(-t) %>% 
+  ggplot(aes(x=t)) + 
+  geom_line(aes(y=value, color=name)) +
+  coord_cartesian(xlim=c(0,2), ylim=c(-200, 200)) +
+  labs(color="segnale", x="tempo (s)", y="tensione (µV)")
+```
+
+
+Si noti che la anti-trasformata restituisce un segnale complesso, per cui è necessario scartare la parte immaginaria.
+
+**ESERCIZIO**: cambiare i valori di `off` e `width` per osservare come modificando la maschera cambia il segnale filtrato.
+
+
+# Taratura dinamica
+
+## Termocoppia
+
+Consideriamo il caso di una sonda PT100 immersa repentinamente in un bagno termostatato. La temperatura della sonda raggiunge quella del bagno secondo la legge:
+
+$$
+T(t) = (T_i - T_f)e^{-\frac{t}{\tau}} + T_f
+$$ {#eq-pt100}
+
+```{r}
+#| include: false
+tau <- 33.5
+Ti <- 33.4
+Tf <- 95
+t0 <- 50
+temp <- tibble(
+  t = seq(0, 350, 0.5),
+  Tn = ifelse(t<t0, Ti, (Ti - Tf)*exp(-(t-t0)/tau) + Tf),
+  T = Tn + rnorm(length(t), 0, 0.5)
+)
+```
+
+Sappiamo che $T_i = `r Ti`$ °C, $T_f = `r Tf`$ °C e stimiamo che l'immersione inizi a $t_0 = 50$ s.
+
+```{r}
+#| fig.cap: "Acquisizione con termocoppia PT100. In rosso la nominale"
+ggplot(temp, aes(x=t, y=T)) + 
+  geom_line() +
+  geom_line(aes(y=Tn), color="red", linewidth=1/3) +
+  labs(x="tempo (s)", y="temperatura (°C)")
+```
+
+### Primo metodo: intercetta
+
+Secondo la @eq-pt100, a $t=\tau$ si ha che $T(\tau) = (T_i-T_f)e^{-1} + T_f$, cioè:
+
+\begin{align}
+T_f - T(\tau) &= (T_f - T_i)e^{-1} \\
+&= (`r Tf` - `r Ti`) \cdot `r exp(-1) %>% round(3)` \\
+&= `r Tf - Ti` \cdot `r exp(-1) %>% round(3)` \\
+&=  `r round((Tf - Ti)*exp(-1), 3)`
+\end{align}
+
+cioè $T(\tau) = `r Tf - round((Tf - Ti)*exp(-1), 3)`$ °C. In grafico:
+
+```{r}
+#| fig.cap = "Identificazione della temperatura $T(\\tau)$"
+Ttau <- Tf - (Tf - Ti)*exp(-1)
+
+ggplot(temp, aes(x=t, y=T)) + 
+  geom_line() +
+  geom_hline(yintercept = Ttau, color="blue") +
+  labs(x="tempo (s)", y="temperatura (°C)")
+```
+Cioè risulta graficamente che $\tau$ è la distanza tra l'inizio del transitorio e l'intersezione con la linea blu. Sui dati:
+
+```{r}
+temp %>% 
+  select(t, T) %>%          # solo le colonne t e T
+  mutate(t = t - 50) %>%    # traslo i tempi all'inizio
+  dplyr::filter(T<Ttau) %>% # solo i valori < Ttau
+  slice_tail(n=1) %>%       # prendo solo l'ultima riga
+  knitr::kable()
+```
+
+
+
+### Secondo metodo: linearizzazione
+
+La @eq-pt100 può essere linearizzata così:
+
+\begin{align}
+\frac{T(t) -T_f}{T_i - T_f} &= e^{-\frac{t}{\tau}} \\
+\ln\left(\frac{T(t) -T_f}{T_i - T_f}\right) &= \ln(e^{-\frac{t}{\tau}}) \\
+\ln\left(\frac{T(t) -T_f}{T_i - T_f}\right) &= -\frac{t}{\tau}
+\end{align}
+
+Posso riorganizzare i dati come segue:
+
+```{r}
+temp.l <- temp %>% 
+  select(t, T) %>% 
+  mutate(t = t - 50) %>%
+  dplyr::filter(t>0 & t < 100) %>% 
+  mutate(y = log((T-Tf)/(Ti - Tf))) %>% 
+  dplyr::filter(!is.nan(y))
+
+temp.lm <- temp.l %>% lm(y~t-1, data=.) 
+temp.lm %>% summary()
+
+tau <- round(-1/temp.lm$coefficients, 1)
+cat(paste("tau:", tau))
+```
+
+
+```{r}
+#| fig.cap = "Regressione del modello dopo linearizzazione"
+temp.l %>% 
+  ggplot(aes(x=t, y=y)) +
+  geom_smooth(method="lm", formula = y~x-1) +
+  geom_point(size=0.5) +
+  labs(x="tempo (s)", 
+       y=latex2exp::TeX("$\\log_{10}(\\frac{T-T_f}{T_i-T_f})$ (T in °C)"))
+```
+
+
+### Terzo metodo: regressione non-lineare
+
+Con il terzo metodo si usa la regressione non-lineare ai minimi quadrati per ottenere direttamente tutti e tre i parametri $T_i, T_f, \tau$:
+
+```{r}
+temp.l <- temp %>% 
+  select(t, T) %>% 
+  mutate(t = t - 50) %>%
+  dplyr::filter(t>0) 
+
+fit <- nls(T~(Ti - Tf)*exp(-t/tau) + Tf, 
+    data = temp.l, 
+    start = list(
+      Ti=30,
+      Tf=100,
+      tau=10
+    ))
+
+fit
+
+temp.l %>% 
+  modelr::add_predictions(fit, var="fit") %>% 
+  ggplot(aes(x=t, y=T)) + 
+  geom_line() +
+  geom_line(aes(y=fit), color="red", linewidth=1/4) +
+  labs(x="tempo (s)", y="temperatura (°C)")
+```
+
+Si notino i valori iniziali approssimativi passati per i tre parametri. 
+
+I vantaggi di questo terzo metodo sono:
+
+* non è necessario stimare **soggettivamente** $T_i$ e $T_f$, ma vengono identificati direttamente dalla regressione
+* definendo il modello per parti (cioè costante per $t<t_i$), è possibile identificare anche $t_i$ (lo si lascia per esercizio)
+* mediante il metodo bootstrap è possibile ottenere gli intervalli di confidenza su tutti e tre i parametri (lo si lascia per esercizio)
+
+Per contro, è computazionalmente più complesso, mentre il primo e al limite anche il secondo metodo possono essere applicati anche "a mano".
+
+# Funzioni di trasferimento
+
+Di seguito, anziché utilizzare la funzione `gsignal::bodeplot()`, che usa la vecchia interfaccia per i grafici, utilizzeremo una funzione da noi definita, `ggbodeplot()`, basata su `ggplot2`. La definizione di questa funzione non è essenziale.
+
+<details>
+<summary>ggbodeplot function</summary>
+```{r}
+#| message: false
+#| warning: false
+#| include: true
+
+library(control)
+library(signal)
+
+ggbodeplot <- function(tf, fmin=1, fmax=1e4, df=0.01) {
+  # vector of points for each order of magnitude (OOM):
+  pts <- 10^seq(0, 1, df) %>% tail(-1)
+  # vector of OOMs:
+  ooms <- 10^(floor(log10(fmin)):ceiling(log10(fmax)-1))
+  # combine pts and ooms:
+  freqs <- as.vector(pts %o% ooms)
+  # warning: bode wants pulsation!
+  bode(tf, freqs*2*pi) %>% {
+    tibble(f=.$w/(2*pi), `magnitude (dB)`=.$mag, `phase (deg)`=.$phase)} %>%
+    pivot_longer(-f) %>% 
+    ggplot(aes(x=f, y=value)) +
+    geom_line() +
+    scale_x_log10(
+      minor_breaks=scales::minor_breaks_n(10), 
+      labels= ~ latex2exp::TeX(paste0("$10^{", log10(.), "}$"))) +
+    facet_wrap(~name, nrow=2, scales="free") +
+    labs(x="frequency (Hz)")
+}
+```
+</details>
+
+
+## Esempio: sistema per isolamento da vibrazioni. 
+
+Con il metodo delle impedenze generalizzate si ottiene:
+
+$$
+H(i\omega)=\frac{V_\mathrm{out}(i\omega)}{V_\mathrm{in}(i\omega)}=\frac{C i\omega + K}{M (i\omega)^2 + C i\omega + K}
+$$ {#eq-tf}
+
+La frequenza naturale del sistema è $f_0=\frac{1}{2\pi}\sqrt{\frac{K}{M}}$, e l'attenuazione comincia a $\sqrt{2}f_0$.
+
+Possiamo definire la funzione di trasferimento in @eq-tf con la funzione `control::tf()`, che prende come due argomenti due vettori con i coefficienti della @eq-tf, in ordine decrescente di grado della variabile $i\omega$:
+
+```{r}
+#| fig.cap: "Bode plot per il sistema di isolamento da vibrazioni"
+M <- 10
+K <- 1000
+C <- 50
+
+# Frequenza naturale:
+f0 <- 1/(2*pi) * sqrt(K/M)
+
+tf(c(C, K),c(M, C, K)) %>% 
+  ggbodeplot(fmin=0.1, fmax=100) +
+  geom_vline(xintercept=c(1, sqrt(2)) * f0, color="red", linetype=2) +
+  labs(title=paste(
+    "Natural frequency:", round(f0, 2), "Hz", 
+    " - Isolation: >", round(sqrt(2)*f0, 2), "Hz"))
+
+```
+
+::: {.content-visible when-format="html"}
+:::column-margin
+**Decibel** --- La magnitudine della funzione di trasferimento è espressa in decibel (dB). Un decibel corrisponde a $10 \log_{10}(X)$. Tuttavia è d'uso scalare la magnitudine in modo che rappresenti il **rapporto tra le potenze**, che dipende dal quadrato della variabile in oggetto. Quindi l'effettiva relazione diventa $20 \log_{10}(X)$. 
+
+In altre parole, un rapporto pari a 1:10 sulla variabile corrisponde a 1:100 sulla potenza; quindi se esprimo la magnitudine come $20 \log_{10}(X)$ significa che un'attenuazione di -10 dB$_{20}$ sul segnale corrisponde a -10 dB$_{10}$ sulla potenza. Ancora più chiaramente: -20 dB sulla magnitudine significa un'attenuazione di 10 volte sul segnale, 100 volte sulla potenza.
+---
+:::
+:::
+
+Si noti che lo stesso risultato si ottiene a partire dalle equazioni della dinamica del sistema, effettuando la trasformata di Laplace $\mathcal{L}$:
+
+\begin{align}
+M\ddot y + C\dot y + Ky &= C\dot x + K x \\
+&\downarrow \mathcal{L}\left(\frac{\mathrm{d}^nx}{\mathrm{d}t^n}\right) = s^n X(s) \\
+M s^2 Y(s) + C s Y(s) + K Y(s) &= CsX(s) + KX(s)
+\end{align} 
+
+dalla quale otteniamo l'espressione per la funzione di trasferimento:
+
+$$
+H(s) = \frac{Y(s)}{X(s)} = \frac{Cs + K}{Ms^2 + Cs  + K }
+$$
+che corrisponde alla @eq-tf a meno della sostituzione $s=i\omega$.
+
+
+## Esempio: accoppiamento rotativo motore-carico. 
+
+Con il metodo delle impedenze generalizzate si ottiene:
+
+$$
+H(i\omega) = \frac{1}{I_c (i\omega)^2 + Ci\omega + K} = \frac{1}{I_c/K (i\omega)^2 + C/K i\omega + 1}
+$$
+
+La frequenza naturale può essere ottenuta con la funzione `control::damp()`, campo `omega`:
+
+```{r}
+#| fig.cap = "Bode plot per l'accoppiamento rotativo"
+Ic <-  10e-3
+K <-  5000
+C <-  1
+
+H <- tf(1,c(Ic/K, C/K, 1)) 
+H.d <- damp(H, doPrint=FALSE)
+
+H %>% 
+  ggbodeplot(fmin=10, fmax=1e4) +
+  geom_vline(xintercept=c(1, sqrt(2)) * H.d$omega[1]/(2*pi), color="red", linetype=2) +
+  labs(title=paste(
+    "Natural frequency:", round(f0, 2), "Hz", 
+    " - Isolation: >", round(sqrt(2)*f0, 2), "Hz"))
+```
+
+

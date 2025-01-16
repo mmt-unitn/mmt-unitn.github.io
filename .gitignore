@@ -1,0 +1,16 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+.Rprofile
+_publish.yml
+
+/.quarto/
+
+renv/*
+
+_site/
+
+*_files
+
+tikz-tex

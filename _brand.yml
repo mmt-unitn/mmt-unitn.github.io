@@ -1,0 +1,19 @@
+color:
+  palette:
+    dark-grey: "#333333"
+    white: "#ffffff"
+  background: white
+  foreground: dark-grey
+  primary: black
+
+logo: 
+  medium: logo.png
+
+typography:
+  fonts:
+    - family: Jura
+      source: google
+    - family: Source Code Pro
+      source: google
+  headings: Jura
+  monospace: Source Code Pro

@@ -1,0 +1,430 @@
+---
+title: "Trasformazione nel dominio delle frequenze"
+author: "Paolo Bosetti"
+date: "`r Sys.Date()`"
+format: 
+  html:
+    toc: TRUE
+  pdf:
+    toc: TRUE
+engine: knitr
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  fig.asp=9/16
+)
+library(tidyverse)
+library(patchwork)
+library(knitr)
+library(gsignal)
+```
+
+# Introduzione
+
+Nella scienza delle misure stanno esplodendo due settori apparentemente non collegati: sensori al silicio, derivanti dalle tecnologie consolidate dei micro-chip, stanno soppiantando i tradizionali sensori (nonostante questi ultimi possiedano qualità metrologiche nettamente superiori); nuovi strumenti di elaborazione dati (PC, DSP, processori, micro-controllori, etc), sempre più potenti ed economici, stanno promuovendo l'impiego di algoritmi sempre più complessi (reti neurali, fuzzy sets, wavelets, etc). Si pensi ai moderni smartphone che contengono diversi sensori (una IMU, Inertial Measurement Unit che contiene accelerometri e giroscopi per la misura del moto, videocamere ed in alcuni casi anche telecamere a tempo di volo per la misura in 3 dimensioni) ed un processore estremamente potente a bordo.
+
+I due aspetti, oltre che essere legati allo stesso fenomeno tecnologico, sono concorrenti nello stimolare il seguente approccio: utilizzare sensori di bassa qualità accoppiati a sistemi di acquisizione ed elaborazione complessa dei dati. In altre parole, le necessità di mercato stanno spingendo verso la ricerca di sensori che sfruttino le tecnologie consolidate della lavorazione del silicio che forniscono il duplice vantaggio della produzione in larga scala e quindi basso costo e quello della estrema miniaturizzazione ed integrazione con l'elettronica di condizionamento ed elaborazione segnali che consentono di impiegare algoritmi avanzati capaci di ottenere un'accuratezza adeguata anche da misure effettuate tramite sensori di bassa qualità.
+Si potrebbe citare la tecnologia dei sistemi embedded che, in maniera pervasiva, occupa gli spazi di vita quotidiana (con reti di sistemi di sorveglianza, sensori distribuiti per la domotica, etc) o industriale (reti di sensori per l'ottimizzazione della produzione e la diagnostica del processo produttivo giusto per citare alcuni esempi).
+
+Si potrebbe aggiungere l'enorme sviluppo dell'intelligenza artificiale che si basa sulla raccolta dati, ovvero segnali generalmente variabili nel tempo.
+Non da ultimo è da considerare che per le applicazioni in ambito ingegneria meccatronica si ha a che fare con sistemi autonomi di cui si vuole controllare un certo numero di stati. A tale scopo è fondamentale la misura di tali stati che, se incogniti, ovviamente non sarebbero controllabili. Ebbene in ambito automatico gli stati sono associati a parametri di misura tempovarianti da cui occorre estrapolare delle informazioni tramite elaborazione di segnali tempovarianti. 
+
+In altre parole, l'elaborazione dei segnali acquisiti tramite reti di sensori distribuiti o da un sistema robotico, richiedono ad un ingegnere meccatronico la capacità di elaborarli. Questo per diversi scopi quali sintetizzare una variabile da controllare, ottenere informazioni legate alla diagnostica delle macchine o semplicemente per ridurre il rumore sovrapposto al segnale.
+
+L'obiettivo di questa dispensa è quello di fornire i rudimenti essenziali per il "signal processing" che comprendono l'elaborazione nel dominio della frequenza tramite Trasformata di Fourier, il concetto e la stima tramite Taratura Dinamica della Funzione di Trasferimento, la Modellazione a Parametri Concentrati dei sistemi meccanici e conseguente estrapolazione delle Impedenze Generalizzate che consentono di costruire reti analoghe a quelle elettriche per la stima delle relazioni dinamiche che intervengono nei diversi punti del meccanismo. 
+
+
+# Trasformata di Fourier
+La trasformata di Fourier trasforma il segnale dal dominio del tempo al dominio della frequenza. In altre parole una funzione del tempo viene rappresentata, tramite opportuni coefficienti, in una funzione della frequenza evidenziando quali componenti armoniche compaiono nel segnale.
+Vi sono proprietà della trasformata di Fourier che ricorrono in altre trasformate quali la WT e la STFT (denominata anche trasformata di Gabor) e che sono essenziali per l'interpretazione dei risultati della trasformazione e di eventuali operazioni in frequenza quali filtraggi. Tali concetti sono la scomposizione di una funzione secondo una base di funzioni ortonormali e la reversibilità della trasformata. 
+
+## Segnali tempovarianti, segnali discreti, vettori
+
+Un segnale funzione del tempo s(t) rappresenta un segnale reale che varia in funzione del tempo senza soluzione di continuità.
+Un segnale discreto è un segnale campionato e quantizzato. Dunque rappresentabile tramite un vettore $s = \{s(1), s(2), \dots, S(N)\}$, dove $n = 1\dots N$ sono gli $N$ campioni acquisiti ad una certa frequenza di campionamento $f_c$.
+
+Come vedremo quindi vi sarà una differenza tra la Trasformata di Fourier di un segnale tempovariante da quella di un segnale discreto. La prima ha un carattere ed una utilità simbolica, potremmo dire di concetto. La seconda pratica poiché tutti i segnali che si elaborano mediante processori sono discreti.
+
+Nei prossimi sotto-paragrafi passeremo: 
+
+- dalla scomposizione di un vettore su di una base di versori ortonormali 
+- alla scomposizione di un segnale tempovariante periodico su una base di segnali ortonormali 
+- alla scomposizione di un segnale tempovariante non periodico su una base di segnali ortonormali 
+- alla scomposizione di un segnale discreto (ovvero un vettore) su una base di segnali discreti ortonormali (altri vettori). 
+
+Tutto ciò per comprendere cosa rappresentano le componenti del segnale nel dominio della frequenza (sia esso continuo o discreto) e, tramite il concetto di Funzione di Trasferimento, implementare le elaborazioni che si possono condurre in tale dominio. Tutto ciò consentirà di capire come gli strumenti di misura di grandezze tempovarianti si comportano con il misurando in base alle caratteristiche dinamiche riassunte proprio dalla loro funzione di trasferimento.
+
+## Scomposizione di un vettore su di una base di versori orto-normali
+
+Per comprendere il concetto di scomposizione di un segnale tempovariante si può pensare al parallelo vettoriale: un vettore nel piano può essere scomposto secondo due direzioni mutuamente ortogonali. In tale maniera si ottiene la scomposizione mediante la semplice relazione del prodotto scalare :
+
+$$
+\mathbf{v} = \alpha \mathbf{e}_1 + \beta \mathbf{e}_2
+$$ {#eq-1}
+
+dove $\mathbf{e}_1$ ed $\mathbf{e}_2$ sono i versori delle direzioni mutuamente ortogonali ($\mathbf{e}_1 \cdot \mathbf{e}_2 = 0$). 
+Grazie alla proprietà di ortogonalità della base posso scrivere infatti:
+
+$$
+\alpha = \mathbf{v}\cdot\mathbf{e}_1 =  (\alpha \mathbf{e}_1 + \beta \mathbf{e}_2)\cdot \mathbf{e}_1 \\
+\beta = \mathbf{v}\cdot\mathbf{e}_2
+$$ {#eq-2}
+
+che definisce l'operazione di scomposizione tramite la semplice operazione di prodotto scalare.
+L’@eq-1 suggerisce di rappresentare il vettore in una maniera diversa, ovvero considerando le sole componenti lungo i due versori:
+
+$$
+\mathbf{v}=[\alpha, \beta]
+$$
+
+tale rappresentazione consente di effettuare considerazioni sul vettore solamente tramite le sue componenti nelle direzioni della base ortogonale di vettori $\mathbf{e}_1$ ed $\mathbf{e}_2$. Ovvero il vettore può essere 'pensato' come una 'freccia' nel piano oppure come insieme di componenti. Tale concetto è illustrato nella figura seguente.
+
+
+Fig. 2.1 Corrispondenza tra un vettore nel piano e l'insieme delle sue componenti lungo una coppia di versori ortogonali.
+
+La relazione di eguaglianza espressa in @eq-1 garantisce la reversibilità, ovvero dati i parametri della trasformazione in componenti vettoriali lungo una coppia di direzioni ortogonali, è possibile risalire esattamente al vettore originario. Vedremo che non tutte le trasformazioni sono reversibili e che la reversibilità garantisce una corretta interpretazione delle operazioni effettuate nel dominio della trasformata. Introducendo ad esempio il concetto di filtro sulle componenti vettoriali come quell'operatore che fornisce la sola componente lungo $\mathbf{e}_1$ , si ottiene il valore del coefficiente $\alpha$ che si sa essere esattamente corrispondente al vettore tolta la componente lungo l'altra direzione. Questa sembrerebbe una tautologia, ma, applicata alle trasformazioni di segnale, giustifica e fornisce la corretta interpretazione alle operazioni di manipolazione in frequenza quali il filtraggio: in una comune operazione di filtraggio passa-basso si ha la certezza di aver eliminato le componenti armoniche del segnale ad alta frequenza e di aver lasciato inalterate le rimanenti.
+
+Dalla @eq-1 e la @eq-2 si ottiene:
+
+$$
+\mathbf{v} = (\mathbf{v}\cdot\mathbf{e}_1) \mathbf{e}_1 + (\mathbf{v}\cdot\mathbf{e}_2) \mathbf{e}_2
+$$
+
+che riassume i concetti prima espressi.
+
+## Scomposizione di un segnale tempovariante continuo su di una base di funzioni orto-normali
+
+Per i segnali temporali vale  un ragionamento analogo. Per semplicità considereremo lo sviluppo in serie invece della trasformata di Fourier in quanto da esso è poi possibile, tramite passaggio al limite, ricavare la formula della trasformata [^1].
+
+[^1]: F. Angrilli, Misure Meccaniche e Termiche, Cedam 2005
+
+Una funzione periodica gode della proprietà che $g(t)=g(t+nT)$ per ogni valore $n$ intero. $T$ è il periodo ed $f_0 = 1/T$ è la **frequenza fondamentale**, mentre $\omega = 2\pi f$ è la **pulsazione**. Essa può essere scomposta in serie di Fourier come segue.
+
+Avendo un segnale $s(t)$, rappresentabile nel dominio del tempo, si può definire lo sviluppo di Fourier tramite la relazione invertibile:
+
+$$
+g(t)=\frac{1}{2}a_o + \sum_{n=1}^{\infty}a_n \cos(\omega_n t) + \sum_{n=1}^{\infty}b_n \sin(\omega_n t)
+$$ {#eq-ft}
+
+Dove $\omega n = 2\pi n f_0$.
+
+I coefficienti $a_n$ e $b_n$ vengono ricavati secondo le seguenti relazioni:
+
+$$
+a_n = \frac{2}{T}\int_0^T g(\tau)\cos(\omega_nt)d\tau \\
+b_n = \frac{2}{T}\int_0^T g(\tau)\sin(\omega_nt)d\tau
+$$ 
+
+La @eq-ft vuol dire scomporre la funzione $g(t)$ secondo la base di funzioni ortogonali armoniche. 
+
+**NOTA**: la @eq-ft corrisponde anche alla media delle componenti del prodotto elemento per elemento tra i due vettori.
+
+
+## Definizione di prodotto scalare tra funzioni continue e discrete
+
+Il prodotto scalare tra segnali/funzioni periodiche si definisce come:
+
+$$
+g(t)\cdot f(t)=\frac{1}{T}\int_0^T g(\tau)f^*(\tau)d\tau
+$$
+
+dove con $f^*(t)$ si intende la funzione **complessa coniugata** di $f(t)$ che, nel caso di funzioni reali, coincide con se stessa.
+
+Le stesse funzioni digitalizzate $g_k$ ed $f_k$ consistono nei due vettori $\{g(1), g(2),\dots, g(N)\}$ e $\{f(1), f(2),\dots, f(N)\}$ e quindi si definisce prodotto scalare tra i segnali digitalizzati:
+
+$$
+g_k\cdot f_k=\frac{1}{T}\sum_{i=1}^N g_i f_i = \\
+ \{g(1), g(2),\dots, g(N)\} \cdot \{f(1), f(2),\dots, f(N)\}^T / N
+$$ {#eq-decompose}
+
+Di seguito un esempio in R di scomposizione di un'onda quadra su una base ortogonale e sua ricomposizione sulla stessa base. Poi scomposizione e ricomposizione secondo la serie di Fourier. Si noti che un'onda quadra che parte con fronte di salita esattamente con il primo campione risulta essere scomponibile solo mediante sinusoidi per cui dimenticheremo le componenti coseno.
+
+
+
+## Esempio
+
+Definiamo le funzioni **prodotto scalare tra segnali digitalizzati** e relativa **norma**. La prima funzione la definiamo come operatore `%ps%`:
+
+```{r}
+  # secondo le equazioni:
+`%ps%` <- function(A, B) {
+  (t(A) %*% B / length(A)) %>% as.numeric()
+}
+
+# ma anche, più efficientemente:
+`%ps%` <- function(A, B) mean(A*B)
+```
+
+Per la norma, definiamo la funzione `norm_ps` (dato che `norm` è già definita):
+
+```{r}
+norm_ps <- function(A) sqrt(A %ps% A)
+
+(1:5) %ps% (5:1)
+norm_ps(1:5)
+```
+
+Ora creiamo un segnale onda quadra (il segno dell'onda seno) campionato su 1000 punti tra 0 e 1, con frequenza 2 Hz:
+
+```{r fig.cap="Onda quadra e corrispondente sinusoide di pari frequenza e ampiezza"}
+f0 <- 2
+fc <- 1000
+Tm <- 1
+dt <- 1/fc
+
+sin_k <- function(x, f, k=1) sin(2*pi*f*k*x)
+
+df <- tibble(
+  t = seq(dt, Tm, dt),
+  ys = sin_k(t, f0),
+  yq = sign(ys)
+)
+
+df %>% 
+  pivot_longer(-t, names_to = "signal") %>% 
+  ggplot(aes(x=t, y=value, color=signal)) +
+  geom_line() 
+```
+
+Calcoliamo le prime sette componenti della serie, secondo @eq-decompose:
+
+```{r}
+K <- 7
+comps <- map_dbl(1:K, \(k) {
+  s <- sin_k(df$t, f0, k)
+  df$yq %ps% s/norm_ps(s)
+}) %>% zapsmall()
+
+comps
+```
+
+Infine approssimiamo l'onda quadra come somma delle prime `r K` componenti:
+
+```{r fig.cap="Onda quadra e sua approssimazione come composizione dei primi sette termini della serie di Fourier"}
+df %>% 
+  mutate(
+    yqk = reduce(1:K, \(acc, k) {
+      s <- sin_k(t, f0, k)
+      acc + comps[k] * s / norm_ps(s)
+    }, .init=0)
+  ) %>% 
+  pivot_longer(-t, names_to = "signal") %>% 
+  ggplot(aes(x=t, y=value, color=signal)) +
+  geom_line()
+```
+
+
+
+# La trasformata di Fourier rapida
+
+Come visto sopra, la trasformata di Fourier scompone una serie temporale nelle sue frequenze costituenti, rappresentandola cioè come una somma di oscillazioni armoniche.
+
+::: {.content-visible when-format="html"}
+:::column-margin
+![Fonte: nti-audio.com](images/fft.png)
+:::
+:::
+L'algoritmo FFT è una procedura computazionale molto efficiente per calcolare la **trasformata di Fourier** discreta di un segnale, o serie temporale, campionato. Se $x$ è la serie storica e $X$ è la sua trasformata:
+
+$$
+X(k) = \sum_{n=1}^N x(n) e^{-j2\pi k n/N}
+$$
+
+dove $k=1, 2, \dots, N-1$ e $N$ è il numero di osservazioni campionate.
+
+Si noti che la trasformata di un segnare reale è una serie di numeri complessi, la cui parte reale rappresenta l'**intensità** mentre la parte immaginaria rappresenta la **fase**.
+
+
+## Esempio
+
+### Creiamo una serie di dati
+
+Creiamo una serie temporale ottenuta combinando sinusoidi con diversi parametri di ampiezza $w$, frequenza $f$ e fase $\phi$. Per farlo definiamo una funzione di supporto:
+
+```{r}
+signal <- function(t, pars, rad=FALSE) {
+  stopifnot(is.data.frame(pars))
+  if (!rad) {
+    pars$phi <- pars$phi/180*pi
+    pars$f <- 2*pi*pars$f
+  }
+  with(
+    pars,
+    map_dbl(t, \(t) map_vec(seq_along(w), ~ w[.]*sin(t*f[.]+phi[.])) %>% sum())
+  )
+}
+```
+
+Ora creiamo un segnale composto da tre sinusoidi, 
+
+```{r}
+pars <- tibble(
+  w = c(1, 0.2, 0.5, 0.25),
+  f = c(4, 10, 2, 30),
+  phi = c(0, 0, 0, 90)
+)
+```
+
+
+```{r echo=FALSE, tab.cap="Tabella dei parametri"}
+pars %>% kable(col.names=c("$w$ (-)", "$f$ (Hz)", "$\\phi$ (°)"))
+```
+
+
+```{r fig.cap="Segnale composto, con rumore normale"}
+s <- tibble(
+  t = seq(0, 10, length.out = 5000),
+  y = signal(t, pars, rad=FALSE) + rnorm(length(t), 0, 0.5) + 1.25
+) 
+
+s %>% 
+  ggplot(aes(x=t, y=y)) +
+  geom_line(linewidth=0.1)
+```
+
+### Spettrogramma mediante FFT
+
+R mette a disposizione la funzione `fft()` nella libreria base:
+
+```{r}
+s.fft <- fft(s$y)
+
+summary(s.fft)
+```
+
+Quindi la trasformata è un vettore complesso con lo stesso numero di osservazioni del segnale iniziale.
+
+```{r fig.cap="FFT grezza"}
+s %>% 
+  mutate(
+    i = 1:n(),
+    fft = fft(y),
+    intensity = Mod(fft),
+    phase = Arg(fft)/pi*180
+  ) %>% 
+  ggplot(aes(x=i, y=intensity)) +
+  geom_line()
+```
+
+Cosa c'è in ascissa? La trasformata copre un intervallo di frequenze $[0, N/T]$, con $T=N\delta t$ la durata complessiva del segnale. L'intensità dei picchi (cioè il modulo del valore complesso) corrisponde invece all'ampiezza delle componenti, scalata con il numero di osservazioni:
+
+```{r fig.cap="FFT riscalata. In rosso le frequenze originali nella tabella `pars`"}
+s.fft <- s %>% 
+  mutate(
+    i = 1:n()-1,
+    fft = fft(y),
+    intensity = Mod(fft) / n() * 2,
+    phase = Arg(fft)/pi*180,
+    f = i / max(t)
+  ) %>% 
+  slice_head(
+    n = nrow(.)/2
+  )
+```
+
+Messa in grafico otteniamo lo **spettro in frequenza** del segnale:
+
+```{r fig.cap="FFT riscalata. In rosso le frequenze originali nella tabella `pars`"}
+s.fft %>% 
+  ggplot(aes(x=f, y=intensity)) +
+  geom_vline(xintercept=pars$f, color="red", linewidth=0.25) +
+  geom_line(linewidth=0.2) +
+  geom_point(size=0.5) +
+  coord_cartesian(xlim=c(0, 35)) +
+  labs(x="frequenza (Hz)", y="intensità (-)")
+```
+
+## Finestre
+
+Consideriamo un segnale sinusoidale privo di disturbo, campionato per un tempo pari a 10 volte il suo periodo più mezzo periodo:
+
+```{r}
+pars <- tibble(
+  w = c(1),
+  f = c(10),
+  phi = c(0)
+)
+
+s <- tibble(
+  t = seq(0, 1+1/pars$f/2, length.out = 512),
+  y = signal(t, pars, rad=FALSE) + rnorm(length(t), 0, 0.0)
+) 
+
+s %>% 
+  ggplot(aes(x=t, y=y)) +
+  geom_line()
+```
+
+Ora osserviamo la FFT
+
+```{r}
+s %>% 
+  mutate(
+    f = 0:(n()-1)/max(t),
+    fft = fft(y),
+    intensity = Mod(fft) / n() * 2,
+    phase = Arg(fft)/pi*180
+  ) %>% 
+  slice_head(n=nrow(.)/2) %>% 
+  ggplot(aes(x=f, y=intensity)) +
+  geom_vline(xintercept=10, linetype=2, color="red") +
+  geom_spoke(aes(angle=pi/2, y=0, radius=intensity), linewidth=0.2) +
+  geom_point(shape=21) +
+  coord_cartesian(xlim=c(0, 100))
+```
+
+Come si vede, la FFT è allargata, in maniera inattesa, attorno al picco a 10 Hz: **come mai?**
+
+Bisogna ricordare che la FFT assume che il segnale sia periodico e campionato per un numero di cicli interi. Cioè è come se il segnale si ripetesse all'infinito uguale a se stesso dopo (e prima) la fine del campionamento. Nel nostro caso, quindi, è come se il segnale fosse come il seguente:
+
+```{r}
+s %>% mutate(step="A") %>% 
+  bind_rows(mutate(s, step="B", t=t+last(t))) %>% 
+  ggplot(aes(x=t, y=y, color=step)) +
+  geom_line()
+```
+
+È evidente come ogni $\Delta T=`r max(s$t)` + `r (1/pars$f/2)`$ secondi ci sia un evento con una discontinuità sulla derivata del segnale, che si ripete periodicamente. Cioè si ha un evento con un ampio contenuto in frequenza (per ottenere uno spigolo bisogna sommare molte componenti!) attorno alla frequenza pari all'inverso della durata del campionamento. È altrettanto evidente come, ad eccezione del caso in cui la durata del campionamento è un multiplo esatto di tutti i periodi contenuti nel segnale, ciò significa che la parte a bassa frequenza dello spettro sarà sempre sporcata alla frequenza pari all'inverso della durata del campionamento.
+
+**ESERCIZIO**: provare a modificare i parametri di frequenza e durata del campionamento per osservare il risultato.
+
+Per mitigare questo problema si ricorre alla **finestratura** (*windowing*) del segnale: si moltiplica il segnale per una funzione che va a zero, o quasi, all'inizio e alla fine del campionamenti. Esistono diverse funzioni di finestratura, le più utilizzate sono quella di **Hamming** e quella di **Hann**. 
+
+Il pacchetto `gsignal` le mette a disposizione entrambi (ed altre):
+
+```{r}
+s %>% 
+  mutate(
+    i = 1:n(),
+    win = hann(n()),
+    yw = y * win
+  ) %>% 
+  ggplot(aes(x=i)) +
+  geom_line(aes(y=win), color="red", linetype=2) +
+  geom_line(aes(y=-win), color="red", linetype=2) +
+  geom_line(aes(y=yw))
+```
+
+A questo punto il segnale è ovviamente perfettamente periodico e, se calcoliamo la FFT del segnale modificato con la finestra di Hann, otteniamo:
+
+```{r}
+s %>% 
+  mutate(
+    f = 0:(n()-1)/max(t),
+    yw = hann(n()) * y,
+    fft = fft(yw),
+    intensity = Mod(fft) / n()*2,
+    phase = Arg(fft)/pi*180
+  ) %>% 
+  slice_head(n=nrow(.)/2) %>% 
+  ggplot(aes(x=f, y=intensity)) +
+  geom_vline(xintercept=10, linetype=2, color="red") +
+  geom_spoke(aes(angle=pi/2, y=0, radius=intensity), linewidth=0.2) +
+  geom_point(shape=21) +
+  coord_cartesian(xlim=c(0, 100))
+```
+
+Possiamo osservare come il contributo della durata del campionamento sia pressoché svanito, anche se risulta ovviamente ridotta l'intensità dei picchi a 10 Hz, dato che l'ampiezza media del segnale è anch'essa ridotta.
+
+**ESERCIZIO**: provare a cambiare funzione finestra utilizzando `hamming()` o una delle altre finestre messe a disposizione da `gsignal`.

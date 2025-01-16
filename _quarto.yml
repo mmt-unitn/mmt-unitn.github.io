@@ -1,0 +1,24 @@
+project:
+  type: website
+
+website:
+  title: "Misure Industriali"
+  navbar:
+    left:
+      - href: r_brief.qmd
+        text: R in breve
+      - href: fft.qmd
+        text: Trasformate
+      - href: filtri.qmd
+        text: Filtri
+      - about.qmd
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+    number-sections: true
+
+
+

@@ -1,0 +1,7 @@
+---
+title: "About"
+---
+
+![](logo.png)
+
+Un corso offerto agli studenti dell'Università di Trento.
