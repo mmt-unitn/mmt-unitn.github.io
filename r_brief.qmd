@@ -6,15 +6,26 @@ format:
   html:
     toc: TRUE
 engine: knitr
+webr:
+  cell-options:
+    autorun: true
+    editor-font-scale: 0.9
+  packages: ['tidyverse']
+filters:
+  - webr
 ---
 
 # Basi del linguaggio
+
+:::{.callout-note}
+I blocchi di codice di seguito sono live: è possibile modificarli, eseguirli e osservare il risultato!
+:::
 
 ## Variabili
 
 L'assegnazione di variabili avviene con il simbolo `<-`, il quale funziona anche in direzione opposta (`->`):
 
-```{r}
+```{webr-r}
 a <- 10
 20 -> b
 ```
@@ -23,13 +34,13 @@ a <- 10
 
 I vettori si creano con la funzione `c()` (come **combine**):
 
-```{r}
+```{webr-r}
 v <- c(1, 2, 3, 4, 5)
 ```
 
 Le sequenze regolari con passo 1 si creano con l'operatore `:`:
 
-```{r}
+```{webr-r}
 v.up <- 1:5
 v.down <- 5:1
 ```
@@ -38,13 +49,13 @@ Si noti che il punto per R è un carattere qualsiasi, quindi può fare parte di 
 
 Le sequenze con passo diverso da 1 si ottengono con `seq()`:
 
-```{r}
+```{webr-r}
 v <- seq(1, 10, 0.1)
 ```
 
 Se si vuole specificare il numero di elementi invece che il passo:
 
-```{r}
+```{webr-r}
 v <- seq(1, 10, length.out = 7)
 v
 ```
@@ -54,13 +65,13 @@ v
 
 Una matrice si crea con la funzione `matrix()`. Di default i valori vengono passati **per colonne**:
 
-```{r}
+```{webr-r}
 m <- matrix(1:12, nrow = 3)
 m
 ```
 Si noti che le opzioni delle funzioni possono essere passate per posizione o per nome. Se si usa il nome, possono essere passate in qualsiasi posizione.
 
-```{r}
+```{webr-r}
 m <- matrix(byrow=TRUE, 1:12, nrow = 3)
 m
 ```
@@ -72,26 +83,26 @@ Matrici e vettori in R hanno **base 1**, cioè il primo elemento ha indice 1 (an
 
 Per **indicizzare** un vettore si usano le parentesi quadrate:
 
-```{r}
+```{webr-r}
 v.up[2]
 ```
 
 Per una matrice si passano due argomenti tra le parentesi quadrate, omettendo uno o entrambi se si vile estrarre un'intera colonna o intera riga. Il primo argomento è quello di riga:
 
-```{r}
+```{webr-r}
 m[3,2]
 m[2,]
 ```
 
 È possibile estrarre sottoinsiemi di elementi passando alle parentesi quadrate **vettori di indici**:
 
-```{r}
+```{webr-r}
 v.down[c(4,2)]
 ```
 
 Infine, è possibile usare vettori di valori logici (`TRUE` o `FALSE`, abbreviabili in `T` e `F`). In questo caso, se il vettore di indici è più breve del vettore/matrice originale, si assume ripetuto:
 
-```{r}
+```{webr-r}
 # Vettore di indici lungo come v.up
 v.up[v.up > 2]
 # Vettore di indici più corto di v.up
@@ -103,13 +114,13 @@ v.up[c(T,F)]
 
 In R ogni variabile è intrinsecamente un vettore e tutte (o quasi) le funzioni e operatori base sono **vettorializzate**, cioè operano elemento per elemento. Ciò spiega perché l'espressione `v.up[v.up > 2]` funziona: `v.up > 2` restituisce un vettore di valori logici lungo come `v.up`, valutando la diseguaglianza per ogni elemento di `v.up`.
 
-```{r}
+```{webr-r}
 v.up * 2
 ```
 
 Ma anche:
 
-```{r}
+```{webr-r}
 v.up + v.down
 ```
 
@@ -119,7 +130,7 @@ Ciò fa sì che sia **raramente necessario utilizzare dei loop**.
 
 Quando proprio è necessario:
 
-```{r}
+```{webr-r}
 s <- 0
 for (e in v.up) {
   s <- s + e
@@ -129,7 +140,7 @@ s
 
 anche se bastava (ed è molto più efficiente):
 
-```{r}
+```{webr-r}
 sum(v.up)
 ```
 
@@ -137,7 +148,7 @@ sum(v.up)
 
 R è un **linguaggio funzionale**, cioè le funzioni sono *first class objects*, ossia tipi come gli altri e possono essere utilizzate anonime o assegnate a variabili:
 
-```{r}
+```{webr-r}
 mult <- function(x, factor = 2) x * factor
 
 mult(10)
@@ -147,7 +158,7 @@ Si noti che è possibile assegnare un *default* ad alcuni argomenti.
 
 Alcune funzioni (vedremo più avanti) accettano **funzioni come argomenti**. In tal caso è frequente usare l'abbreviazione (con `\` al posto di `function`):
 
-```{r}
+```{webr-r}
 mult <- \(x, factor = 1) x * factor
 ```
 
@@ -164,12 +175,12 @@ Le principali strutture dati sono le **liste** e le **tabelle**:
 
 Le liste si creano con la funzione `list()`:
 
-```{r}
+```{webr-r}
 l.anon <- list(2, "sette", 1:5)
 l.anon
 ```
 
-```{r}
+```{webr-r}
 l.named <- list(
   A = 1,
   B = "cinque",
@@ -183,14 +194,14 @@ Si noti che `NA` significa **not available** e rappresenta un elemento mancante.
 
 Per accedere agli elementi di una lista si usano sempre le parentesi quadrate:
 
-```{r}
+```{webr-r}
 l.anon[2]
 l.named["B"]
 ```
 
 Si noti però che usando `[]` si ottiene di nuovo una lista (una *sotto-lista*). Per ottenere l'elemento contenuto in una data posizione è necessario usare la doppia parentesi `[[]]`:
 
-```{r}
+```{webr-r}
 l.anon[[2]]
 l.named[["B"]]
 ```
@@ -200,7 +211,7 @@ l.named[["B"]]
 
 Le tabelle sono la struttura più usata in R e si creano con la funzione `data.frame()`. Noi utilizzeremo però la funzione `tibble()`: una versione più evoluta che fa parte della famiglia di librerie `tidyverse`:
 
-```{r}
+```{webr-r}
 #| warning = FALSE
 # Prima carichiamo la libreria (una volta per sessione)
 library(tidyverse)
@@ -214,13 +225,13 @@ t1
 
 Una tabella può essere indicizzata per riga e per colonna come una matrice, ma è possibile anche attingere alle colonne come vettori usando **il nome**:
 
-```{r}
+```{webr-r}
 t1$A
 ```
 
 E, ovviamente, per ottenere i numeri la cui radice è dispari:
 
-```{r}
+```{webr-r}
 t1$B[t1$A %% 2 == 1]
 ```
 
@@ -240,13 +251,13 @@ La libreria `tidyverse` mette a disposizione tutto ciò che serve per maneggiare
 
 Per rendere il codice più leggibile, anziché nidificare le chiamate ad una serie di funzioni si preferisce utilizzare l'operatore **pipe**, `%>%`, che passa il risultato di una funzione come primo argomento della successiva:
 
-```{r}
+```{webr-r}
 seq(0, pi, pi/3) %>% round(digits=2)
 ```
 
 che equivale a scrivere:
 
-```{r}
+```{webr-r}
 round(seq(0, pi, pi/3), digits=2)
 ```
 
@@ -262,7 +273,7 @@ Le funzioni di *data mangling* più comuni sono:
 
 Ad esempio:
 
-```{r}
+```{webr-r}
 tibble(
   A = 1:10,
   B = A ^ 2,
@@ -276,7 +287,7 @@ tibble(
 
 Si noti che tutte queste funzioni sono **non distruttive**, cioè non alterano la tabella di partenza ma ne restituiscono una nuova. Se il risultato è utile per successive operazioni, quindi, è necessario salvarlo, ad esempio con:
 
-```{r}
+```{webr-r}
 tibble(
   A = 1:10,
   B = A ^ 2,
@@ -289,7 +300,7 @@ tibble(
 
 Le funzioni `group_by()` e `summarise()` servono per operare su **gruppi di righe**; ad esempio, per calcolare il massimo di `B` e la media di `C` per le righe in cui `A` è pari o dispari:
 
-```{r}
+```{webr-r}
 tibble(
   A = 1:10,
   B = A ^ 2,
@@ -307,7 +318,7 @@ tibble(
 
 La funzione `aes()`infine rappresenta l'*estetica*, cioè stabilisce quali variabili (cioè colonne della tabella) vanno sui vari assi del grafico. Qui per *assi* si intendono sia gli assi cartesiani che gli assi generalizzati, cioè colori, dimensione, tipo linea, ecc. utilizzati per rappresentare le varie serie.
 
-```{r}
+```{webr-r}
 set.seed(0)
 t <- tibble(
   A = 1:10,
@@ -325,7 +336,7 @@ Nel caso di più assi si passa l'estetica più generale a `ggplot()`, quelle par
 
 Si noti che nelle estetiche è possibile anche applicare trasformazioni:
 
-```{r}
+```{webr-r}
 t %>% 
   ggplot(aes(x=A)) +
   geom_point(aes(y=C*20+50)) +
@@ -334,7 +345,7 @@ t %>%
 
 Serie differenti possono essere identificate per colore (o per tipo linea, o per larghezza linea, ecc.):
 
-```{r}
+```{webr-r}
 t %>% 
   mutate(C = C * 20 + 50) %>% 
   ggplot(aes(x=A)) +
@@ -346,7 +357,7 @@ In questi casi però è preferibile usare l'**approccio *tidy* **: la tabella or
 
 Per rendere la tabella *tidy*:
 
-```{r}
+```{webr-r}
 t %>% 
   pivot_longer(-A, names_to = "series", values_to = "value")
 ```
@@ -355,7 +366,7 @@ dove `pivot_longer(-A, ...)` significa "riorganizza tutte le colonne **meno** la
 
 Una tabella tidy è più semplice da mettere in grafico (e più efficiente da manipolare):
 
-```{r}
+```{webr-r}
 t %>% 
   mutate(C = C * 20 + 50) %>% 
   pivot_longer(-A, names_to = "series", values_to = "value") %>% 
@@ -377,21 +388,21 @@ In R, le operazioni analoghe sono fornite dal pacchetto `purrr`, parte di `tidyv
 
 le funzioni di `purrr` che cominciano con `map_*` operano su una lista o un vettore, ritornando una collezione di uguale dimensione e del tipo specificato. Ad esempio, `map_dbl()` restituisce una lista di double, `map_chr()` una lista di stringhe, ecc. Il primo argomento (spesso passato via pipe) è la collezione, il secondo è una funzione, eventualmente creata sul posto:
 
-```{r}
+```{webr-r}
 1:10 %>% 
   map_chr(function(x) LETTERS[x])
 ```
 
 Per brevità si può scrivere anche:
 
-```{r}
+```{webr-r}
 1:10 %>% 
   map_chr(\(x) LETTERS[x])
 ```
 
 e addirittura, sostituendo `\(x)` con `~` e `x` con `.`:
 
-```{r}
+```{webr-r}
 1:10 %>% map_chr(~ LETTERS[.])
 ```
 
@@ -401,19 +412,19 @@ Tutti questi esempi in realtà possono essere evitati scrivendo semplicemente `L
 
 L'algoritmo *reduce* applica una mappa alla collezione e accumula ogni elemento in un accumulatore. In R si ottiene mediante la funzione `purrr::reduce()`:
 
-```{r}
+```{webr-r}
 1:4 %>% reduce(\(accu, elem) accu * elem)
 ```
 
 Più in breve:
 
-```{r}
+```{webr-r}
 1:4 %>% reduce(~ .x * .y)
 ```
 
 In questo caso, il valore iniziale dell'accumulatore è il primo elemento della collezione e il loop inizia a partire dal secondo. Quando invece l'accumulatore deve essere di un tipo differente dagli elementi, è necessario inizializzarlo con il parametro `.init`. È il caso, ad esempio, se voglio accumulare gli elementi in una lista:
 
-```{r}
+```{webr-r}
 0:4 %>% 
   reduce(
     \(accu, elem) {
@@ -433,7 +444,7 @@ Ci sono numerose funzioni per importare ed esportare dati su file, in differenti
 
 Per salvare una tabella su un file:
 
-```{r}
+```{webr-r}
 tibble(
   A = 1:10,
   B = rnorm(length(A)),
@@ -445,7 +456,7 @@ Se si usa il formato italiano/francese/spagnolo (celle separate da `;` e decimal
 
 Per leggere un file:
 
-```{r}
+```{webr-r}
 read_csv("example.csv")
 ```
 
