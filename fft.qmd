@@ -97,8 +97,7 @@ tale rappresentazione consente di effettuare considerazioni sul vettore solament
 Ovvero il vettore può essere 'pensato' come una 'freccia' nel piano oppure come insieme di componenti.
 Tale concetto è illustrato nella figura seguente.
 
-Fig.
-2.1 Corrispondenza tra un vettore nel piano e l'insieme delle sue componenti lungo una coppia di versori ortogonali.
+![Corrispondenza tra un vettore nel piano e l'insieme delle sue componenti lungo una coppia di versori ortogonali](images/fig2.1.png){#fig-2_1}
 
 La relazione di eguaglianza espressa in @eq-1 garantisce la reversibilità, ovvero dati i parametri della trasformazione in componenti vettoriali lungo una coppia di direzioni ortogonali, è possibile risalire esattamente al vettore originario.
 Vedremo che non tutte le trasformazioni sono reversibili e che la reversibilità garantisce una corretta interpretazione delle operazioni effettuate nel dominio della trasformata.
@@ -137,7 +136,7 @@ I coefficienti $a_n$ e $b_n$ vengono ricavati secondo le seguenti relazioni:
 $$
 a_n = \frac{2}{T}\int_0^T g(\tau)\cos(\omega_nt)d\tau \\
 b_n = \frac{2}{T}\int_0^T g(\tau)\sin(\omega_nt)d\tau
-$$
+$$ {#eq-ab-coeffs}
 
 La @eq-ft vuol dire scomporre la funzione $g(t)$ secondo la base di funzioni ortogonali armoniche.
 
@@ -236,6 +235,103 @@ df %>%
   ggplot(aes(x=t, y=value, color=signal)) +
   geom_line()
 ```
+
+:::{.callout-note title=Esercizi}
+1. Partire da $K=1$ e incrementare di 1 alla volta. Cosa si nota?
+2. Con $f_0=1$ aumentare $K$ di alcune centinaia e poi vicino a 500. Cosa succede? Esiste un numero $K$ per cui il segnale ricomposto diviene pressoché perfettamente un’onda quadra?
+3. Mostrare in un grafico i coefficienti in funzione della frequenza.
+4. Con $f0 = 4$; aumentate $K$ fino ad ottenere un’onda quadra perfettamente ricomposta. Quanto vale $K$? C’è qualche nesso con il teorema di Nyquist?
+5. Aumentate ancora $K$, cosa succede? C’è, di nuovo, qualche nesso con il teorema di Nyquist? Che effetto sta subendo il segnale ricostruito?
+:::
+
+
+Dall’esempio qui sopra in cui, per semplicità, ci siamo occupati di un caso in cui sono presenti solo componenti seno abbiamo compreso che lo sviluppo in serie di Fourier di un segnale tempovariante è dato dalla sommatoria pesata di componenti armoniche. Tali armoniche rappresentano una base di funzioni ortogonali ma non ortonormali.
+
+Si ha infatti:
+
+$$
+\begin{aligned}
+\sin(\omega_t) \cdot  \sin(\omega_nt) &= \frac{1}{T}\int_0^T \sin^2(\omega_nt)~dt = \frac{1}{T}\int_0^T\frac{1-2\cos(2\omega_nt)}{2}=\frac{1}{2} \\
+\cos(\omega_t) \cdot  \cos(\omega_nt) &= \frac{1}{T}\int_0^T \cos^2(\omega_nt)~dt = \frac{1}{T}\int_0^T\frac{1+2\cos(2\omega_nt)}{2}=\frac{1}{2} \\
+\cos(\omega_t) \cdot  \sin(\omega_nt) &= \frac{1}{T}\int_0^T \sin(\omega_nt)\cos(\omega_nt)~dt = \frac{1}{T}\int_0^T\frac{\sin(2\omega_nt)}{2}=0 \\
+\cos(\omega_t) \cdot  \cos(\omega_kt) &= \frac{1}{T}\int_0^T \frac{\cos(\omega_nt+\omega_kt)\cos(\omega_nt-\omega_kt)}{2}~dt = 0,\quad n\neq k \\
+\sin(\omega_nt) \cdot \sin(\omega_kt) &= \dots = 0 \\
+\sin(\omega_nt) \cdot \cos(\omega_kt) &= \dots = 0
+\end{aligned}
+$$ {#eq-sincos}
+
+Per ottenere una scomposizione corretta occorre introdurre al denominatore dei coefficienti il quadrato del modulo (delle componenti la base di funzioni) quindi 1/2 che, portato a numeratore, spiega il fattore 2 nelle @eq-ab-coeffs.
+
+![Corrispondenza tra una funzione del tempo e l’insieme delle sue componenti secondo una base di funzioni ortonormali](images/fig2.2.png){#fig-2_2}
+
+Passiamo ora a come rappresentare le funzioni in maniera analoga a quanto facciamo con i vettori. La @eq-ft suggerisce infatti la rappresentazione di @fig-2_2, analoga a quella riportata in @fig-2_1.
+
+Secondo quanto rappresentato in @fig-2_2 si potrebbe ragionare indifferentemente (grazie alla relazione di eguaglianza in @eq-ft sulla funzione del tempo oppure su due funzioni (discrete) che rappresentano le componenti della scomposizione secondo Fourier. 
+
+Esiste però una rappresentazione più significativa sia per l’analisi segnali che per la soluzione di equazioni differenziali associate a sistemi lineari. Per determinare tale rappresentazione è necessario elaborare la @eq-ft impiegando la formula di Eulero, ovvero i fasori:
+
+$$
+e^{i\omega_nt} = \cos(\omega_nt) + i\sin(\omega_nt)
+$$
+
+che porta ad esprimere le funzioni armoniche seno e coseno come:
+
+$$
+\begin{aligned}
+\cos(\omega_nt)&=\frac{e^{i\omega_nt}+e^{-i\omega_nt}}{2} \\
+\sin(\omega_nt)&=\frac{e^{i\omega_nt}-e^{-i\omega_nt}}{2i} \\
+\end{aligned}
+$$
+le quali, sostituite nella @eq-ft, comportano:
+
+$$
+\begin{aligned}
+g(t) &= \frac{1}{2}a_o + \sum_{n=1}^\infty a_n\frac{e^{i\omega_nt}+e^{-i\omega_nt}}{2} + \sum_{n=1}^\infty b_n\frac{e^{i\omega_nt}-e^{-i\omega_nt}}{2i} \\
+g(t) &= \frac{1}{2}a_o + \frac{1}{2}\sum_{n=1}^\infty (a_n-ib)e^{i\omega_nt}    + \sum_{n=1}^\infty (a_n+ib)e^{-i\omega_nt}
+\end{aligned}
+$$
+dalla quale, ponendo:
+$$
+G_0 = a_0/2 \\
+G_n = (a_n-ib)/2 \\
+G_{-n} = (a_n + ib_n)/2 = G^*
+$$
+si può scrivere:
+$$
+g(t)=G_0 + \sum_{n=1}^{\infty}G_n e^{i\omega_nt} + \sum_{n=-1}^{-\infty}G_n e^{i\omega_nt}
+$$
+cioè:
+$$
+g(t) = \sum_{n=-\infty}^{\infty}G_n e^{i\omega_nt}
+$$
+
+Le componenti, ovvero quanto ognuna di tali funzioni pesa nella ricostruzione della funzione $g(t)$ del tempo, si ricava in maniera analoga:
+$$
+G_n = g(t) \cdot e^{i\omega_nt}=\frac{1}{T}\int_0^T g(\tau)\left(e^{i\omega_n\tau}\right)^*~d\tau = \frac{1}{T}\int_0^Tg(\tau)e^{-i\omega_n\tau}~d\tau
+$$
+
+Tale rappresentazione complessa, anche definita **spettro del segnale**, ha il vantaggio di consentire un’immediata valutazione della risposta di un sistema regolato da equazioni differenziali lineari conoscendo le componenti $G_n$ del segnale in ingresso. La dimostrazione di ciò verrà riportata tra breve nel paragrafo "Funzione di Trasferimento sinusoidale".
+
+In questo caso la **base di funzioni è sia ortogonale** come nel caso delle armoniche pure, **ma anche normale**:
+$$
+e^{i\omega_nt}\cdot e^{i\omega_kt} = \frac{1}{T}\int_0^T e^{i\omega_n\tau}\left(e^{i\omega_k\tau}\right)^*~d\tau=\delta_{n,k}
+$$
+dove $\delta_{n,k}$ è il delta di Kroneker. Nel caso in cui $n = k$ basta seguire i seguenti passaggi:
+$$
+\begin{aligned}
+e^{i\omega_nt}\cdot e^{i\omega_kt} &= \frac{1}{T}\int_0^T e^{i\omega_n\tau}\left(e^{i\omega_k\tau}\right)^*~d\tau \\
+&= \frac{1}{T}\int_0^T (\cos(\omega_n\tau) + i\sin(\omega_n\tau))~(\cos(\omega_n\tau)-i\sin(\omega_n\tau))~d\tau \\
+&= \frac{1}{T}\int_0^T \cos^2(\omega_n\tau)~d\tau + \frac{1}{T}\int_0^T \sin^2(\omega_n\tau)~d\tau = \frac{1}{2} + \frac{1}{2} \\
+&= 1
+\end{aligned}
+$$
+
+Nel caso in cui $n\neq k$ la dimostrazione è banale se si considera l’ortogonalità delle funzioni armoniche.
+
+:::{.callout-warning}
+Mancano le pagine da 12 a 33 della dispensa originale 
+:::
+
 
 # La trasformata di Fourier rapida
 

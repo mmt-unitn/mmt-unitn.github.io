@@ -20,6 +20,38 @@ library(knitr)
 library(gsignal)
 ```
 
+
+# Impiego della Funzione di trasferimento per l’elaborazione dei segnali: Filtraggio in frequenza
+Un sistema dinamico lineare per il quale esiste una funzione di trasferimento sinusoidale può rappresentare diverse cose:
+
+* **un elemento che elabora segnali**: la funzione di trasferimento non è utile solo per la soluzione di equazioni differenziali che divengo semplici equazioni algebriche, ma anche per effettuare elaborazioni sulle componenti armoniche di un generico segnale e prevedere quali armoniche conterrà l’uscita in base al suo diagramma di Bode. Tali blocchi di elaborazione possono servire per ridurre il rumore in alta frequenza (filtri passa basso), quello in bassa (filtri passa alto), etc;
+* **uno strumento di misura**: la funzione di trasferimento in questo caso descrive come lo strumento modifica le componenti armoniche di un segnale da misurare (misurando) e prevedere quali armoniche conterrà l’uscita dello strumento in base al suo diagramma di Bode. Va da sé che uno strumento ideale dovrebbe far passare tutte le armoniche del misurando inalterate. Ovvero né alterate in ampiezza e neppure sfasate. In questo modo esiste una corrispondenza esatta (a meno di un fattore di conversione proporzionale) tra uscita e misurando in ingresso. Questo a volte è possibile, a volte no. Come vedremo, se uno strumento è particolarmente 'lento', esso distorcerà significativamente le ampiezze e sfaserà altrettanto significativamente le fasi delle componenti armoniche tanto più si va su in frequenza. In questi casi, per stimare correttamente il misurando, occorre invertire la funzione di trasferimento in una procedura analoga a quella vista per l’operazione di misura di una grandezza statica. Questa procedura può essere definita **Compensazione Dinamica** che vedremo in uno dei prossimi paragrafi.
+
+## Esempio di riduzione del rumore in alta frequenza su di un segnale di temperatura
+
+Si consideri il segnale ed il modulo del suo spettro mostrate in figura 2.5 (una misura di temperatura tramite PT100 su di una piastra termostatata che regola la temperatura tra due valori soglia). Se il segnale viene posto in ingresso ad un sistema che possiede una funzione di trasferimento passa basso, si ottiene un segnale in uscita con le medesime componenti in bassa frequenza mentre quelle in alta sono attenuate.
+
+
+È possibile notare che il segnale in uscita non mostra più il rumore originario in alta frequenza in quanto la funzione di trasferimento ha attenuato proprio le componenti armoniche ad alta frequenza che non appartenevano ad un andamento di temperatura. La dinamica termica è infatti generalmente 'lenta'. Appartenevano, ad esempio, al rumore elettromagnetico di natura interferente.
+
+Le tipologie di filtri sono dette
+
+* **passa-basso** nel caso in cui vengano mantenute le componenti a bassa frequenza ed eliminate quelle ad lata frequenza; 
+* **passa-alto** nel caso contrario; 
+* **passa-banda** nel caso in cui vengano lasciate immutate le componenti appartenenti ad una data frequenza ed eliminate le altre; 
+* **elimina-banda** nel caso opposto. 
+
+L’**ordine del filtro** coincide con l’ordine del sistema lineare corrispondente al filtro e definisce, nel diagramma di Bode, la pendenza di modulo(espresso nel diagramma logaritmico in decibel per decade) ed andamento della fase. Altro parametro importante è la frequenza di taglio $f_c$ definita come quella frequenza alla quale il segnale viene distorto in modo trascurabile, quindi:
+
+* la massima attenuazione (o amplificazione) della potenza delle armoniche è pari al 50%, ovvero l’ampiezza viene attenuata di un fattore uno su radice di due, in termini logaritmici quindi $\pm 3$ dB;
+* lo sfasamento è pressoché lineare (introducendo eventualmente un ritardo ma non una distorsione). A tale conclusione si arriva considerando la proprietà dell’anticipo-ritardo della trasformata. 
+
+Alla frequenza di taglio corrisponde implicitamente una banda passante che sarà da 0 ad $f_c$ nel caso di passa basso, da $f_c$ ad infinito nel caso di passa alto.
+
+:::{.callout-warning}
+Mancano le pagine da 34 a 36 delle dispense originali.
+:::
+
 # Filtri online
 
 Riutilizziamo la funzione `signal()`:
@@ -653,6 +685,13 @@ I vantaggi di questo terzo metodo sono:
 * mediante il metodo bootstrap è possibile ottenere gli intervalli di confidenza su tutti e tre i parametri (lo si lascia per esercizio)
 
 Per contro, è computazionalmente più complesso, mentre il primo e al limite anche il secondo metodo possono essere applicati anche "a mano".
+
+
+:::{.callout-note}
+# Esercizio
+
+Definire una funzione piecewise costante fino a $T_i$ e poi esponenziale e regredire tale funzione, identificando anche $T_i$
+:::
 
 # Funzioni di trasferimento
 
