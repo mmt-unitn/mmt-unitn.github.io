@@ -5,6 +5,7 @@ date: "`r Sys.Date()`"
 format: 
   html:
     toc: TRUE
+    html-math-method: katex
   pdf:
     toc: TRUE
 engine: knitr
@@ -107,7 +108,7 @@ Questa sembrerebbe una tautologia, ma, applicata alle trasformazioni di segnale,
 Dalla @eq-1 e la @eq-2 si ottiene:
 
 $$
-\mathbf{v} = (\mathbf{v}\cdot\mathbf{e}_1) \mathbf{e}_1 + (\mathbf{v}\cdot\mathbf{e}_2) \mathbf{e}_2
+\mathbf{v} = (\mathbf{v}\cdot\mathbf{e}_1) \mathbf{e}_1 + (\mathbf{v}\cdot \mathbf{e}_2) \mathbf{e}_2
 $$
 
 che riassume i concetti prima espressi.
@@ -147,7 +148,7 @@ La @eq-ft vuol dire scomporre la funzione $g(t)$ secondo la base di funzioni ort
 Il prodotto scalare tra segnali/funzioni periodiche si definisce come:
 
 $$
-g(t)\cdot f(t)=\frac{1}{T}\int_0^T g(\tau)f^*(\tau)d\tau
+g(t)\bullet f(t)=\frac{1}{T}\int_0^T g(\tau)f^*(\tau)d\tau
 $$
 
 dove con $f^*(t)$ si intende la funzione **complessa coniugata** di $f(t)$ che, nel caso di funzioni reali, coincide con se stessa.
@@ -155,8 +156,8 @@ dove con $f^*(t)$ si intende la funzione **complessa coniugata** di $f(t)$ che, 
 Le stesse funzioni digitalizzate $g_k$ ed $f_k$ consistono nei due vettori $\{g(1), g(2),\dots, g(N)\}$ e $\{f(1), f(2),\dots, f(N)\}$ e quindi si definisce prodotto scalare tra i segnali digitalizzati:
 
 $$
-g_k\cdot f_k=\frac{1}{T}\sum_{i=1}^N g_i f_i = \\
- \{g(1), g(2),\dots, g(N)\} \cdot \{f(1), f(2),\dots, f(N)\}^T / N
+g_k\bullet f_k=\frac{1}{T}\sum_{i=1}^N g_i f_i = \\
+ \{g(1), g(2),\dots, g(N)\} \bullet \{f(1), f(2),\dots, f(N)\}^T / N
 $$ {#eq-decompose}
 
 Di seguito un esempio in R di scomposizione di un'onda quadra su una base ortogonale e sua ricomposizione sulla stessa base.
@@ -240,7 +241,7 @@ df %>%
 1. Partire da $K=1$ e incrementare di 1 alla volta. Cosa si nota?
 2. Con $f_0=1$ aumentare $K$ di alcune centinaia e poi vicino a 500. Cosa succede? Esiste un numero $K$ per cui il segnale ricomposto diviene pressoché perfettamente un’onda quadra?
 3. Mostrare in un grafico i coefficienti in funzione della frequenza.
-4. Con $f0 = 4$; aumentate $K$ fino ad ottenere un’onda quadra perfettamente ricomposta. Quanto vale $K$? C’è qualche nesso con il teorema di Nyquist?
+4. Con $f_0 = 4$; aumentate $K$ fino ad ottenere un’onda quadra perfettamente ricomposta. Quanto vale $K$? C’è qualche nesso con il teorema di Nyquist?
 5. Aumentate ancora $K$, cosa succede? C’è, di nuovo, qualche nesso con il teorema di Nyquist? Che effetto sta subendo il segnale ricostruito?
 :::
 
@@ -251,12 +252,12 @@ Si ha infatti:
 
 $$
 \begin{aligned}
-\sin(\omega_t) \cdot  \sin(\omega_nt) &= \frac{1}{T}\int_0^T \sin^2(\omega_nt)~dt = \frac{1}{T}\int_0^T\frac{1-2\cos(2\omega_nt)}{2}=\frac{1}{2} \\
-\cos(\omega_t) \cdot  \cos(\omega_nt) &= \frac{1}{T}\int_0^T \cos^2(\omega_nt)~dt = \frac{1}{T}\int_0^T\frac{1+2\cos(2\omega_nt)}{2}=\frac{1}{2} \\
-\cos(\omega_t) \cdot  \sin(\omega_nt) &= \frac{1}{T}\int_0^T \sin(\omega_nt)\cos(\omega_nt)~dt = \frac{1}{T}\int_0^T\frac{\sin(2\omega_nt)}{2}=0 \\
-\cos(\omega_t) \cdot  \cos(\omega_kt) &= \frac{1}{T}\int_0^T \frac{\cos(\omega_nt+\omega_kt)\cos(\omega_nt-\omega_kt)}{2}~dt = 0,\quad n\neq k \\
-\sin(\omega_nt) \cdot \sin(\omega_kt) &= \dots = 0 \\
-\sin(\omega_nt) \cdot \cos(\omega_kt) &= \dots = 0
+\sin(\omega_t) \bullet  \sin(\omega_nt) &= \frac{1}{T}\int_0^T \sin^2(\omega_nt)~dt = \frac{1}{T}\int_0^T\frac{1-2\cos(2\omega_nt)}{2}=\frac{1}{2} \\
+\cos(\omega_t) \bullet  \cos(\omega_nt) &= \frac{1}{T}\int_0^T \cos^2(\omega_nt)~dt = \frac{1}{T}\int_0^T\frac{1+2\cos(2\omega_nt)}{2}=\frac{1}{2} \\
+\cos(\omega_t) \bullet  \sin(\omega_nt) &= \frac{1}{T}\int_0^T \sin(\omega_nt)\cos(\omega_nt)~dt = \frac{1}{T}\int_0^T\frac{\sin(2\omega_nt)}{2}=0 \\
+\cos(\omega_t) \bullet  \cos(\omega_kt) &= \frac{1}{T}\int_0^T \frac{\cos(\omega_nt+\omega_kt)\cos(\omega_nt-\omega_kt)}{2}~dt = 0,\quad n\neq k \\
+\sin(\omega_nt) \bullet \sin(\omega_kt) &= \dots = 0 \\
+\sin(\omega_nt) \bullet \cos(\omega_kt) &= \dots = 0
 \end{aligned}
 $$ {#eq-sincos}
 
@@ -307,19 +308,19 @@ $$
 
 Le componenti, ovvero quanto ognuna di tali funzioni pesa nella ricostruzione della funzione $g(t)$ del tempo, si ricava in maniera analoga:
 $$
-G_n = g(t) \cdot e^{i\omega_nt}=\frac{1}{T}\int_0^T g(\tau)\left(e^{i\omega_n\tau}\right)^*~d\tau = \frac{1}{T}\int_0^Tg(\tau)e^{-i\omega_n\tau}~d\tau
+G_n = g(t) \bullet e^{i\omega_nt}=\frac{1}{T}\int_0^T g(\tau)\left(e^{i\omega_n\tau}\right)^*~d\tau = \frac{1}{T}\int_0^Tg(\tau)e^{-i\omega_n\tau}~d\tau
 $$
 
 Tale rappresentazione complessa, anche definita **spettro del segnale**, ha il vantaggio di consentire un’immediata valutazione della risposta di un sistema regolato da equazioni differenziali lineari conoscendo le componenti $G_n$ del segnale in ingresso. La dimostrazione di ciò verrà riportata tra breve nel paragrafo "Funzione di Trasferimento sinusoidale".
 
 In questo caso la **base di funzioni è sia ortogonale** come nel caso delle armoniche pure, **ma anche normale**:
 $$
-e^{i\omega_nt}\cdot e^{i\omega_kt} = \frac{1}{T}\int_0^T e^{i\omega_n\tau}\left(e^{i\omega_k\tau}\right)^*~d\tau=\delta_{n,k}
+e^{i\omega_nt}\bullet e^{i\omega_kt} = \frac{1}{T}\int_0^T e^{i\omega_n\tau}\left(e^{i\omega_k\tau}\right)^*~d\tau=\delta_{n,k}
 $$
 dove $\delta_{n,k}$ è il delta di Kroneker. Nel caso in cui $n = k$ basta seguire i seguenti passaggi:
 $$
 \begin{aligned}
-e^{i\omega_nt}\cdot e^{i\omega_kt} &= \frac{1}{T}\int_0^T e^{i\omega_n\tau}\left(e^{i\omega_k\tau}\right)^*~d\tau \\
+e^{i\omega_nt}\bullet e^{i\omega_kt} &= \frac{1}{T}\int_0^T e^{i\omega_n\tau}\left(e^{i\omega_k\tau}\right)^*~d\tau \\
 &= \frac{1}{T}\int_0^T (\cos(\omega_n\tau) + i\sin(\omega_n\tau))~(\cos(\omega_n\tau)-i\sin(\omega_n\tau))~d\tau \\
 &= \frac{1}{T}\int_0^T \cos^2(\omega_n\tau)~d\tau + \frac{1}{T}\int_0^T \sin^2(\omega_n\tau)~d\tau = \frac{1}{2} + \frac{1}{2} \\
 &= 1
@@ -328,8 +329,49 @@ $$
 
 Nel caso in cui $n\neq k$ la dimostrazione è banale se si considera l’ortogonalità delle funzioni armoniche.
 
-:::{.callout-warning}
-Mancano le pagine da 12 a 33 della dispensa originale 
+:::{.callout-important}
+Mancano le pagine da 12 a 16 della dispensa originale
+:::
+
+## Alcune proprietà della trasformata di Fourier
+
+:::{.callout-important}
+Mancano le pagine da 17 a 19
+:::
+
+
+### Linearità
+
+### Derivata
+
+### Convoluzione
+
+### Ritardo/anticipo
+
+## Trasformazione di un’equazione differenziale in un’equazione algebrica nel dominio delle frequenze: **Funzione di Trasferimento**
+
+:::{.callout-important}
+Mancano le pagine da 19 a 21
+:::
+
+## Funzione di trasferimento sinusoidale
+
+:::{.callout-important}
+Mancano le pagine da 21 a 24
+:::
+
+
+## Rappresentazione dello spettro di un segnale campionato mediante DFT 
+
+:::{.callout-important}
+Mancano le pagine da 25 a 30
+:::
+
+
+## Tabella riassuntiva
+
+:::{.callout-important}
+Mancano le pagine da 30 a 33
 :::
 
 
@@ -510,7 +552,9 @@ s %>% mutate(step="A") %>%
 Cioè si ha un evento con un ampio contenuto in frequenza (per ottenere uno spigolo bisogna sommare molte componenti!) attorno alla frequenza pari all'inverso della durata del campionamento.
 È altrettanto evidente come, ad eccezione del caso in cui la durata del campionamento è un multiplo esatto di tutti i periodi contenuti nel segnale, ciò significa che la parte a bassa frequenza dello spettro sarà sempre sporcata alla frequenza pari all'inverso della durata del campionamento.
 
-**ESERCIZIO**: provare a modificare i parametri di frequenza e durata del campionamento per osservare il risultato.
+:::{.callout-note title="Esercizio"}
+Provare a modificare i parametri di frequenza e durata del campionamento per osservare il risultato.
+:::
 
 Per mitigare questo problema si ricorre alla **finestratura** (*windowing*) del segnale: si moltiplica il segnale per una funzione che va a zero, o quasi, all'inizio e alla fine del campionamenti.
 Esistono diverse funzioni di finestratura, le più utilizzate sono quella di **Hamming** e quella di **Hann**.
@@ -551,4 +595,6 @@ s %>%
 
 Possiamo osservare come il contributo della durata del campionamento sia pressoché svanito, anche se risulta ovviamente ridotta l'intensità dei picchi a 10 Hz, dato che l'ampiezza media del segnale è anch'essa ridotta.
 
-**ESERCIZIO**: provare a cambiare funzione finestra utilizzando `hamming()` o una delle altre finestre messe a disposizione da `gsignal`.
+:::{.callout-note title="Esercizio"}
+Provare a cambiare funzione finestra utilizzando `hamming()` o una delle altre finestre messe a disposizione da `gsignal`.
+:::

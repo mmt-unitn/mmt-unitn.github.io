@@ -48,7 +48,7 @@ L’**ordine del filtro** coincide con l’ordine del sistema lineare corrispond
 
 Alla frequenza di taglio corrisponde implicitamente una banda passante che sarà da 0 ad $f_c$ nel caso di passa basso, da $f_c$ ad infinito nel caso di passa alto.
 
-:::{.callout-warning}
+:::{.callout-important}
 Mancano le pagine da 34 a 36 delle dispense originali.
 :::
 
@@ -687,11 +687,30 @@ I vantaggi di questo terzo metodo sono:
 Per contro, è computazionalmente più complesso, mentre il primo e al limite anche il secondo metodo possono essere applicati anche "a mano".
 
 
-:::{.callout-note}
-# Esercizio
-
+:::{.callout-note title="Esercizio"}
 Definire una funzione piecewise costante fino a $T_i$ e poi esponenziale e regredire tale funzione, identificando anche $T_i$
 :::
+
+## Considerazioni sulla relazione tra costante di tempo e funzione di trasferimento
+
+:::{.callout-important}
+Mancano pagine 53-54.
+:::
+
+## Compensazione o misura dinamica
+
+:::{.callout-important}
+Mancano pagine 55-58.
+:::
+
+
+# Determinazione Funzioni di Trasferimento mediante Parametri Concentrati ed Impedenze Generalizzate
+
+:::{.callout-important}
+Mancano pagine 66-81, ma i due esempi originariamente in tabella sono qui riportati per esteso nel capitolo seguente.
+:::
+
+
 
 # Funzioni di trasferimento
 
