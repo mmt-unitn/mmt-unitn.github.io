@@ -2,6 +2,7 @@
 title: "3. Compensazione (o Misura) dinamica"
 author: Mariolino De Cecco
 date: today
+categories: [signal, filter, spectrum]
 format:
   html:
     toc: true

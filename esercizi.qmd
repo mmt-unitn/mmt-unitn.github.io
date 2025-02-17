@@ -7,7 +7,7 @@ listing:
   type: table
   contents: esercizi
   fields: [date, title, author, description, categories, reading-time]
-  sort-ui: [title]
+  sort-ui: [title, categories, date]
   filter-ui: true
 ---
 
