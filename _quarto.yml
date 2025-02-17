@@ -11,6 +11,8 @@ website:
         text: Trasformate
       - href: filtri.qmd
         text: Filtri
+      - href: esercizi.qmd
+        text: Esercizi
       - about.qmd
 
 format:

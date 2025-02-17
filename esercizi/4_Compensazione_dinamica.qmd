@@ -1,0 +1,200 @@
+---
+title: "3. Compensazione (o Misura) dinamica"
+author: Mariolino De Cecco
+date: today
+format:
+  html:
+    toc: true
+abstract: |
+  Esercizi sulla compensazione dinamica delle misure mediante analisi dello spettro e filtraggio offline.
+---
+
+# Librerie
+
+Quanto segue richiede questi pacchetti:
+
+```{r}
+#| label: setup
+#| message: false
+#| warning: false
+library(plotly)
+library(tidyverse)
+library(signal)
+library(gsignal)
+library(control)
+library(latex2exp)
+```
+
+# Funzioni di utilità
+
+Per comodità definiamo alcune funzioni di utilità:
+
+Bode plot mediante GGplot:
+
+```{r}
+# FUNZIONE: Bodeplot
+ggbodeplot <- function(tf, fmin=1, fmax=1e4, df=0.01) {
+  # vector of points for each order of magnitude (OOM):
+  pts <- 10^seq(0, 1, df) %>% tail(-1)
+  # vector of OOMs:
+  ooms <- 10^(floor(log10(fmin)):ceiling(log10(fmax)-1))
+  # combine pts and ooms:
+  freqs <- as.vector(pts %o% ooms)
+  # warning: bode wants pulsation!
+  bode(tf, freqs*2*pi) %>% {
+    tibble(f=.$w/(2*pi), `magnitude (dB)`=.$mag, `phase (deg)`=.$phase)} %>%
+    pivot_longer(-f) %>% 
+    ggplot(aes(x=f, y=value)) +
+    geom_line() +
+    scale_x_log10(
+      minor_breaks=scales::minor_breaks_n(10), 
+      labels= ~ latex2exp::TeX(paste0("$10^{", log10(.), "}$"))) +
+    facet_wrap(~name, nrow=2, scales="free") +
+    labs(x="frequency (Hz)")
+}
+```
+
+Generazione di un segnale sinusoidale con diverse armoniche, come definite in una tabella (`pars`) con le colonne `w` (ampiezza), `f` (frequenza) e `phi` (fase) per le varie frequenze (una riga per ogni armonica):
+
+```{r}
+signal <- function(t, pars, rad = FALSE) { 
+  stopifnot(is.data.frame(pars))
+  with(pars, {
+    if (!rad) {
+      phi <- phi/180*pi
+      f <- 2*pi*f
+    }
+    map_dbl(t, \(t) sum( map_vec(seq_along(w) , \(i) w[i]*sin(t*f[i] + phi[i] ))))
+  })
+}
+
+```
+
+# Simuliamo l'uscita di un sistema di misura
+
+```{r}
+# Parametri del misurando (input del sistema di misura)
+pars <- tibble(
+  w = c(1, 0.3, 0.3), 
+  f = c(1/30, 1/10, 1/4), 
+  phi = c(0, 0, 0)
+)
+
+# Generiamo il misurando u
+# Specifica il tempo di campionamento:
+Ts <- 0.01  
+u <- tibble(
+  t = 0:10000 * Ts,
+  u = signal(t, pars),
+  un = u + rnorm(length(t), 0, pars$w[1]/10)
+)
+
+# Definiamo la Funzione di Trasferimento dello strumento:
+# Coefficienti del numeratore e denominatore
+num <- c(5, 1)   # 5s + 1
+den <- c(1, 2, 1) # s^2 + 2s + 1
+H <- tf(num, den)
+print(H)
+# Diagramma di Bode
+ggbodeplot(H, fmin=0.01, fmax=1e2, df=1/max(u$t))
+```
+```{r}
+(u %>% 
+  mutate(
+    out = lsim(H, un, t)$y[1,],
+    ideal = lsim(H, u, t)$y[1,],
+  ) %>% 
+  pivot_longer(c(un, out, ideal), names_to = "series") %>% 
+  ggplot(aes(x=t, y=value, color=series)) + 
+  geom_line()) %>% 
+  ggplotly()
+```
+
+
+```{r}
+# Simulazione dell'uscita con rumore
+output <- lsim(H, u$un, u$t)
+
+# Simulazione dell'uscita ideale
+outputI <- lsim(H, u$u, u$t)
+yI <- outputI$y[1,]
+
+# Grafici
+pp <- plot_ly() %>%
+  add_lines(u$t, output$y, name = "output", line= list(color= "red")) %>%
+  add_lines(u$t, u$un, name = "misurando", line= list(color= "blue")) %>%
+  add_lines(u$t, yI, name = "output ideale", line= list(color= "green"))
+# pp
+
+
+
+```
+
+Si nota come un rumore 'bianco', ovvero contenente tutte le armoniche, viene ridotto in uscita dal sistema di misura che si comporta in modo simile ad un passa-basso.
+
+# Stima del misurando a partire dal segnale in uscita
+
+Se vogliamo invece stimare il misurando a partire dal segnale in uscita invertendo quindi la funzione di trasferimento, condizione che si verifica per le misure 'dinamiche' (per le statiche ricordate si inverte la caratteristica statica che si ottiene dopo taratura, statica). In questo caso, cosa succederà a parità di rumore bianco in uscita?
+
+```{r}
+# Segnale in uscita con rumore
+yn = yI + rnorm(length(u$t), 0, pars$w[1]/10)
+
+
+# Ricaviamo l'inversa della Funzione di Trasferimento:
+Hinv <- tf(den, num)
+print(Hinv)
+# Diagramma di Bode
+ggbodeplot(Hinv, fmin=0.01, fmax=1e2, df=1/max(u$t))
+
+# SCOMMENTARE:
+# # Simulazione dell'ingresso
+# input <- lsim(Hinv, yn, y$t, x0 = rep(0, length(pole(Hinv))))
+# 
+# # Grafici dell'ingresso e dell'uscita
+# pp <- plot_ly() %>%
+#   add_lines(y$t, y$yn, name = "output", line= list(color= "blue")) %>%
+#   add_lines(y$t, input$y, name = "Estimated input", line= list(color= "red"))
+# pp
+
+```
+
+Otteniamo l'errore: "The order of the Numerator should be equal or lesser than the Denominator" Dunque R si rifiuta di impiegare la funzione di trasferimento inversa. Perchè? Trovare una soluzione e svilupparla continuando il codice fornito.
+
+# OMETTERE E FAR FARE COME ESERCIZIO
+
+Cambiamo strategia: Aggiungiamo un filtro in serie all'inversa della Funzione di Trasferimento:
+
+```{r}
+# Aggiungiamo un filtro in serie all'inversa della Funzione di Trasferimento:
+# Coefficienti del numeratore e denominatore
+numf <- c(1)   # 5s + 1
+freqT <- 100   # 1 ... 100 se alto è come se non ci fosse
+denf <- c(1/freqT, 1) # s^2 + 2s + 1
+Hf <- tf(numf, denf)
+print(Hf)
+# Diagramma di Bode
+ggbodeplot(Hf, fmin=0.01, fmax=1e2, df=1/max(u$t))
+
+Hinv_filt <- series(Hinv, Hf)  # Collegamento in serie
+print(Hinv_filt)
+# Diagramma di Bode
+ggbodeplot(Hinv_filt, fmin=0.01, fmax=1e2, df=1/max(u$t))
+
+# Simulazione dell'ingresso a partire dall'uscita per ottenere il misurando
+input <- lsim(Hinv_filt, yn, u$t, x0 = rep(0, length(pole(Hinv_filt))))
+
+# Grafici
+pp <- plot_ly() %>%
+  add_lines(u$t, input$y, name = "misurando stimato", line= list(color= "red")) %>%
+  add_lines(u$t, yn, name = "output con rumore", line= list(color= "blue"))%>%
+  add_lines(u$t, u$u, name = "misurando originario", line= list(color= "green"))
+pp
+
+```
+
+SUGGERIMENTI: - provare a cambiare la frequenza di taglio del filtro
+
+..........
+
+Cambiamo strategia: operiamo nel dominio della frequenza andando a calcolare la trasformata dell'ingresso che sarà data dalla moltiplicazione della trasformata dell'uscita per la funzione di trasferimento inversa:
