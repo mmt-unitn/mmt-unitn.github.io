@@ -88,7 +88,7 @@ $$
 $$ {#eq-2}
 
 che definisce l'operazione di scomposizione tramite la semplice operazione di prodotto scalare.
-L’@eq-1 suggerisce di rappresentare il vettore in una maniera diversa, ovvero considerando le sole componenti lungo i due versori:
+L'@eq-1 suggerisce di rappresentare il vettore in una maniera diversa, ovvero considerando le sole componenti lungo i due versori:
 
 $$
 \mathbf{v}=[\alpha, \beta]
@@ -128,9 +128,9 @@ Avendo un segnale $s(t)$, rappresentabile nel dominio del tempo, si può definir
 
 $$
 g(t)=\frac{1}{2}a_o + \sum_{n=1}^{\infty}a_n \cos(\omega_n t) + \sum_{n=1}^{\infty}b_n \sin(\omega_n t)
-$$ {#eq-ft}
+$$ {#eq-sft}
 
-Dove $\omega n = 2\pi n f_0$.
+Dove $\omega_n = 2\pi n f_0$.
 
 I coefficienti $a_n$ e $b_n$ vengono ricavati secondo le seguenti relazioni:
 
@@ -139,9 +139,9 @@ a_n = \frac{2}{T}\int_0^T g(\tau)\cos(\omega_nt)d\tau \\
 b_n = \frac{2}{T}\int_0^T g(\tau)\sin(\omega_nt)d\tau
 $$ {#eq-ab-coeffs}
 
-La @eq-ft vuol dire scomporre la funzione $g(t)$ secondo la base di funzioni ortogonali armoniche.
+La @eq-sft vuol dire scomporre la funzione $g(t)$ secondo la base di funzioni ortogonali armoniche.
 
-**NOTA**: la @eq-ft corrisponde anche alla media delle componenti del prodotto elemento per elemento tra i due vettori.
+**NOTA**: la @eq-sft corrisponde anche alla media delle componenti del prodotto elemento per elemento tra i due vettori.
 
 ## Definizione di prodotto scalare tra funzioni continue e discrete
 
@@ -239,14 +239,14 @@ df %>%
 
 :::{.callout-note title=Esercizi}
 1. Partire da $K=1$ e incrementare di 1 alla volta. Cosa si nota?
-2. Con $f_0=1$ aumentare $K$ di alcune centinaia e poi vicino a 500. Cosa succede? Esiste un numero $K$ per cui il segnale ricomposto diviene pressoché perfettamente un’onda quadra?
+2. Con $f_0=1$ aumentare $K$ di alcune centinaia e poi vicino a 500. Cosa succede? Esiste un numero $K$ per cui il segnale ricomposto diviene pressoché perfettamente un'onda quadra?
 3. Mostrare in un grafico i coefficienti in funzione della frequenza.
-4. Con $f_0 = 4$; aumentate $K$ fino ad ottenere un’onda quadra perfettamente ricomposta. Quanto vale $K$? C’è qualche nesso con il teorema di Nyquist?
-5. Aumentate ancora $K$, cosa succede? C’è, di nuovo, qualche nesso con il teorema di Nyquist? Che effetto sta subendo il segnale ricostruito?
+4. Con $f_0 = 4$; aumentate $K$ fino ad ottenere un'onda quadra perfettamente ricomposta. Quanto vale $K$? C'è qualche nesso con il teorema di Nyquist?
+5. Aumentate ancora $K$, cosa succede? C'è, di nuovo, qualche nesso con il teorema di Nyquist? Che effetto sta subendo il segnale ricostruito?
 :::
 
 
-Dall’esempio qui sopra in cui, per semplicità, ci siamo occupati di un caso in cui sono presenti solo componenti seno abbiamo compreso che lo sviluppo in serie di Fourier di un segnale tempovariante è dato dalla sommatoria pesata di componenti armoniche. Tali armoniche rappresentano una base di funzioni ortogonali ma non ortonormali.
+Dall'esempio qui sopra in cui, per semplicità, ci siamo occupati di un caso in cui sono presenti solo componenti seno abbiamo compreso che lo sviluppo in serie di Fourier di un segnale tempovariante è dato dalla sommatoria pesata di componenti armoniche. Tali armoniche rappresentano una base di funzioni ortogonali ma non ortonormali.
 
 Si ha infatti:
 
@@ -263,13 +263,13 @@ $$ {#eq-sincos}
 
 Per ottenere una scomposizione corretta occorre introdurre al denominatore dei coefficienti il quadrato del modulo (delle componenti la base di funzioni) quindi 1/2 che, portato a numeratore, spiega il fattore 2 nelle @eq-ab-coeffs.
 
-![Corrispondenza tra una funzione del tempo e l’insieme delle sue componenti secondo una base di funzioni ortonormali](images/fig2.2.png){#fig-2_2}
+![Corrispondenza tra una funzione del tempo e l'insieme delle sue componenti secondo una base di funzioni ortonormali](images/fig2.2.png){#fig-2_2}
 
-Passiamo ora a come rappresentare le funzioni in maniera analoga a quanto facciamo con i vettori. La @eq-ft suggerisce infatti la rappresentazione di @fig-2_2, analoga a quella riportata in @fig-2_1.
+Passiamo ora a come rappresentare le funzioni in maniera analoga a quanto facciamo con i vettori. La @eq-sft suggerisce infatti la rappresentazione di @fig-2_2, analoga a quella riportata in @fig-2_1.
 
-Secondo quanto rappresentato in @fig-2_2 si potrebbe ragionare indifferentemente (grazie alla relazione di eguaglianza in @eq-ft sulla funzione del tempo oppure su due funzioni (discrete) che rappresentano le componenti della scomposizione secondo Fourier. 
+Secondo quanto rappresentato in @fig-2_2 si potrebbe ragionare indifferentemente (grazie alla relazione di eguaglianza in @eq-sft sulla funzione del tempo oppure su due funzioni (discrete) che rappresentano le componenti della scomposizione secondo Fourier. 
 
-Esiste però una rappresentazione più significativa sia per l’analisi segnali che per la soluzione di equazioni differenziali associate a sistemi lineari. Per determinare tale rappresentazione è necessario elaborare la @eq-ft impiegando la formula di Eulero, ovvero i fasori:
+Esiste però una rappresentazione più significativa sia per l'analisi segnali che per la soluzione di equazioni differenziali associate a sistemi lineari. Per determinare tale rappresentazione è necessario elaborare la @eq-sft impiegando la formula di Eulero, ovvero i fasori:
 
 $$
 e^{i\omega_nt} = \cos(\omega_nt) + i\sin(\omega_nt)
@@ -283,7 +283,7 @@ $$
 \sin(\omega_nt)&=\frac{e^{i\omega_nt}-e^{-i\omega_nt}}{2i} \\
 \end{aligned}
 $$
-le quali, sostituite nella @eq-ft, comportano:
+le quali, sostituite nella @eq-sft, comportano:
 
 $$
 \begin{aligned}
@@ -304,14 +304,14 @@ $$
 cioè:
 $$
 g(t) = \sum_{n=-\infty}^{\infty}G_n e^{i\omega_nt}
-$$
+$${#eq-ft2}
 
 Le componenti, ovvero quanto ognuna di tali funzioni pesa nella ricostruzione della funzione $g(t)$ del tempo, si ricava in maniera analoga:
 $$
 G_n = g(t) \bullet e^{i\omega_nt}=\frac{1}{T}\int_0^T g(\tau)\left(e^{i\omega_n\tau}\right)^*~d\tau = \frac{1}{T}\int_0^Tg(\tau)e^{-i\omega_n\tau}~d\tau
-$$
+$${#eq-spettro}
 
-Tale rappresentazione complessa, anche definita **spettro del segnale**, ha il vantaggio di consentire un’immediata valutazione della risposta di un sistema regolato da equazioni differenziali lineari conoscendo le componenti $G_n$ del segnale in ingresso. La dimostrazione di ciò verrà riportata tra breve nel paragrafo "Funzione di Trasferimento sinusoidale".
+Tale rappresentazione complessa, anche definita **spettro del segnale**, ha il vantaggio di consentire un'immediata valutazione della risposta di un sistema regolato da equazioni differenziali lineari conoscendo le componenti $G_n$ del segnale in ingresso. La dimostrazione di ciò verrà riportata tra breve nel paragrafo "Funzione di Trasferimento sinusoidale".
 
 In questo caso la **base di funzioni è sia ortogonale** come nel caso delle armoniche pure, **ma anche normale**:
 $$
@@ -327,18 +327,111 @@ e^{i\omega_nt}\bullet e^{i\omega_kt} &= \frac{1}{T}\int_0^T e^{i\omega_n\tau}\le
 \end{aligned}
 $$
 
-Nel caso in cui $n\neq k$ la dimostrazione è banale se si considera l’ortogonalità delle funzioni armoniche.
+Nel caso in cui $n\neq k$ la dimostrazione è banale se si considera l'ortogonalità delle funzioni armoniche.
 
-:::{.callout-important}
-Mancano le pagine da 12 a 16 della dispensa originale
+È opportuno anche notare come **le componenti $G_{-n}$ e $G_n$ danno vita a segnali armonici reali**. Si nota infatti che:
+
+$$
+G_n~e^{i\omega_nt} + G_{-n}~e^{-i\omega_nt} = G_n~e^{i\omega_nt} + G_n^*~(e^{i\omega_nt})^* = G_n~e^{i\omega_nt} + (G_n~e^{i\omega_nt})^*
+$$
+che, andando a comporre graficamente i due fasori, fornisce la seguente rappresentazione ed il segnale corrispondente $s_n(t) = 2M_n\cos(\omega t+\phi_n)$
+
+:::{#fig-fasori1 layout-ncol=2}
+![Fasore e suo coniugato a base della scomposizione](images/fasori1.png){width=300}
+
+![Coefficiente dello sviluppo in serie di Fourier e suo coniugato](images/fasori2.png){width=300}
+
 :::
 
+:::{#fig-fasori2 layout-ncol=2}
+
+![Composizione grafica dei due fasori (a)](images/fasori3.png){width=300}
+
+![Composizione grafica dei due fasori (b)](images/fasori4.png){width=300}
+:::
+
+La differenza tra l'espressione dell'equazione @eq-sft e quella della @eq-ft2 è che nel primo caso si tratta di coefficienti $a_n$ e $b_n$ reali, nel secondo di coefficienti complessi di cui, come è schematizzato in @fig-2_3, è possibile rappresentare le due funzioni modulo e fase in funzione della frequenza. Tali moduli e fasi, è facile convincersene tenendo conto dei passaggi che hanno condotto dalla @eq-sft alla @eq-ft e la rappresentazione dei fasori appena riportata, sono proprio i moduli e le fasi delle componenti armoniche che compongono il segnale $s(t)$. 
+
+
+![Corrispondenza tra un segnale periodico e l'insieme delle componenti secondo una base di funzioni complesse ortonormali oppure con due funzioni discrete che rappresentano l'andamento dell'insieme dei coefficienti in modulo e fase.](images/fig2.3.png){#fig-2_3}
+
+Rappresentiamo di nuovo i segnali in maniera analoga a quanto facciamo con i vettori. La @eq-spettro suggerisce ora la rappresentazione di @fig-2_3, analoga a quella riportate in figure @fig-2_2 e @fig-2_1.
+
+
+La proprietà della reversibilità, valida per l'eguaglianza espressa nella @eq-sft, permette di effettuare operazioni di manipolazione in frequenza, quindi di antitrasformare tornando nel dominio del tempo avendo la certezza di non aver introdotto ulteriori elaborazioni a causa della doppia trasformazione. Un classico esempio è l'operazione di filtraggio passa-basso su segnali aventi una componente additiva di rumore in alta frequenza. In tale caso l'operazione di filtraggio passa-basso assicura l'eliminazione delle sole componenti in alta frequenza ipotizzate appartenenti al rumore. 
+
+**Funzioni non periodiche possono essere immaginate come funzioni periodiche dal periodo $T \rightarrow \infty$ e quindi la frequenza fondamentale $f_0 \rightarrow 0$**. Le scomposizioni di @eq-ft2 e @eq-spettro assumono la forma definita come Trasformata di Fourier:
+
+$$
+\begin{aligned}
+g(t) &= \frac{1}{2\pi}\int_{-\infty}^\infty G(\omega)~e^{i\omega t}~d\omega \\
+G(\omega) &= \int_{-\infty}^\infty g(t)~e^{-i\omega t}~dt
+\end{aligned}
+$${#eq-ft}
+notare la convenzione impiegata per indicare la trasformata di una funzione $g(t)$ con la lettera maiuscola, ovvero come $G(\omega)$.
+
+Di seguito la dimostrazione delle @eq-ft:
+
+Se definiamo:
+
+$$
+A_n := T \bullet G_n = \int_0^Tg(t)~e^{-i\omega_nt}~dt
+$$
+questo corrispondere semplicemente a modificare la definizione di prodotto scalare tra funzioni del tempo, che da
+$$
+f(t)\bullet g(t) = \frac{1}{T}\int_0^Tf(t)~g(t)^*~dt
+$$
+diventa:
+$$
+f(t)\bullet g(t) = \int_0^Tf(t)~g(t)^*~dt
+$$
+
+Questo serve in quanto, dovendo tendere $T\rightarrow\infty$, si avrebbe uno $0$ che moltiplica l'integrale. Questo viene quindi eliminato dalla definizione.
+
+Ora facciamo tendere  $T\rightarrow\infty$: si ottiene:
+$$
+A_{f=\frac{n}{T}} = A(\omega_n) = \int_{-\infty}^\infty g(t)~e^{-i\omega_nt}~dt
+$$
+Questa corrisponde alla seconda delle @eq-ft. In particolare, i coefficienti discreti $A_n$ diventano una funzione continua della frequenza (o pulsazione) in quanto il passo tra frequenze successive diviene infinitesimo. Dunque, **le funzioni che rappresentano le componenti della scomposizione** (analoghe a quelle rappresentate in @fig-2_3) non saranno più funzioni discrete, bensì continue **in quanto l'intervallo di spaziatura sulle ascisse** (nel dominio della pulsazione) **pari a $2\pi/T$ tende a zero**.
+
+Consideriamo ora la @eq-ft2:
+
+$$
+g(t) = \sum_{n=-\infty}^\infty G_n~e^{i\omega_nt} = \sum_{n=-\infty}^\infty \frac{A_n}{T}~e^{i\omega_nt} = \frac{1}{T} \sum_{n=-\infty}^\infty A~e^{i\omega_nt}
+$$
+se facciamo tendere $T\rightarrow\infty$, $A_n$ diviene una funzione continua della pulsazione $A(\omega)$ per cui la sommatoria diviene un integrale ottenendo:
+$$
+\int_{-\infty}^\infty A(\omega)~e^{i\omega t}~df = \int_{-\infty}^\infty A(\omega)~e^{i\omega t}\frac{2\pi}{2\pi}~df = \frac{1}{2\pi}\int_{-\infty}^\infty A(\omega)~e^{i\omega t}~d\omega
+$$
+Che corrisponde alla prima delle @eq-ft.
+
+![Corrispondenza tra un segnale non periodico e l'insieme delle sue componenti secondo una base di funzioni complesse ortonormali oppure con due funzioni continue che rappresentano l'andamento dell'insieme dei coefficienti in modulo e fase.](images/fig2.4.png)
+
 ## Alcune proprietà della trasformata di Fourier
+
+La trasformata di Fourier gode delle proprietà elencate in @tbl-ftprop.
+
+|Proprietà        |Relazione nel dominio del tempo e dello spettro                |
+|-----------------|---------------------------------------------------------------|
+|Linearità        |$a x(t) + b y(t)\rightarrow a X(\omega) + b Y(\omega)$         |
+|Derivata         |$\dot x(t) \rightarrow i\omega X(\omega)$                      |
+|Integrale        |$\int_0^t x(\tau)~d\tau \rightarrow \frac{1}{i\omega}X(\omega)$|
+|Variazione scala |$x(at)\rightarrow\frac{1}{|a|}X(\frac{\omega}{a}$              |
+|Anticipo/Ritardo |$x(t-\tau)\rightarrow X(\omega)~e^{-i\omega\tau}$              |
+|Modulazione      |$x(t)~e^{-i\omega_0t}\rightarrow X(\omega-\omega_0)$           |
+|Convoluzione     |$x(t) \bullet y(t)\rightarrow X(\omega)Y(\omega)$              |
+|Prodotto         |$x(t)y(t)\rightarrow X(\omega)\bullet Y(\omega)$               |
+
+: Proprietà della trasformata di Fourier {#tbl-ftprop .striped .hover}
+
+
+## Dimostrazione di alcune proprietà
+
+Di seguito le dimostrazioni:
 
 :::{.callout-important}
 Mancano le pagine da 17 a 19
 :::
-
 
 ### Linearità
 
@@ -348,11 +441,66 @@ Mancano le pagine da 17 a 19
 
 ### Ritardo/anticipo
 
-## Trasformazione di un’equazione differenziale in un’equazione algebrica nel dominio delle frequenze: **Funzione di Trasferimento**
+## Trasformazione di un'equazione differenziale in un'equazione algebrica nel dominio delle frequenze: **Funzione di Trasferimento**
 
-:::{.callout-important}
-Mancano le pagine da 19 a 21
-:::
+Supponiamo di avere un sistema regolato da una equazione differenziale del secondo ordine:
+
+$$
+\frac{d^2y(t)}{dt^2} + a\frac{dy(t)}{dt} + b~y(t) = c~u(t)
+$$
+
+dove la $u(t)$ è la forzante, ovvero l'ingresso, mentre la $y(t)$ è la risposta, ovvero l'uscita.
+
+Trasformando secondo Fourier la derivata prima e seconda dell'uscita, tenendo presente le proprietà enunciate in @tbl-ftprop, si ottiene:
+
+$$
+\frac{dy(t)}{dt}\rightarrow i\omega Y(\omega)
+$$
+e
+$$
+\frac{d^2y(t)}{dt^2}\rightarrow i\omega(i\omega Y(\omega))
+$$
+e quindi la equazione differenziale diventa:
+$$
+(i\omega)^2Y(\omega) + i\omega a~Y(\omega) + b~Y(\omega) = c~U(\omega)
+$$
+che non è altro se non una equazione algebrica che può essere risolta rispetto all'uscita:
+$$
+Y(\omega) = \frac{c}{b + i\omega~a + (i\omega)^2}~U(\omega)
+$$
+
+Tale relazione indica che la trasformata dell'uscita del sistema è pari alla trasformata dell'ingresso moltiplicata per una funzione anch'essa della frequenza (o pulsazione) che dipende solamente dalla forma dell'equazione differenziale che regola il sistema stesso, ovvero dai parametri $a$, $b$ e $c$. Tale funzione complessa viene definita **Funzione di Trasferimento**. 
+Per convenzione la funzione di trasferimento viene indicata come $H(\omega)$ per cui la precedente relazione si scrive in forma generale:
+$$
+Y(\omega) = H(\omega)U(\omega)
+$$
+
+Dalla precedente è immediato ricavare la funzione di trasferimento come rapporto delle trasformate:
+$$
+H(\omega) = \frac{Y(\omega)}{U(\omega)}
+$$
+In generale l'uscita di un sistema lineare si può ottenere in due maniere:
+
+* in frequenza: moltiplicazione della trasformata dell'ingresso per la funzione di trasferimento
+* nel tempo: convoluzione tra ingresso ed antitrasformata della funzione di trasferimento (risposta del sistema ad un impulso ideale).
+
+La funzione di trasferimento, oltre che esplicitamente ricavata dalla relazione differenziale data dalla fisica del fenomeno, può essere ricavata trasformando la risposta del sistema ad un impulso.
+
+Per fare ciò introduciamo il concetto di *delta di Dirac* che modella **un impulso ideale**. Essa vale infinito per un tempo infinitesimo. Si definisce $\delta(t-t_0)$ quella funzione che vale infinito per $t = t_0$  ed è nulla altrove. 
+Se integrata tale funzione, avendo dominio infinitesimo ma valore infinito, risulta:
+$$
+\int_{-\infty}^\infty \delta(t-t_0)~dt = 1
+$$
+
+Calcoliamone dunque la sua trasformata:
+$$
+\delta(t)\rightarrow \int_{-\infty}^\infty \delta(t)~e^{-i\omega t}~dt = \int_{-\infty}^\infty \delta(t)~e^{-i\omega (t=0)}~dt = \int_{-\infty}^\infty \delta(t) = 1\quad \forall\omega
+$$
+
+Se quindi si impiega tale funzione come ingresso ad un generico sistema, si ottiene che $U(\omega) = 1$ per ogni frequenza e quindi $Y(\omega) = H(\omega)$. Questo è il principale motivo per il quale chi si occupa di identificazione/caratterizzazione dei sistemi meccanici impiega martelletti strumentati per imporre degli impulsi sulle strutture e registrarne le vibrazioni nei diversi punti di interesse per ricavare la $h(t)$ ovvero, tramite trasformata di Fourier, la $H(\omega)$ che lega sollecitazioni nel punto di applicazioni dell'impulso alla risposta nel punto di registrazione delle vibrazioni. Torneremo su questo argomento nel terzo paragrafo.
+
+Nel prossimo paragrafo evidenziamo un ulteriore punto di vista sulla funzione di trasferimento che può essere vista come quella funzione che in modulo indica l'attenuazione di una qualsiasi armonica venga posta in ingresso ed in fase il suo sfasamento. Da ciò prende anche il nome di funzione di trasferimento ‘sinusoidale'.
+
 
 ## Funzione di trasferimento sinusoidale
 
