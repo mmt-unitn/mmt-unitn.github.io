@@ -117,12 +117,11 @@ ym <- tibble(
 ) %>% 
   mutate(
     f = 0:(length(t)-1)/max(t),
-    fft = fft(yn),
-    intensity = Mod(fft) / length(t)*2,
-    phase = Arg(fft)/pi*180
+    fft = fft(yn)
   ) 
 
 ym %>%  
+  mutate(intensity = Mod(fft) / length(t)*2,) %>% 
   ggplot(aes(x=f, y=intensity)) +
   geom_line()
 ```
@@ -152,16 +151,15 @@ Ottengo il grafico dello spettro:
 
 ```{r}
 ym %>% 
-  select(t, yn, f, fft_s=fft, fft_n) %>% 
+  select(f, fft, fft_n) %>% 
   pivot_longer(
     contains("fft"), 
     names_to = "signal",
     values_to = "fft",
-    names_transform = ~ ifelse(.=="fft_s", "signal", "intf. noise")
+    names_transform = ~ ifelse(.=="fft", "signal", "intf. noise")
   ) %>% 
   mutate(
-    intensity = Mod(fft) / length(t)*2,
-    phase = Arg(fft)/pi*180
+    intensity = Mod(fft) / length(t)*2
   ) %>% 
   ggplot(aes(x=f, y=intensity, color=signal)) +
   geom_line()
@@ -188,26 +186,65 @@ ym <- ym %>%
   mutate(
     yn_m = (1 + m * ym$yn) * cos(2 * pi * fp * t),
     fft_m = fft(yn_m)
-  ) 
+  )
+```
 
+
+
+
+```{r}
 # Grafico dello spettro
 (ym %>% 
-  select(t, yn, i_noise, yn_m, f, contains("fft")) %>% 
+  select(f, contains("fft")) %>% 
   pivot_longer(
     contains("fft"), 
     names_to = "signal",
     values_to = "fft",
     names_transform = ~ fft_names[.]
-  ) %>% 
+  ) %>%
   mutate(
-    intensity = Mod(fft) / length(t)*2,
-    phase = Arg(fft)/pi*180
+    intensity = Mod(fft) / length(t)*2
   ) %>% 
   ggplot(aes(x=f, y=intensity, color=signal)) +
   geom_line() +
   xlim(c(0, 500))) %>% 
   ggplotly()
 ```
+
+:::{.callout-note title="Alternativa SENZA `pivot_longer`"}
+Ridotto all'osso, l'ultimo grafico è (evito `ggplotly` per brevità):
+
+```{r}
+#| warning: false
+ym %>% 
+  select(f, contains("fft")) %>% 
+  pivot_longer(-f) %>%
+  mutate(
+    intensity = Mod(value) / length(t)*2
+  ) %>% 
+  ggplot(aes(x=f, y=intensity, color=name)) +
+  geom_line()
+```
+
+Se non voglio usare `pivot_longer()` devo aggiungere tre colonne, una alla volta (stando attento a ripetere la formula correttamente: se scrivessi `fft_m = Mod(fft_n) / length(t) * 2` otterrei un errore molto difficile da individuare!), con il modulo della FFT e nel plot devo aggiungere un layer alla volta (stando asttento a specificare correttamente il nome della serie come variabile `color`):
+
+```{r}
+#| warning: false
+ym %>% 
+  select(f, contains("fft")) %>% 
+  mutate(
+    fft = Mod(fft) / length(t) * 2,
+    fft_n = Mod(fft_n) / length(t) * 2,
+    fft_m = Mod(fft_m) / length(t) * 2
+  ) %>% 
+  ggplot(aes(x=f)) + 
+  geom_line(aes(y=fft, color="fft")) +
+  geom_line(aes(y=fft_n, color="fft_n")) +
+  geom_line(aes(y=fft_m, color="fft_m"))
+```
+
+:::
+
 
 # Effetto interferente sul segnale modulato
 
