@@ -19,45 +19,14 @@ Quanto segue richiede questi pacchetti:
 #| warning: false
 library(tidyverse)
 library(plotly)
-library(signal)
 library(gsignal)
-library(control)
-library(latex2exp)
 ```
 
 Se necessario installarli con `install.packages()` o mediante la GUI.
 
 # Funzioni di utilità
 
-Per comodità definiamo alcune funzioni di utilità:
-
-Bode plot mediante GGplot:
-
-```{r}
-ggbodeplot <- function(tf, fmin=1, fmax=1e4, df=0.01) {
-  # vector of points for each order of magnitude (OOM):
-  pts <- 10^seq(0, 1, df) %>% tail(-1)
-  # vector of OOMs:
-  ooms <- 10^(floor(log10(fmin)):ceiling(log10(fmax)-1))
-  # combine pts and ooms:
-  freqs <- as.vector(pts %o% ooms)
-  # warning: bode wants pulsation!
-  bode(tf, freqs*2*pi) %>% {
-    tibble(f=.$w/(2*pi), `magnitude (dB)`=.$mag, `phase (deg)`=.$phase)} %>%
-    pivot_longer(-f) %>% 
-    ggplot(aes(x=f, y=value)) +
-    geom_line() +
-    scale_x_log10(
-      minor_breaks=scales::minor_breaks_n(10), 
-      labels= ~ latex2exp::TeX(paste0("$10^{", log10(.), "}$"))) +
-    facet_wrap(~name, nrow=2, scales="free") +
-    labs(x="frequency (Hz)")
-}
-```
-
-::: callout-warning
-Forse la funzione `ggbodeplot` può essere rimossa da questo file?
-:::
+Per comodità definiamo alcune funzioni di utilità.
 
 Generazione di un segnale sinusoidale con diverse armoniche, come definite in una tabella (`pars`) con le colonne `w` (ampiezza), `f` (frequenza) e `phi` (fase) per le varie frequenze (una riga per ogni armonica):
 
@@ -117,7 +86,7 @@ ym <- tibble(
 ) %>% 
   mutate(
     f = 0:(length(t)-1)/max(t),
-    fft = fft(yn)
+    fft = fft(y)
   ) 
 
 ym %>%  
@@ -137,13 +106,13 @@ pars_r <- tibble(
 pars_r %>% knitr::kable()
 ```
 
-Aggiungo il rumore alla tabella `ym`:
+Aggiungo il rumore interferente alla tabella `ym`:
 
 ```{r}
 ym <- ym %>% 
   mutate(
-    i_noise = signal(t, pars_r),
-    fft_n = fft(i_noise)
+    y_in = signal(t, pars_r),
+    fft_in = fft(y_in)
   )
 ```
 
@@ -151,7 +120,7 @@ Ottengo il grafico dello spettro:
 
 ```{r}
 ym %>% 
-  select(f, fft, fft_n) %>% 
+  select(f, fft, fft_in) %>% 
   pivot_longer(
     contains("fft"), 
     names_to = "signal",
@@ -177,15 +146,15 @@ Aggiungo anche la modulazione:
 # Aggiungo una mappa da nomi delle colonne -> nomi in legenda
 fft_names=c(
   "fft" = "signal", 
-  "fft_n" = "intf. noise", 
+  "fft_in" = "intf. noise", 
   "fft_m" = "modulation"
 )
 
 # Aggiungo la modulazione
 ym <- ym %>% 
   mutate(
-    yn_m = (1 + m * ym$yn) * cos(2 * pi * fp * t),
-    fft_m = fft(yn_m)
+    y_m = (1 + m * yn) * cos(2 * pi * fp * t),
+    fft_m = fft(y_m)
   )
 ```
 
@@ -197,7 +166,7 @@ ym <- ym %>%
 (ym %>% 
   select(f, contains("fft")) %>% 
   pivot_longer(
-    contains("fft"), 
+    -f, 
     names_to = "signal",
     values_to = "fft",
     names_transform = ~ fft_names[.]
@@ -234,12 +203,12 @@ ym %>%
   select(f, contains("fft")) %>% 
   mutate(
     fft = Mod(fft) / length(t) * 2,
-    fft_n = Mod(fft_n) / length(t) * 2,
+    fft_in = Mod(fft_in) / length(t) * 2,
     fft_m = Mod(fft_m) / length(t) * 2
   ) %>% 
   ggplot(aes(x=f)) + 
   geom_line(aes(y=fft, color="fft")) +
-  geom_line(aes(y=fft_n, color="fft_n")) +
+  geom_line(aes(y=fft_in, color="fft_in")) +
   geom_line(aes(y=fft_m, color="fft_m"))
 ```
 
@@ -254,7 +223,7 @@ Osserviamo prima la modulazione:
 
 ```{r}
 ym %>% 
-  ggplot(aes(x=t, y=yn_m)) + 
+  ggplot(aes(x=t, y=y_m)) + 
   geom_line()
 ```
 
@@ -264,8 +233,8 @@ Combiniamo segnale e modulazione:
 #| warning: false
 ym <- ym %>% 
   mutate(
-    yn_m_n = yn_m + i_noise,
-    fft_m_n = fft(yn_m_n)
+    y_m_in = y_m + y_in,
+    fft_m_in = fft(y_m_in)
   )
 ```
 
@@ -280,8 +249,8 @@ ym %>% head() %>% knitr::kable()
 ```{r}
 #| warning: false
 ym %>% 
-  select(t, yn_m, yn_m_n) %>% 
-  pivot_longer(!t, names_to = "series", values_to = "value") %>% 
+  select(t, y_m, y_m_in) %>% 
+  pivot_longer(-t, names_to = "series", values_to = "value") %>% 
   ggplot(aes(x=t, y=value, color=series)) +
   geom_line() +
   facet_wrap(~series, nrow=2) +
@@ -292,18 +261,17 @@ Osserviamo lo spettro:
 
 ```{r}
 #| warning: false
-fft_names["fft_m_n"] <- "signal_modulated"
+fft_names["fft_m_in"] <- "mod. + intf."
 ym %>%
-  select(t, yn, i_noise, yn_m, f, contains("fft")) %>% 
+  select(f, contains("fft")) %>% 
   pivot_longer(
-    contains("fft"), 
+    -f, 
     names_to = "signal",
     values_to = "fft",
     names_transform = ~ fft_names[.]
   ) %>% 
   mutate(
-    intensity = Mod(fft) / length(t)*2,
-    phase = Arg(fft)/pi*180
+    intensity = Mod(fft) / length(t)*2
   ) %>% 
   ggplot(aes(x=f, y=intensity, color=signal)) +
   geom_line() +
@@ -311,8 +279,52 @@ ym %>%
 ```
 
 ::: {.callout-note title="Esercizio"}
-Estrarre il segnale in uscita originale a partire da quello affetto da rumore bianco, modulato ed affetto da rumore interfente ovvero da `ym$yn_m_n`
+Estrarre il segnale in uscita originale a partire da quello affetto da rumore bianco, modulato ed affetto da rumore interfente ovvero da `ym$y_m_in`
 :::
+
+## In un colpo solo
+
+Nella parte precedente, la tabella `ym` è stata costruita gradualmente, allo scopo di illustrare la composizione del segnale simulato. Guardando le operazioni nel loro complesso, la procedura è in realtà più semplice:
+
+```{r}
+#| warning: false
+
+tibble(
+  t = seq(0, duration, by = 1/fc),
+  y = signal(t, pars_m) + 
+      rnorm(length(t), 0, pars_m$w[1]/10),    # segnale 
+  fft = fft(y),                               # e sua FFT
+  y_in = signal(t, pars_r),                   # rumore interferente
+  fft_in = fft(y_in),                         # e sua FFT
+  y_m = (1 + m * y) * cos(2 * pi * fp * t),   # modulante
+  fft_m = fft(y_m),                           # e sua FFT
+  y_m_in = y_m + y_in,                        # modulante + interferente
+  fft_m_in = fft(y_m_in)                      # e sua FFT
+) %>%
+  # aggiungo la frequenza
+  mutate(
+    f = 0:(length(t)-1)/max(t),
+  ) %>% 
+  # prendo solo le colonne frequenza e fft
+  select(f, contains("fft")) %>% 
+  # riorganizzo la tabella
+  pivot_longer(
+    -f, 
+    names_to = "signal",
+    values_to = "fft",
+    names_transform = ~ fft_names[.]
+  ) %>% 
+  # aggiungo l'intensità
+  mutate(
+    intensity = Mod(fft) / length(t)*2
+  ) %>% 
+  ggplot(aes(x=f, y=intensity, color=signal)) +
+  geom_line() +
+  xlim(c(0,500))
+```
+
+
+
 
 # OMETTERE E FAR FARE COME ESERCIZIO
 
@@ -325,7 +337,7 @@ cutoff <- 2 * max(pars_r$f) / fc  # Frequenza di taglio (2 volte la massima freq
 bf <- butter(4, cutoff, type = "high")
 ym <- ym %>% 
   mutate(
-    yn_m_f = filtfilt(bf, yn_m_n) # filtfilt non introduce ritardo
+    y_m_f = filtfilt(bf, y_m_in) # filtfilt non introduce ritardo
   )
 ```
 
@@ -336,7 +348,7 @@ Moltiplicazione per la portante:
 ```{r}
 ym <- ym %>% 
   mutate(
-    demod_raw = 2 * yn_m_f * cos(2 * pi * fp * t) - 1
+    demod_raw = 2 * y_m_f * cos(2 * pi * fp * t) - 1
   )
 ```
 
@@ -355,7 +367,7 @@ Confronto dei segnali:
 
 ```{r}
 (ym %>% 
-  mutate(y_noisy = yn + i_noise) %>% 
+  mutate(y_noisy = y + y_in) %>% 
   select(t, y, y_noisy, demod) %>% 
   pivot_longer(-t) %>% 
   ggplot(aes(x=t, y=value, color=name)) + 

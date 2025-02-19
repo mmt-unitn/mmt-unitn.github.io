@@ -419,8 +419,8 @@ La trasformata di Fourier gode delle proprietà elencate in @tbl-ftprop.
 |Variazione scala |$x(at)\rightarrow\frac{1}{|a|}X(\frac{\omega}{a}$              |
 |Anticipo/Ritardo |$x(t-\tau)\rightarrow X(\omega)~e^{-i\omega\tau}$              |
 |Modulazione      |$x(t)~e^{-i\omega_0t}\rightarrow X(\omega-\omega_0)$           |
-|Convoluzione     |$x(t) \bullet y(t)\rightarrow X(\omega)Y(\omega)$              |
-|Prodotto         |$x(t)y(t)\rightarrow X(\omega)\bullet Y(\omega)$               |
+|Convoluzione     |$x(t) \otimes y(t)\rightarrow X(\omega)Y(\omega)$              |
+|Prodotto         |$x(t)y(t)\rightarrow X(\omega)\otimes Y(\omega)$               |
 
 : Proprietà della trasformata di Fourier {#tbl-ftprop .striped .hover}
 
@@ -469,11 +469,11 @@ $$
 
 Si noti che si è sostituita la variabile $t$ con $t-\tau$ nell’integrale 'interno' nella seguente maniera:
 $$
-\begin{align}
+\begin{aligned}
 \xi &= t - \tau \\
 t &= \xi + \tau \\
 d\xi &= dt
-\end{align}
+\end{aligned}
 $$
 
 Gli estremi di integrazione, essendo da $-\infty$ a $+\infty$ rimangono invariati.
