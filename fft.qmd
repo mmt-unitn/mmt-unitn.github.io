@@ -429,17 +429,75 @@ La trasformata di Fourier gode delle proprietà elencate in @tbl-ftprop.
 
 Di seguito le dimostrazioni:
 
-:::{.callout-important}
-Mancano le pagine da 17 a 19
-:::
-
 ### Linearità
+
+$$
+\begin{aligned}
+\Im(a~x(t) + b~y(t)) &= \int_{-\infty}^\infty \left[a~x(t) + b~y(t)\right]~e^{-i\omega t}~dt \\
+&= \int_{-\infty}^\infty a~x(t)~e^{-i\omega t}~dt + \int_{-\infty}^\infty b ~x(t)~e^{-i\omega t}~dt \\
+&= a\int_{-\infty}^\infty x(t)~e^{-i\omega t}~dt + b\int_{-\infty}^\infty~x(t)~e^{-i\omega t}~dt \\
+&= a~X(\omega) + b~Y(\omega)
+\end{aligned}
+$$
 
 ### Derivata
 
+Differenziando la trasformata inversa di $X(\omega)$ rispetto al tempo (che equivale a derivare il segnale $x(t)$), si ottiene:
+
+$$
+\begin{aligned}
+\frac{d}{dt}x(t) &= \frac{d}{dt}\left\{\frac{1}{2\pi}\int_{-\infty}^\infty X(\omega)~e^{i\omega t}~d\omega \right\} \\
+&= \frac{1}{2\pi} \int_{-\infty}^\infty X(\omega)~\frac{d}{dt}\left(e^{i\omega t}\right)~d\omega \\
+&= \frac{1}{2\pi} \int_{-\infty}^\infty \left[i\omega X(\omega)\right]~e^{i\omega t}~d\omega \\
+&= \Im^{-1}\left\{i\omega X(\omega)\right\}
+\end{aligned}
+$$
+
+
 ### Convoluzione
 
+$$
+\begin{aligned}
+x(t) \otimes y(t) &= \int_{-\infty}^\infty x(\tau)y(t-\tau)~d\tau \\
+\Im\left\{x(t) \otimes y(t)\right\} &= \int_{-\infty}^\infty\left[ \int_{-\infty}^\infty x(\tau)y(t-\tau)~d\tau \right]~e^{-i\omega t}~dt \\
+&= \int_{-\infty}^\infty x(\tau)\left[ \int_{-\infty}^\infty y(t-\tau)~e^{-i\omega t}~dt\right]~d\tau  \\
+&= \int_{-\infty}^\infty x(\tau)\left[ \int_{-\infty}^\infty y(\xi)~e^{-i\omega \xi}~e^{-i\omega \tau}~d\xi\right]~d\tau  \\
+&= \int_{-\infty}^\infty x(\tau)~e^{-i\omega\tau} \left[ \int_{-\infty}^\infty y(\xi)~e^{-i\omega \xi}~d\xi\right]~d\tau  \\
+&= X(\omega)Y(\omega)
+\end{aligned}
+$$
+
+Si noti che si è sostituita la variabile $t$ con $t-\tau$ nell’integrale 'interno' nella seguente maniera:
+$$
+\begin{align}
+\xi &= t - \tau \\
+t &= \xi + \tau \\
+d\xi &= dt
+\end{align}
+$$
+
+Gli estremi di integrazione, essendo da $-\infty$ a $+\infty$ rimangono invariati.
+Questa proprietà è connessa con la soluzione di equazioni differenziali lineari che nel dominio del tempo corrisponde ad una operazione di convoluzione, nel dominio della frequenza ad una semplice moltiplicazione di funzioni della frequenza.
+
+
 ### Ritardo/anticipo
+
+$$
+\begin{aligned}
+\Im\left\{x(t\pm t_0)\right\} &= \int_{-\infty}^\infty x(t\pm t_0)~e^{-i\omega t}~dt \\
+&= \int_{-\infty}^\infty x(t')~e^{-i\omega (t'\mp t_0)}~dt' \\
+&= e^{\pm i\omega t_0} \int_{-\infty}^\infty x(t')e^{-i\omega t'}~dt' \\
+&= X(\omega)~e^{\pm i \omega t_0}
+\end{aligned}
+$$
+
+Questa proprietà evidenzia come un ritardo/anticipo di un segnale nel tempo ha influenza solo sulla fase dello spettro mentre ne lascia invariato il modulo (il fattore esponenziale con argomento immaginario ha modulo unitario e fase pari all’argomento stesso). 
+Intuitivamente questo è ovvio in quanto le componenti dello sviluppo in serie saranno identiche come ampiezza mentre saranno ritardate/anticipate di $t_0$. Considerando una singola componente dello sviluppo inserire ad esempio:
+$$
+a_n\cos(\omega_n(t\pm t_0)) = a_n\cos(\omega_n t \pm \omega_n t_0)
+$$
+che evidenzia lo sfasamento proporzionale alla pulsazione moltiplicato per $t_0$.
+
 
 ## Trasformazione di un'equazione differenziale in un'equazione algebrica nel dominio delle frequenze: **Funzione di Trasferimento**
 
@@ -499,7 +557,7 @@ $$
 
 Se quindi si impiega tale funzione come ingresso ad un generico sistema, si ottiene che $U(\omega) = 1$ per ogni frequenza e quindi $Y(\omega) = H(\omega)$. Questo è il principale motivo per il quale chi si occupa di identificazione/caratterizzazione dei sistemi meccanici impiega martelletti strumentati per imporre degli impulsi sulle strutture e registrarne le vibrazioni nei diversi punti di interesse per ricavare la $h(t)$ ovvero, tramite trasformata di Fourier, la $H(\omega)$ che lega sollecitazioni nel punto di applicazioni dell'impulso alla risposta nel punto di registrazione delle vibrazioni. Torneremo su questo argomento nel terzo paragrafo.
 
-Nel prossimo paragrafo evidenziamo un ulteriore punto di vista sulla funzione di trasferimento che può essere vista come quella funzione che in modulo indica l'attenuazione di una qualsiasi armonica venga posta in ingresso ed in fase il suo sfasamento. Da ciò prende anche il nome di funzione di trasferimento ‘sinusoidale'.
+Nel prossimo paragrafo evidenziamo un ulteriore punto di vista sulla funzione di trasferimento che può essere vista come quella funzione che in modulo indica l'attenuazione di una qualsiasi armonica venga posta in ingresso ed in fase il suo sfasamento. Da ciò prende anche il nome di funzione di trasferimento 'sinusoidale'.
 
 
 ## Funzione di trasferimento sinusoidale
