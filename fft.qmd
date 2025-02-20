@@ -252,10 +252,10 @@ Si ha infatti:
 
 $$
 \begin{aligned}
-\sin(\omega_t) \bullet  \sin(\omega_nt) &= \frac{1}{T}\int_0^T \sin^2(\omega_nt)~dt = \frac{1}{T}\int_0^T\frac{1-2\cos(2\omega_nt)}{2}=\frac{1}{2} \\
-\cos(\omega_t) \bullet  \cos(\omega_nt) &= \frac{1}{T}\int_0^T \cos^2(\omega_nt)~dt = \frac{1}{T}\int_0^T\frac{1+2\cos(2\omega_nt)}{2}=\frac{1}{2} \\
-\cos(\omega_t) \bullet  \sin(\omega_nt) &= \frac{1}{T}\int_0^T \sin(\omega_nt)\cos(\omega_nt)~dt = \frac{1}{T}\int_0^T\frac{\sin(2\omega_nt)}{2}=0 \\
-\cos(\omega_t) \bullet  \cos(\omega_kt) &= \frac{1}{T}\int_0^T \frac{\cos(\omega_nt+\omega_kt)\cos(\omega_nt-\omega_kt)}{2}~dt = 0,\quad n\neq k \\
+\sin(\omega_nt) \bullet  \sin(\omega_nt) &= \frac{1}{T}\int_0^T \sin^2(\omega_nt)~dt = \frac{1}{T}\int_0^T\frac{1-2\cos(2\omega_nt)}{2}=\frac{1}{2} \\
+\cos(\omega_nt) \bullet  \cos(\omega_nt) &= \frac{1}{T}\int_0^T \cos^2(\omega_nt)~dt = \frac{1}{T}\int_0^T\frac{1+2\cos(2\omega_nt)}{2}=\frac{1}{2} \\
+\cos(\omega_nt) \bullet  \sin(\omega_nt) &= \frac{1}{T}\int_0^T \sin(\omega_nt)\cos(\omega_nt)~dt = \frac{1}{T}\int_0^T\frac{\sin(2\omega_nt)}{2}=0 \\
+\cos(\omega_nt) \bullet  \cos(\omega_kt) &= \frac{1}{T}\int_0^T \frac{\cos(\omega_nt+\omega_kt)\cos(\omega_nt-\omega_kt)}{2}~dt = 0,\quad n\neq k \\
 \sin(\omega_nt) \bullet \sin(\omega_kt) &= \dots = 0 \\
 \sin(\omega_nt) \bullet \cos(\omega_kt) &= \dots = 0
 \end{aligned}
@@ -296,7 +296,7 @@ $$
 G_0 = a_0/2 \\
 G_n = (a_n-ib)/2 \\
 G_{-n} = (a_n + ib_n)/2 = G^*
-$$
+$${#eq-7prime}
 si può scrivere:
 $$
 g(t)=G_0 + \sum_{n=1}^{\infty}G_n e^{i\omega_nt} + \sum_{n=-1}^{-\infty}G_n e^{i\omega_nt}
@@ -528,10 +528,11 @@ Y(\omega) = \frac{c}{b + i\omega~a + (i\omega)^2}~U(\omega)
 $$
 
 Tale relazione indica che la trasformata dell'uscita del sistema è pari alla trasformata dell'ingresso moltiplicata per una funzione anch'essa della frequenza (o pulsazione) che dipende solamente dalla forma dell'equazione differenziale che regola il sistema stesso, ovvero dai parametri $a$, $b$ e $c$. Tale funzione complessa viene definita **Funzione di Trasferimento**. 
+
 Per convenzione la funzione di trasferimento viene indicata come $H(\omega)$ per cui la precedente relazione si scrive in forma generale:
 $$
 Y(\omega) = H(\omega)U(\omega)
-$$
+$${#eq-transffunc}
 
 Dalla precedente è immediato ricavare la funzione di trasferimento come rapporto delle trasformate:
 $$
@@ -562,9 +563,89 @@ Nel prossimo paragrafo evidenziamo un ulteriore punto di vista sulla funzione di
 
 ## Funzione di trasferimento sinusoidale
 
-:::{.callout-important}
-Mancano le pagine da 21 a 24
-:::
+Consideriamo un sistema dinamico lineare caratterizzato da una funzione di trasferimento $H(\omega)$. Iniettiamo un ingresso puramente armonico di tipo sinusoidale, come schematizzato nel diagramma a blocchi di @fig-2_5.
+
+![Rappresentazione ingresso-uscita di un sistema dinamico regolato da equazione differenziale lineare.](images/fig2.5.png){#fig-2_5 height=100px}
+
+Imponendo in ingresso $u(t)=\sin(\omega_0 t)$ vogliamo determinare l’uscita $y(t)$. Vedremo che si determina in maniera immediata dalla conoscenza di modulo e fase della funzione di trasferimento in corrispondenza della pulsazione dell’ingresso.
+
+Per determinarlo passiamo attraverso le trasformate, dunque trasformiamo l’ingresso:
+$$
+u(t)=\sin(\omega_0 t) \otimes U(\omega) = \int_{-\infty}^\infty \sin(\omega_0 t)~e^{-i\omega t}~ dt = \\
+= \int_{-\infty}^\infty \sin(\omega_0 t)(\cos(\omega t) - i\sin(\omega t)) ~dt
+$$
+
+Tale trasformata vale chiaramente zero $\forall\omega \neq\pm\omega_0$ grazie alla proprietà di ortonormalità delle funzioni armoniche. Per $\omega = \omega_0$ ed $\omega = -\omega_0$ occorre invece calcolarne i valori.
+
+$$
+\begin{aligned}
+U(\omega_0) &= \int_{-\infty}^\infty \sin(\omega_0 t)(- i\sin(\omega_0 t)) ~dt = -i\int_{-\infty}^\infty \sin^2(\omega_0 t)~dt \\
+&= -i \int_{-\infty}^\infty \frac{1-\cos(2\omega_0 t)}{2}~dt = -\frac{i}{2} \cdot\infty \\
+U(-\omega_0) &= \int_{-\infty}^\infty \sin(\omega_0 t)(i\sin(\omega_0 t)) ~dt = i\int_{-\infty}^\infty \sin^2(\omega_0 t)~dt \\
+&= i \int_{-\infty}^\infty \frac{1-\cos(2\omega_0 t)}{2}~dt = \frac{i}{2} \cdot\infty \\
+\end{aligned}
+$$
+
+Volendo rappresentare lo spettro della funzione seno si ha dunque il grafico in @fig-2_6.
+
+![Rappresentazione dello spettro della funzione sinusoidale. In modulo ha due componenti di valore infinito del primo ordine con modulo 1/2 (ovvero due delta di Dirac di valore 1/2). Come fase due valori antisimmetrici di 90° e -90°. Globalmente lo spettro delle componenti a pulsazioni positive risultano essere i valori coniugati delle componenti a pulsazioni negative, come risulta anche dall’equazione @eq-7prime.](images/fig2.6.png){#fig-2_6}
+
+Globalmente la trasformata dell’ingresso si può scrivere quindi come somma di due delta di Dirac:
+$$
+U(\omega) = \frac{i}{2}\delta(\omega + \omega_0)- \frac{i}{2}\delta(\omega-\omega_0)
+$$
+dove con delta di Dirac $\delta(\omega-\omega_0)$ si intende la funzione che vale infinito per $\omega=\omega_0)$ ed è nulla altrove. Se integrata, tale funzione, avendo dominio infinitesimo ma valore infinito, risulta $\int_{-\infty}^\infty\delta(\omega-\omega_0)~d\omega$. Se come argomento dell’integrale si ha una generica funzione $H(\omega)$, risulta $\int_{-\infty}^\infty H(\omega)\delta(\omega-\omega_0)~d\omega = H(\omega_0)$. Questo semplicemente perché l’infinito rappresentato dalla delta di Dirac moltiplica il valore della funzione in corrispondenza della pulsazione $\omega_0$ facendo assumere al prodotto un valore infinito di modulo $H(\omega_0)$ che, integrato su di un dominio infinitesimo produce un risultato finito pari al valore assunto dalla funzione in corrispondenza della pulsazione $\omega_0)$.
+A questo punto è immediato determinare il valore della trasformata dell’uscita:
+$$
+Y(\omega) = H(\omega)U(\omega) = H(\omega) \left( \frac{i}{2}\delta(\omega + \omega_0) - \frac{i}{2}\delta(\omega - \omega_0) \right)
+$$
+che porta ad avere una somma di due delta con moduli pari al valore della funzione di trasferimento in corrispondenza dei due infiniti:
+$$
+Y(\omega) = H(-\omega_0)\frac{i}{2}\delta(\omega+\omega_0) - H(\omega_0)\frac{i}{2}\delta(\omega-\omega_0)
+$$
+
+La funzione di trasferimento può essere scomposta in modulo e fase:
+$$
+H(\omega) = M(\omega)~e^{-i\Phi(\omega)}
+$$
+per cui si ha:
+$$
+Y(\omega)=M(\omega_0)\frac{i}{2}\delta(\omega + \omega_0)~e^{-i\Phi(\omega_0)} - M(\omega_0)\frac{i}{2}\delta(\omega - \omega_0)~e^{-i\Phi(\omega_0)}
+$$
+In cui si sono semplicemente sostituiti i valori e considerata la proprietà dello spettro si un segnale reale: modulo simmetrico e fase antisimmetrica, secondo la @eq-7prime.
+
+Considerando l’equazione di Eulero: $e^{i\Phi(\omega_0)}=\cos(\Phi(\omega_0)) + i\sin(\Phi(\omega_0))$ si ottiene, dopo semplice manipolazione:
+$$
+\frac{Y(\omega)}{M(\omega_0)} = \cos(\Phi(\omega_0)) \left[ \frac{i}{2}\delta(\omega+\omega_0) - \frac{i}{2}\delta(\omega-\omega_0) \right] + \\
++ \sin(\Phi(\omega_0)) \left[ \frac{1}{2}\delta(\omega+\omega_0) + \frac{1}{2}\delta(\omega-\omega_0) \right]
+$$
+
+Del primo termine sappiamo immediatamente calcolare l’antitrasformata avendo appena calcolato la trasformata della funzione seno. Il secondo termine è anche immediatamente antitrasformabile in quanto vale:
+$$
+\cos(\omega_0 t) = \frac{1}{2}\delta(\omega+\omega_0) + \frac{1}{2}\delta(\omega-\omega_0)
+$$
+
+In definitiva, quindi:
+$$
+y(y) = M(\omega_0)\cos(\Phi(\omega_0)) \sin(\omega_0 t) +  M(\omega_0)\sin(\Phi(\omega_0)) \cos(\omega_0 t)
+$$
+ovvero:
+$$
+y(t) = M(\omega_0)\sin(\omega_0t + \Phi(\omega_0))
+$$
+Che esprime il fatto che se si pone in ingresso ad un sistema regolato da equazioni differenziali lineari un ingresso armonico di modulo unitario e pulsazione $\omega_0$, l’uscita sarà un’armonica di pari pulsazione $\omega_0$ ma di modulo pari al modulo della funzione di trasferimento $H(\omega_0)$ calcolata per la pulsazione $\omega_0$ e sfasata della fase della funzione di trasferimento $\Phi(\omega_0))$ calcolata per la stessa pulsazione $\omega_0$.
+
+![Trasformata del seno](images/fig2.7.png){#fig-2_7 height=100px}
+
+A tale risultato era possibile giungere semplicemente considerando la @eq-transffunc:
+$$
+\begin{aligned}
+Y(\omega) &= H(\omega)U(\omega)=M_H(\omega)~e^{i\Phi_H(\omega)} M_U(\omega)~e^{i\Phi_U(\omega)} \\
+&= M_H(\omega) M_U(\omega)~e^{i(\Phi_H(\omega) + \Phi_U(\omega))}
+\end{aligned}
+$$
+che esprime appunto il fatto che i moduli si moltiplicano e le fasi si sommano.
+
 
 
 ## Rappresentazione dello spettro di un segnale campionato mediante DFT 
