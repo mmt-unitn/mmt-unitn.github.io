@@ -31,6 +31,7 @@ Un sistema dinamico lineare per il quale esiste una funzione di trasferimento si
 
 Si consideri il segnale ed il modulo del suo spettro mostrate in figura 2.5 (una misura di temperatura tramite PT100 su di una piastra termostatata che regola la temperatura tra due valori soglia). Se il segnale viene posto in ingresso ad un sistema che possiede una funzione di trasferimento passa basso, si ottiene un segnale in uscita con le medesime componenti in bassa frequenza mentre quelle in alta sono attenuate.
 
+![Schema a blocchi di un processo di riduzione delle componenti in alta frequenza. In altre parole filtraggio in alta frequenza mediante un passa-basso. Nella figura sono rappresentati i segnali d’ingresso ed uscita in funzione del tempo ed il modulo (fase omessa) del loro spettro e la funzione di trasferimento che ha elaborato l’ingresso in modulo e fase.](images/fig-pt100.png){#fig-pt100}
 
 È possibile notare che il segnale in uscita non mostra più il rumore originario in alta frequenza in quanto la funzione di trasferimento ha attenuato proprio le componenti armoniche ad alta frequenza che non appartenevano ad un andamento di temperatura. La dinamica termica è infatti generalmente 'lenta'. Appartenevano, ad esempio, al rumore elettromagnetico di natura interferente.
 
@@ -48,11 +49,78 @@ L’**ordine del filtro** coincide con l’ordine del sistema lineare corrispond
 
 Alla frequenza di taglio corrisponde implicitamente una banda passante che sarà da 0 ad $f_c$ nel caso di passa basso, da $f_c$ ad infinito nel caso di passa alto.
 
-:::{.callout-important}
-Mancano le pagine da 34 a 36 delle dispense originali.
-:::
-
 # Filtri online
+
+Il filtro online opera direttamente sul segnale temporale elaborandolo mano mano che esso si presenta, campione dopo campione tramite una successione per ricorrenza. 
+La dimostrazione del fatto che un sistema reale si comporta nel dominio discreto come una successione per ricorrenza la si ottiene:
+
+* moltiplicando la trasformata di un segnale d’ingresso per la funzione di trasferimento
+* antitrasformando 
+* discretizzando la derivata 
+
+Proviamo quanto detto con un filtro del primo ordine avente uno zero ed un polo:
+
+![](images/fig-filtro-online.png){height="100px"}
+
+Sappiamo che:
+$$
+Y(\omega) = \frac{1+i\omega\tau_N}{1+i\omega\tau_D}U(\omega)
+$$
+da cui:
+$$
+Y(\omega)(1+i\omega\tau_D) = U(\omega)(1+i\omega\tau_N)
+$$
+quindi:
+$$
+Y(\omega)+i\omega\tau_DY(\omega)=U(\omega)+i\omega\tau_nU(\omega)
+$$
+
+Anti-trasformando otteniamo:
+$$
+y(t) + \dot y(t)\tau_D=u(t)+\dot u(t)\tau_N
+$$
+e applicando la formula di Eulero per la discretizzazione (anche conosciuta come formula alle differenze finite):
+$$
+y_k+\frac{y_k-y_{k-1}}{T_c}\tau_D=u_k\frac{u_k-u_{k-1}}{T_c}\tau_n
+$$
+e, in definitiva:
+$$
+y_k\left(1+\frac{\tau_D}{T_c}\right) = y_{k-1}\frac{\tau_D}{T_c}+ u_k\left(1+\frac{\tau_N}{T_c}\right) - u_{k-1}\frac{\tau_N}{T_c}
+$$
+che, normalizzando, diventa la seguente ricorrenza:
+$$
+y_k=y_{k-1}\frac{\tau_D/T_c}{1+\tau_D/T_c} + u_k\frac{\tau_N/T_c}{1+\tau_D/T_c}+u_{k-1}\frac{\tau_N/T_c}{1+\tau_D/T_c}
+$$
+
+**Che significato assumono in R i vettori `A` e `B`?**
+
+Se $n_a$ è l'ordine del denominatore ed $n_b$ è l'ordine del numeratore, $A = [A(1), A(2),\dots, A(n_a+1)]$, $B = [B(1), B(2),\dots, B(n_b+1)]$:
+$$
+\begin{aligned}
+a(1)y(n) =& b(1)x(n) + b(2)x(n-1) + \dots + b(n_b+1)x(n-n_b) + \\
+&- a(2)y(n-1)-\dots-a(n_a+1)y(n-n_a)
+\end{aligned}
+$$
+
+Grazie alla normalizzazione, si impone $a(1)=1$
+
+Nel caso sopra citato della funzione di trasferimento con un polo ed uno zero del primo ordine i vettori A e B sono:
+$$
+\begin{aligned}
+A &= \left[ 1\quad -\frac{\tau_D/T_c}{1+\tau_D/T_c}\right] \\
+B &= \left[ \frac{1+\tau_N/T_c}{1+\tau_D/T_c} \quad -\frac{\tau_N/T_c}{1+\tau_D/T_c}\right]
+\end{aligned}
+$$
+
+Notare che essendo $n_a = n_b = 1$ entrambi i vettori hanno 2 elementi.
+
+In R il comando `butter(n, fn)` restituisce i coefficienti della funzione di trasferimento di un filtro Butterworth digitale passa basso di ordine $n$ in grado di operare in tempo reale con frequenza di taglio normalizzata alla frequenza di Nyquist $f_n$.
+
+La frequenza di taglio per filtri digitali, ovvero filtri che elaborano sequenze di segnali campionati e convertiti viene solitamente normalizzata per la frequenza di Nyquist. Il motivo è semplice: un vettore corrispondente ad un segnale digitale non possiede esplicitamente informazioni circa la frequenza di campionamento per cui ha senso normalizzare il suo massimo contenuto in frequenza (ponendo quindi la fn pari ad 1) ed esprimendo i parametri di elaborazione (quali ad esempio il filtraggio) rispetto a tale valore, quindi tra 0 ed 1.
+
+Si noti come, perdendo l’informazione circa la frequenza o tempo di campionamento è possibile ragionare equivalentemente in termini di numeri di campioni. Per la frequenza di Nyquist ad esempio l’armonica corrispondente ha 2 campioni: $f_c = 1 / 1$ campione, quindi $f_n = fc / 2 = 1 / 2$ campioni, ovvero periodo 2 campioni.
+
+## Esempi
 
 Riutilizziamo la funzione `signal()`:
 
