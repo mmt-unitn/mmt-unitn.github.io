@@ -1,6 +1,6 @@
 ---
 title: "Trasformazione nel dominio delle frequenze"
-author: "Paolo Bosetti"
+author: "Mariolino De Cecco e Paolo Bosetti"
 date: "`r Sys.Date()`"
 format: 
   html:
