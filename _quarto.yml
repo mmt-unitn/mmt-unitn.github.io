@@ -1,6 +1,7 @@
 project:
   type: website
-
+  resources:
+    - esercizi.qmd
 website:
   title: "Misure Industriali"
   navbar:
@@ -11,8 +12,6 @@ website:
         text: Trasformate
       - href: filtri.qmd
         text: Filtri
-      - href: esercizi.qmd
-        text: Esercizi
       - about.qmd
 execute:
   freeze: auto
