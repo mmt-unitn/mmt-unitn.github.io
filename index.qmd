@@ -7,3 +7,7 @@ Contenuti del corso:
 1. [R in breve](r_brief.html) (un'introduzione **veramente** breve al linguaggio R)
 1. [Fast Fourier Transform](fft.html)
 1. [Filtri](filtri.html)
+
+Materiale aggiuntivo:
+
+* [Dispensa 2023](images/Dispensa_23.pdf){target="_blank"}

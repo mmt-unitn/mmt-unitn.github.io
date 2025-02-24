@@ -2,6 +2,7 @@ project:
   type: website
   resources:
     - esercizi.qmd
+    - images/Dispensa_23.pdf
 website:
   title: "Misure Industriali"
   navbar:
