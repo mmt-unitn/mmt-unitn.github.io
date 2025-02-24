@@ -1,0 +1,1720 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Mariolino De Cecco e Paolo Bosetti">
+
+<title>Trasformazione nel dominio delle frequenze – Misure Industriali</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-3e869bf4211dfe387421f5099c41857e.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-91ed04e8770893e4b33077ae46dd6466.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Nessun risultato",
+    "search-matching-documents-text": "documenti trovati",
+    "search-copy-link-title": "Copiare il link nella ricerca",
+    "search-hide-matches-text": "Nascondere i risultati aggiuntivi",
+    "search-more-match-text": "ci sono altri risultati in questo documento",
+    "search-more-matches-text": "ulteriori risultati in questo documento",
+    "search-clear-button-title": "Pulire",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancellare",
+    "search-submit-button-title": "Inviare",
+    "search-label": "Ricerca"
+  }
+}</script>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css">
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./logo.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Misure Industriali</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Ricerca"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Attiva/disattiva la navigazione" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./r_brief.html"> 
+<span class="menu-text">R in breve</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./fft.html" aria-current="page"> 
+<span class="menu-text">Trasformate</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./filtri.html"> 
+<span class="menu-text">Filtri</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">In questa pagina</h2>
+   
+  <ul>
+  <li><a href="#introduzione" id="toc-introduzione" class="nav-link active" data-scroll-target="#introduzione"><span class="header-section-number">1</span> Introduzione</a></li>
+  <li><a href="#trasformata-di-fourier" id="toc-trasformata-di-fourier" class="nav-link" data-scroll-target="#trasformata-di-fourier"><span class="header-section-number">2</span> Trasformata di Fourier</a>
+  <ul class="collapse">
+  <li><a href="#segnali-tempovarianti-segnali-discreti-vettori" id="toc-segnali-tempovarianti-segnali-discreti-vettori" class="nav-link" data-scroll-target="#segnali-tempovarianti-segnali-discreti-vettori"><span class="header-section-number">2.1</span> Segnali tempovarianti, segnali discreti, vettori</a></li>
+  <li><a href="#scomposizione-di-un-vettore-su-di-una-base-di-versori-orto-normali" id="toc-scomposizione-di-un-vettore-su-di-una-base-di-versori-orto-normali" class="nav-link" data-scroll-target="#scomposizione-di-un-vettore-su-di-una-base-di-versori-orto-normali"><span class="header-section-number">2.2</span> Scomposizione di un vettore su di una base di versori orto-normali</a></li>
+  <li><a href="#scomposizione-di-un-segnale-tempovariante-continuo-su-di-una-base-di-funzioni-orto-normali" id="toc-scomposizione-di-un-segnale-tempovariante-continuo-su-di-una-base-di-funzioni-orto-normali" class="nav-link" data-scroll-target="#scomposizione-di-un-segnale-tempovariante-continuo-su-di-una-base-di-funzioni-orto-normali"><span class="header-section-number">2.3</span> Scomposizione di un segnale tempovariante continuo su di una base di funzioni orto-normali</a></li>
+  <li><a href="#definizione-di-prodotto-scalare-tra-funzioni-continue-e-discrete" id="toc-definizione-di-prodotto-scalare-tra-funzioni-continue-e-discrete" class="nav-link" data-scroll-target="#definizione-di-prodotto-scalare-tra-funzioni-continue-e-discrete"><span class="header-section-number">2.4</span> Definizione di prodotto scalare tra funzioni continue e discrete</a></li>
+  <li><a href="#esempio" id="toc-esempio" class="nav-link" data-scroll-target="#esempio"><span class="header-section-number">2.5</span> Esempio</a></li>
+  <li><a href="#alcune-proprietà-della-trasformata-di-fourier" id="toc-alcune-proprietà-della-trasformata-di-fourier" class="nav-link" data-scroll-target="#alcune-proprietà-della-trasformata-di-fourier"><span class="header-section-number">2.6</span> Alcune proprietà della trasformata di Fourier</a></li>
+  <li><a href="#dimostrazione-di-alcune-proprietà" id="toc-dimostrazione-di-alcune-proprietà" class="nav-link" data-scroll-target="#dimostrazione-di-alcune-proprietà"><span class="header-section-number">2.7</span> Dimostrazione di alcune proprietà</a>
+  <ul class="collapse">
+  <li><a href="#linearità" id="toc-linearità" class="nav-link" data-scroll-target="#linearità"><span class="header-section-number">2.7.1</span> Linearità</a></li>
+  <li><a href="#derivata" id="toc-derivata" class="nav-link" data-scroll-target="#derivata"><span class="header-section-number">2.7.2</span> Derivata</a></li>
+  <li><a href="#convoluzione" id="toc-convoluzione" class="nav-link" data-scroll-target="#convoluzione"><span class="header-section-number">2.7.3</span> Convoluzione</a></li>
+  <li><a href="#ritardoanticipo" id="toc-ritardoanticipo" class="nav-link" data-scroll-target="#ritardoanticipo"><span class="header-section-number">2.7.4</span> Ritardo/anticipo</a></li>
+  </ul></li>
+  <li><a href="#trasformazione-di-unequazione-differenziale-in-unequazione-algebrica-nel-dominio-delle-frequenze-funzione-di-trasferimento" id="toc-trasformazione-di-unequazione-differenziale-in-unequazione-algebrica-nel-dominio-delle-frequenze-funzione-di-trasferimento" class="nav-link" data-scroll-target="#trasformazione-di-unequazione-differenziale-in-unequazione-algebrica-nel-dominio-delle-frequenze-funzione-di-trasferimento"><span class="header-section-number">2.8</span> Trasformazione di un’equazione differenziale in un’equazione algebrica nel dominio delle frequenze: <strong>Funzione di Trasferimento</strong></a></li>
+  <li><a href="#funzione-di-trasferimento-sinusoidale" id="toc-funzione-di-trasferimento-sinusoidale" class="nav-link" data-scroll-target="#funzione-di-trasferimento-sinusoidale"><span class="header-section-number">2.9</span> Funzione di trasferimento sinusoidale</a></li>
+  <li><a href="#rappresentazione-dello-spettro-di-un-segnale-campionato-mediante-dft" id="toc-rappresentazione-dello-spettro-di-un-segnale-campionato-mediante-dft" class="nav-link" data-scroll-target="#rappresentazione-dello-spettro-di-un-segnale-campionato-mediante-dft"><span class="header-section-number">2.10</span> Rappresentazione dello spettro di un segnale campionato mediante DFT</a></li>
+  <li><a href="#tabella-riassuntiva" id="toc-tabella-riassuntiva" class="nav-link" data-scroll-target="#tabella-riassuntiva"><span class="header-section-number">2.11</span> Tabella riassuntiva</a></li>
+  </ul></li>
+  <li><a href="#la-trasformata-di-fourier-rapida" id="toc-la-trasformata-di-fourier-rapida" class="nav-link" data-scroll-target="#la-trasformata-di-fourier-rapida"><span class="header-section-number">3</span> La trasformata di Fourier rapida</a>
+  <ul class="collapse">
+  <li><a href="#esempio-1" id="toc-esempio-1" class="nav-link" data-scroll-target="#esempio-1"><span class="header-section-number">3.1</span> Esempio</a>
+  <ul class="collapse">
+  <li><a href="#sec-example-fft" id="toc-sec-example-fft" class="nav-link" data-scroll-target="#sec-example-fft"><span class="header-section-number">3.1.1</span> Creiamo una serie di dati</a></li>
+  <li><a href="#spettrogramma-mediante-fft" id="toc-spettrogramma-mediante-fft" class="nav-link" data-scroll-target="#spettrogramma-mediante-fft"><span class="header-section-number">3.1.2</span> Spettrogramma mediante FFT</a></li>
+  </ul></li>
+  <li><a href="#finestre" id="toc-finestre" class="nav-link" data-scroll-target="#finestre"><span class="header-section-number">3.2</span> Finestre</a></li>
+  </ul></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Altri Formati</h2><ul><li><a href="fft.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Trasformazione nel dominio delle frequenze</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Autore/Autrice</div>
+    <div class="quarto-title-meta-contents">
+             <p>Mariolino De Cecco e Paolo Bosetti </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Data di Pubblicazione</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">24 febbraio 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduzione" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Introduzione</h1>
+<p>Nella scienza delle misure stanno esplodendo due settori apparentemente non collegati: sensori al silicio, derivanti dalle tecnologie consolidate dei micro-chip, stanno soppiantando i tradizionali sensori (nonostante questi ultimi possiedano qualità metrologiche nettamente superiori); nuovi strumenti di elaborazione dati (PC, DSP, processori, micro-controllori, etc), sempre più potenti ed economici, stanno promuovendo l’impiego di algoritmi sempre più complessi (reti neurali, fuzzy sets, wavelets, etc). Si pensi ai moderni smartphone che contengono diversi sensori (una IMU, Inertial Measurement Unit che contiene accelerometri e giroscopi per la misura del moto, videocamere ed in alcuni casi anche telecamere a tempo di volo per la misura in 3 dimensioni) ed un processore estremamente potente a bordo.</p>
+<p>I due aspetti, oltre che essere legati allo stesso fenomeno tecnologico, sono concorrenti nello stimolare il seguente approccio: utilizzare sensori di bassa qualità accoppiati a sistemi di acquisizione ed elaborazione complessa dei dati. In altre parole, le necessità di mercato stanno spingendo verso la ricerca di sensori che sfruttino le tecnologie consolidate della lavorazione del silicio che forniscono il duplice vantaggio della produzione in larga scala e quindi basso costo e quello della estrema miniaturizzazione ed integrazione con l’elettronica di condizionamento ed elaborazione segnali che consentono di impiegare algoritmi avanzati capaci di ottenere un’accuratezza adeguata anche da misure effettuate tramite sensori di bassa qualità. Si potrebbe citare la tecnologia dei sistemi embedded che, in maniera pervasiva, occupa gli spazi di vita quotidiana (con reti di sistemi di sorveglianza, sensori distribuiti per la domotica, etc) o industriale (reti di sensori per l’ottimizzazione della produzione e la diagnostica del processo produttivo giusto per citare alcuni esempi).</p>
+<p>Si potrebbe aggiungere l’enorme sviluppo dell’intelligenza artificiale che si basa sulla raccolta dati, ovvero segnali generalmente variabili nel tempo. Non da ultimo è da considerare che per le applicazioni in ambito ingegneria meccatronica si ha a che fare con sistemi autonomi di cui si vuole controllare un certo numero di stati. A tale scopo è fondamentale la misura di tali stati che, se incogniti, ovviamente non sarebbero controllabili. Ebbene in ambito automatico gli stati sono associati a parametri di misura tempovarianti da cui occorre estrapolare delle informazioni tramite elaborazione di segnali tempovarianti.</p>
+<p>In altre parole, l’elaborazione dei segnali acquisiti tramite reti di sensori distribuiti o da un sistema robotico, richiedono ad un ingegnere meccatronico la capacità di elaborarli. Questo per diversi scopi quali sintetizzare una variabile da controllare, ottenere informazioni legate alla diagnostica delle macchine o semplicemente per ridurre il rumore sovrapposto al segnale.</p>
+<p>L’obiettivo di questa dispensa è quello di fornire i rudimenti essenziali per il “signal processing” che comprendono l’elaborazione nel dominio della frequenza tramite Trasformata di Fourier, il concetto e la stima tramite Taratura Dinamica della Funzione di Trasferimento, la Modellazione a Parametri Concentrati dei sistemi meccanici e conseguente estrapolazione delle Impedenze Generalizzate che consentono di costruire reti analoghe a quelle elettriche per la stima delle relazioni dinamiche che intervengono nei diversi punti del meccanismo.</p>
+</section>
+<section id="trasformata-di-fourier" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Trasformata di Fourier</h1>
+<p>La trasformata di Fourier trasforma il segnale dal dominio del tempo al dominio della frequenza. In altre parole una funzione del tempo viene rappresentata, tramite opportuni coefficienti, in una funzione della frequenza evidenziando quali componenti armoniche compaiono nel segnale. Vi sono proprietà della trasformata di Fourier che ricorrono in altre trasformate quali la WT e la STFT (denominata anche trasformata di Gabor) e che sono essenziali per l’interpretazione dei risultati della trasformazione e di eventuali operazioni in frequenza quali filtraggi. Tali concetti sono la scomposizione di una funzione secondo una base di funzioni ortonormali e la reversibilità della trasformata.</p>
+<section id="segnali-tempovarianti-segnali-discreti-vettori" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="segnali-tempovarianti-segnali-discreti-vettori"><span class="header-section-number">2.1</span> Segnali tempovarianti, segnali discreti, vettori</h2>
+<p>Un segnale funzione del tempo s(t) rappresenta un segnale reale che varia in funzione del tempo senza soluzione di continuità. Un segnale discreto è un segnale campionato e quantizzato. Dunque rappresentabile tramite un vettore <span class="math inline">s = \{s(1), s(2), \dots, S(N)\}</span>, dove <span class="math inline">n = 1\dots N</span> sono gli <span class="math inline">N</span> campioni acquisiti ad una certa frequenza di campionamento <span class="math inline">f_c</span>.</p>
+<p>Come vedremo quindi vi sarà una differenza tra la Trasformata di Fourier di un segnale tempovariante da quella di un segnale discreto. La prima ha un carattere ed una utilità simbolica, potremmo dire di concetto. La seconda pratica poiché tutti i segnali che si elaborano mediante processori sono discreti.</p>
+<p>Nei prossimi sotto-paragrafi passeremo:</p>
+<ul>
+<li>dalla scomposizione di un vettore su di una base di versori ortonormali</li>
+<li>alla scomposizione di un segnale tempovariante periodico su una base di segnali ortonormali</li>
+<li>alla scomposizione di un segnale tempovariante non periodico su una base di segnali ortonormali</li>
+<li>alla scomposizione di un segnale discreto (ovvero un vettore) su una base di segnali discreti ortonormali (altri vettori).</li>
+</ul>
+<p>Tutto ciò per comprendere cosa rappresentano le componenti del segnale nel dominio della frequenza (sia esso continuo o discreto) e, tramite il concetto di Funzione di Trasferimento, implementare le elaborazioni che si possono condurre in tale dominio. Tutto ciò consentirà di capire come gli strumenti di misura di grandezze tempovarianti si comportano con il misurando in base alle caratteristiche dinamiche riassunte proprio dalla loro funzione di trasferimento.</p>
+</section>
+<section id="scomposizione-di-un-vettore-su-di-una-base-di-versori-orto-normali" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="scomposizione-di-un-vettore-su-di-una-base-di-versori-orto-normali"><span class="header-section-number">2.2</span> Scomposizione di un vettore su di una base di versori orto-normali</h2>
+<p>Per comprendere il concetto di scomposizione di un segnale tempovariante si può pensare al parallelo vettoriale: un vettore nel piano può essere scomposto secondo due direzioni mutuamente ortogonali. In tale maniera si ottiene la scomposizione mediante la semplice relazione del prodotto scalare :</p>
+<p><span id="eq-1"><span class="math display">
+\mathbf{v} = \alpha \mathbf{e}_1 + \beta \mathbf{e}_2
+\tag{1}</span></span></p>
+<p>dove <span class="math inline">\mathbf{e}_1</span> ed <span class="math inline">\mathbf{e}_2</span> sono i versori delle direzioni mutuamente ortogonali (<span class="math inline">\mathbf{e}_1 \cdot \mathbf{e}_2 = 0</span>). Grazie alla proprietà di ortogonalità della base posso scrivere infatti:</p>
+<p><span id="eq-2"><span class="math display">
+\alpha = \mathbf{v}\cdot\mathbf{e}_1 =  (\alpha \mathbf{e}_1 + \beta \mathbf{e}_2)\cdot \mathbf{e}_1 \\
+\beta = \mathbf{v}\cdot\mathbf{e}_2
+\tag{2}</span></span></p>
+<p>che definisce l’operazione di scomposizione tramite la semplice operazione di prodotto scalare. L’<a href="#eq-1" class="quarto-xref">Equazione&nbsp;1</a> suggerisce di rappresentare il vettore in una maniera diversa, ovvero considerando le sole componenti lungo i due versori:</p>
+<p><span class="math display">
+\mathbf{v}=[\alpha, \beta]
+</span></p>
+<p>tale rappresentazione consente di effettuare considerazioni sul vettore solamente tramite le sue componenti nelle direzioni della base ortogonale di vettori <span class="math inline">\mathbf{e}_1</span> ed <span class="math inline">\mathbf{e}_2</span>. Ovvero il vettore può essere ‘pensato’ come una ‘freccia’ nel piano oppure come insieme di componenti. Tale concetto è illustrato nella figura seguente.</p>
+<div id="fig-2_1" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-2_1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/fig2.1.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-2_1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;1: Corrispondenza tra un vettore nel piano e l’insieme delle sue componenti lungo una coppia di versori ortogonali
+</figcaption>
+</figure>
+</div>
+<p>La relazione di eguaglianza espressa in <a href="#eq-1" class="quarto-xref">Equazione&nbsp;1</a> garantisce la reversibilità, ovvero dati i parametri della trasformazione in componenti vettoriali lungo una coppia di direzioni ortogonali, è possibile risalire esattamente al vettore originario. Vedremo che non tutte le trasformazioni sono reversibili e che la reversibilità garantisce una corretta interpretazione delle operazioni effettuate nel dominio della trasformata. Introducendo ad esempio il concetto di filtro sulle componenti vettoriali come quell’operatore che fornisce la sola componente lungo <span class="math inline">\mathbf{e}_1</span> , si ottiene il valore del coefficiente <span class="math inline">\alpha</span> che si sa essere esattamente corrispondente al vettore tolta la componente lungo l’altra direzione. Questa sembrerebbe una tautologia, ma, applicata alle trasformazioni di segnale, giustifica e fornisce la corretta interpretazione alle operazioni di manipolazione in frequenza quali il filtraggio: in una comune operazione di filtraggio passa-basso si ha la certezza di aver eliminato le componenti armoniche del segnale ad alta frequenza e di aver lasciato inalterate le rimanenti.</p>
+<p>Dalla <a href="#eq-1" class="quarto-xref">Equazione&nbsp;1</a> e la <a href="#eq-2" class="quarto-xref">Equazione&nbsp;2</a> si ottiene:</p>
+<p><span class="math display">
+\mathbf{v} = (\mathbf{v}\cdot\mathbf{e}_1) \mathbf{e}_1 + (\mathbf{v}\cdot \mathbf{e}_2) \mathbf{e}_2
+</span></p>
+<p>che riassume i concetti prima espressi.</p>
+</section>
+<section id="scomposizione-di-un-segnale-tempovariante-continuo-su-di-una-base-di-funzioni-orto-normali" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="scomposizione-di-un-segnale-tempovariante-continuo-su-di-una-base-di-funzioni-orto-normali"><span class="header-section-number">2.3</span> Scomposizione di un segnale tempovariante continuo su di una base di funzioni orto-normali</h2>
+<p>Per i segnali temporali vale un ragionamento analogo. Per semplicità considereremo lo sviluppo in serie invece della trasformata di Fourier in quanto da esso è poi possibile, tramite passaggio al limite, ricavare la formula della trasformata <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
+<p>Una funzione periodica gode della proprietà che <span class="math inline">g(t)=g(t+nT)</span> per ogni valore <span class="math inline">n</span> intero. <span class="math inline">T</span> è il periodo ed <span class="math inline">f_0 = 1/T</span> è la <strong>frequenza fondamentale</strong>, mentre <span class="math inline">\omega = 2\pi f</span> è la <strong>pulsazione</strong>. Essa può essere scomposta in serie di Fourier come segue.</p>
+<p>Avendo un segnale <span class="math inline">s(t)</span>, rappresentabile nel dominio del tempo, si può definire lo sviluppo di Fourier tramite la relazione invertibile:</p>
+<p><span id="eq-sft"><span class="math display">
+g(t)=\frac{1}{2}a_o + \sum_{n=1}^{\infty}a_n \cos(\omega_n t) + \sum_{n=1}^{\infty}b_n \sin(\omega_n t)
+\tag{3}</span></span></p>
+<p>Dove <span class="math inline">\omega_n = 2\pi n f_0</span>.</p>
+<p>I coefficienti <span class="math inline">a_n</span> e <span class="math inline">b_n</span> vengono ricavati secondo le seguenti relazioni:</p>
+<p><span id="eq-ab-coeffs"><span class="math display">
+a_n = \frac{2}{T}\int_0^T g(\tau)\cos(\omega_nt)d\tau \\
+b_n = \frac{2}{T}\int_0^T g(\tau)\sin(\omega_nt)d\tau
+\tag{4}</span></span></p>
+<p>La <a href="#eq-sft" class="quarto-xref">Equazione&nbsp;3</a> vuol dire scomporre la funzione <span class="math inline">g(t)</span> secondo la base di funzioni ortogonali armoniche.</p>
+<p><strong>NOTA</strong>: la <a href="#eq-sft" class="quarto-xref">Equazione&nbsp;3</a> corrisponde anche alla media delle componenti del prodotto elemento per elemento tra i due vettori.</p>
+</section>
+<section id="definizione-di-prodotto-scalare-tra-funzioni-continue-e-discrete" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="definizione-di-prodotto-scalare-tra-funzioni-continue-e-discrete"><span class="header-section-number">2.4</span> Definizione di prodotto scalare tra funzioni continue e discrete</h2>
+<p>Il prodotto scalare tra segnali/funzioni periodiche si definisce come:</p>
+<p><span id="eq-prodscal"><span class="math display">
+g(t)\bullet f(t)=\frac{1}{T}\int_0^T g(\tau)f^*(\tau)d\tau
+\tag{5}</span></span></p>
+<p>dove con <span class="math inline">f^*(t)</span> si intende la funzione <strong>complessa coniugata</strong> di <span class="math inline">f(t)</span> che, nel caso di funzioni reali, coincide con se stessa.</p>
+<p>Le stesse funzioni digitalizzate <span class="math inline">g_k</span> ed <span class="math inline">f_k</span> consistono nei due vettori <span class="math inline">\{g(1), g(2),\dots, g(N)\}</span> e <span class="math inline">\{f(1), f(2),\dots, f(N)\}</span> e quindi si definisce prodotto scalare tra i segnali digitalizzati:</p>
+<p><span id="eq-decompose"><span class="math display">
+g_k\bullet f_k=\frac{1}{T}\sum_{i=1}^N g_i f_i = \\
+\{g(1), g(2),\dots, g(N)\} \bullet \{f(1), f(2),\dots, f(N)\}^T / N
+\tag{6}</span></span></p>
+<p>Di seguito un esempio in R di scomposizione di un’onda quadra su una base ortogonale e sua ricomposizione sulla stessa base. Poi scomposizione e ricomposizione secondo la serie di Fourier. Si noti che un’onda quadra che parte con fronte di salita esattamente con il primo campione risulta essere scomponibile solo mediante sinusoidi per cui dimenticheremo le componenti coseno.</p>
+</section>
+<section id="esempio" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="esempio"><span class="header-section-number">2.5</span> Esempio</h2>
+<p>Definiamo le funzioni <strong>prodotto scalare tra segnali digitalizzati</strong> e relativa <strong>norma</strong>. La prima funzione la definiamo come operatore <code>%ps%</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>  <span class="co"># secondo le equazioni:</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="st">`</span><span class="at">%ps%</span><span class="st">`</span> <span class="ot">&lt;-</span> <span class="cf">function</span>(A, B) {</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  (<span class="fu">t</span>(A) <span class="sc">%*%</span> B <span class="sc">/</span> <span class="fu">length</span>(A)) <span class="sc">%&gt;%</span> <span class="fu">as.numeric</span>()</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># ma anche, più efficientemente:</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="st">`</span><span class="at">%ps%</span><span class="st">`</span> <span class="ot">&lt;-</span> <span class="cf">function</span>(A, B) <span class="fu">mean</span>(A<span class="sc">*</span>B)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Per la norma, definiamo la funzione <code>norm_ps</code> (dato che <code>norm</code> è già definita):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>norm_ps <span class="ot">&lt;-</span> <span class="cf">function</span>(A) <span class="fu">sqrt</span>(A <span class="sc">%ps%</span> A)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>) <span class="sc">%ps%</span> (<span class="dv">5</span><span class="sc">:</span><span class="dv">1</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 7</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">norm_ps</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.316625</code></pre>
+</div>
+</div>
+<p>Ora creiamo un segnale onda quadra (il segno dell’onda seno) campionato su 1000 punti tra 0 e 1, con frequenza 2 Hz:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>f0 <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>fc <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>Tm <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>dt <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span>fc</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>sin_k <span class="ot">&lt;-</span> <span class="cf">function</span>(x, f, <span class="at">k=</span><span class="dv">1</span>) <span class="fu">sin</span>(<span class="dv">2</span><span class="sc">*</span>pi<span class="sc">*</span>f<span class="sc">*</span>k<span class="sc">*</span>x)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">t =</span> <span class="fu">seq</span>(dt, Tm, dt),</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">ys =</span> <span class="fu">sin_k</span>(t, f0),</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">yq =</span> <span class="fu">sign</span>(ys)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>t, <span class="at">names_to =</span> <span class="st">"signal"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>t, <span class="at">y=</span>value, <span class="at">color=</span>signal)) <span class="sc">+</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() </span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fft_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Onda quadra e corrispondente sinusoide di pari frequenza e ampiezza</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Calcoliamo le prime sette componenti della serie, secondo <a href="#eq-decompose" class="quarto-xref">Equazione&nbsp;6</a>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>K <span class="ot">&lt;-</span> <span class="dv">7</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>comps <span class="ot">&lt;-</span> <span class="fu">map_dbl</span>(<span class="dv">1</span><span class="sc">:</span>K, \(k) {</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  s <span class="ot">&lt;-</span> <span class="fu">sin_k</span>(df<span class="sc">$</span>t, f0, k)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  df<span class="sc">$</span>yq <span class="sc">%ps%</span> s<span class="sc">/</span><span class="fu">norm_ps</span>(s)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>}) <span class="sc">%&gt;%</span> <span class="fu">zapsmall</span>()</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>comps</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.9003045 0.0000000 0.3000699 0.0000000 0.1800040 0.0000000 0.1285337</code></pre>
+</div>
+</div>
+<p>Infine approssimiamo l’onda quadra come somma delle prime 7 componenti:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">yqk =</span> <span class="fu">reduce</span>(<span class="dv">1</span><span class="sc">:</span>K, \(acc, k) {</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>      s <span class="ot">&lt;-</span> <span class="fu">sin_k</span>(t, f0, k)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>      acc <span class="sc">+</span> comps[k] <span class="sc">*</span> s <span class="sc">/</span> <span class="fu">norm_ps</span>(s)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    }, <span class="at">.init=</span><span class="dv">0</span>)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>t, <span class="at">names_to =</span> <span class="st">"signal"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>t, <span class="at">y=</span>value, <span class="at">color=</span>signal)) <span class="sc">+</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fft_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Onda quadra e sua approssimazione come composizione dei primi sette termini della serie di Fourier</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="Esercizi">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Esercizi
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Partire da <span class="math inline">K=1</span> e incrementare di 1 alla volta. Cosa si nota?</li>
+<li>Con <span class="math inline">f_0=1</span> aumentare <span class="math inline">K</span> di alcune centinaia e poi vicino a 500. Cosa succede? Esiste un numero <span class="math inline">K</span> per cui il segnale ricomposto diviene pressoché perfettamente un’onda quadra?</li>
+<li>Mostrare in un grafico i coefficienti in funzione della frequenza.</li>
+<li>Con <span class="math inline">f_0 = 4</span>; aumentate <span class="math inline">K</span> fino ad ottenere un’onda quadra perfettamente ricomposta. Quanto vale <span class="math inline">K</span>? C’è qualche nesso con il teorema di Nyquist?</li>
+<li>Aumentate ancora <span class="math inline">K</span>, cosa succede? C’è, di nuovo, qualche nesso con il teorema di Nyquist? Che effetto sta subendo il segnale ricostruito?</li>
+</ol>
+</div>
+</div>
+<p>Dall’esempio qui sopra in cui, per semplicità, ci siamo occupati di un caso in cui sono presenti solo componenti seno abbiamo compreso che lo sviluppo in serie di Fourier di un segnale tempovariante è dato dalla sommatoria pesata di componenti armoniche. Tali armoniche rappresentano una base di funzioni ortogonali ma non ortonormali.</p>
+<p>Si ha infatti:</p>
+<p><span id="eq-sincos"><span class="math display">
+\begin{aligned}
+\sin(\omega_nt) \bullet  \sin(\omega_nt) &amp;= \frac{1}{T}\int_0^T \sin^2(\omega_nt)~dt = \frac{1}{T}\int_0^T\frac{1-2\cos(2\omega_nt)}{2}=\frac{1}{2} \\
+\cos(\omega_nt) \bullet  \cos(\omega_nt) &amp;= \frac{1}{T}\int_0^T \cos^2(\omega_nt)~dt = \frac{1}{T}\int_0^T\frac{1+2\cos(2\omega_nt)}{2}=\frac{1}{2} \\
+\cos(\omega_nt) \bullet  \sin(\omega_nt) &amp;= \frac{1}{T}\int_0^T \sin(\omega_nt)\cos(\omega_nt)~dt = \frac{1}{T}\int_0^T\frac{\sin(2\omega_nt)}{2}=0 \\
+\cos(\omega_nt) \bullet  \cos(\omega_kt) &amp;= \frac{1}{T}\int_0^T \frac{\cos(\omega_nt+\omega_kt)\cos(\omega_nt-\omega_kt)}{2}~dt = 0,\quad n\neq k \\
+\sin(\omega_nt) \bullet \sin(\omega_kt) &amp;= \dots = 0 \\
+\sin(\omega_nt) \bullet \cos(\omega_kt) &amp;= \dots = 0
+\end{aligned}
+\tag{7}</span></span></p>
+<p>Per ottenere una scomposizione corretta occorre introdurre al denominatore dei coefficienti il quadrato del modulo (delle componenti la base di funzioni) quindi 1/2 che, portato a numeratore, spiega il fattore 2 nelle <a href="#eq-ab-coeffs" class="quarto-xref">Equazione&nbsp;4</a>.</p>
+<div id="fig-2_2" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-2_2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/fig2.2.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-2_2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;2: Corrispondenza tra una funzione del tempo e l’insieme delle sue componenti secondo una base di funzioni ortonormali
+</figcaption>
+</figure>
+</div>
+<p>Passiamo ora a come rappresentare le funzioni in maniera analoga a quanto facciamo con i vettori. La <a href="#eq-sft" class="quarto-xref">Equazione&nbsp;3</a> suggerisce infatti la rappresentazione di <a href="#fig-2_2" class="quarto-xref">Figura&nbsp;2</a>, analoga a quella riportata in <a href="#fig-2_1" class="quarto-xref">Figura&nbsp;1</a>.</p>
+<p>Secondo quanto rappresentato in <a href="#fig-2_2" class="quarto-xref">Figura&nbsp;2</a> si potrebbe ragionare indifferentemente (grazie alla relazione di eguaglianza in <a href="#eq-sft" class="quarto-xref">Equazione&nbsp;3</a> sulla funzione del tempo oppure su due funzioni (discrete) che rappresentano le componenti della scomposizione secondo Fourier.</p>
+<p>Esiste però una rappresentazione più significativa sia per l’analisi segnali che per la soluzione di equazioni differenziali associate a sistemi lineari. Per determinare tale rappresentazione è necessario elaborare la <a href="#eq-sft" class="quarto-xref">Equazione&nbsp;3</a> impiegando la formula di Eulero, ovvero i fasori:</p>
+<p><span class="math display">
+e^{i\omega_nt} = \cos(\omega_nt) + i\sin(\omega_nt)
+</span></p>
+<p>che porta ad esprimere le funzioni armoniche seno e coseno come:</p>
+<p><span class="math display">
+\begin{aligned}
+\cos(\omega_nt)&amp;=\frac{e^{i\omega_nt}+e^{-i\omega_nt}}{2} \\
+\sin(\omega_nt)&amp;=\frac{e^{i\omega_nt}-e^{-i\omega_nt}}{2i} \\
+\end{aligned}
+</span> le quali, sostituite nella <a href="#eq-sft" class="quarto-xref">Equazione&nbsp;3</a>, comportano:</p>
+<p><span class="math display">
+\begin{aligned}
+g(t) &amp;= \frac{1}{2}a_o + \sum_{n=1}^\infty a_n\frac{e^{i\omega_nt}+e^{-i\omega_nt}}{2} + \sum_{n=1}^\infty b_n\frac{e^{i\omega_nt}-e^{-i\omega_nt}}{2i} \\
+g(t) &amp;= \frac{1}{2}a_o + \frac{1}{2}\sum_{n=1}^\infty (a_n-ib)e^{i\omega_nt}    + \sum_{n=1}^\infty (a_n+ib)e^{-i\omega_nt}
+\end{aligned}
+</span> dalla quale, ponendo: <span id="eq-7prime"><span class="math display">
+G_0 = a_0/2 \\
+G_n = (a_n-ib)/2 \\
+G_{-n} = (a_n + ib_n)/2 = G^*
+\tag{8}</span></span> si può scrivere: <span class="math display">
+g(t)=G_0 + \sum_{n=1}^{\infty}G_n e^{i\omega_nt} + \sum_{n=-1}^{-\infty}G_n e^{i\omega_nt}
+</span> cioè: <span id="eq-ft2"><span class="math display">
+g(t) = \sum_{n=-\infty}^{\infty}G_n e^{i\omega_nt}
+\tag{9}</span></span></p>
+<p>Le componenti, ovvero quanto ognuna di tali funzioni pesa nella ricostruzione della funzione <span class="math inline">g(t)</span> del tempo, si ricava in maniera analoga: <span id="eq-spettro"><span class="math display">
+G_n = g(t) \bullet e^{i\omega_nt}=\frac{1}{T}\int_0^T g(\tau)\left(e^{i\omega_n\tau}\right)^*~d\tau = \frac{1}{T}\int_0^Tg(\tau)e^{-i\omega_n\tau}~d\tau
+\tag{10}</span></span></p>
+<p>Tale rappresentazione complessa, anche definita <strong>spettro del segnale</strong>, ha il vantaggio di consentire un’immediata valutazione della risposta di un sistema regolato da equazioni differenziali lineari conoscendo le componenti <span class="math inline">G_n</span> del segnale in ingresso. La dimostrazione di ciò verrà riportata tra breve nel paragrafo “Funzione di Trasferimento sinusoidale”.</p>
+<p>In questo caso la <strong>base di funzioni è sia ortogonale</strong> come nel caso delle armoniche pure, <strong>ma anche normale</strong>: <span class="math display">
+e^{i\omega_nt}\bullet e^{i\omega_kt} = \frac{1}{T}\int_0^T e^{i\omega_n\tau}\left(e^{i\omega_k\tau}\right)^*~d\tau=\delta_{n,k}
+</span> dove <span class="math inline">\delta_{n,k}</span> è il delta di Kroneker. Nel caso in cui <span class="math inline">n = k</span> basta seguire i seguenti passaggi: <span class="math display">
+\begin{aligned}
+e^{i\omega_nt}\bullet e^{i\omega_kt} &amp;= \frac{1}{T}\int_0^T e^{i\omega_n\tau}\left(e^{i\omega_k\tau}\right)^*~d\tau \\
+&amp;= \frac{1}{T}\int_0^T (\cos(\omega_n\tau) + i\sin(\omega_n\tau))~(\cos(\omega_n\tau)-i\sin(\omega_n\tau))~d\tau \\
+&amp;= \frac{1}{T}\int_0^T \cos^2(\omega_n\tau)~d\tau + \frac{1}{T}\int_0^T \sin^2(\omega_n\tau)~d\tau = \frac{1}{2} + \frac{1}{2} \\
+&amp;= 1
+\end{aligned}
+</span></p>
+<p>Nel caso in cui <span class="math inline">n\neq k</span> la dimostrazione è banale se si considera l’ortogonalità delle funzioni armoniche.</p>
+<p>È opportuno anche notare come <strong>le componenti</strong> <span class="math inline">G_{-n}</span> e <span class="math inline">G_n</span> danno vita a segnali armonici reali. Si nota infatti che:</p>
+<p><span class="math display">
+G_n~e^{i\omega_nt} + G_{-n}~e^{-i\omega_nt} = G_n~e^{i\omega_nt} + G_n^*~(e^{i\omega_nt})^* = G_n~e^{i\omega_nt} + (G_n~e^{i\omega_nt})^*
+</span> che, andando a comporre graficamente i due fasori, fornisce la seguente rappresentazione ed il segnale corrispondente <span class="math inline">s_n(t) = 2M_n\cos(\omega t+\phi_n)</span></p>
+<div id="fig-fasori1" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fasori1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/fasori1.png" class="img-fluid figure-img" width="300"></p>
+<figcaption>Fasore e suo coniugato a base della scomposizione</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/fasori2.png" class="img-fluid figure-img" width="300"></p>
+<figcaption>Coefficiente dello sviluppo in serie di Fourier e suo coniugato</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fasori1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;3
+</figcaption>
+</figure>
+</div>
+<div id="fig-fasori2" class="quarto-layout-panel">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fasori2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/fasori3.png" class="img-fluid figure-img" width="300"></p>
+<figcaption>Composizione grafica dei due fasori (a)</figcaption>
+</figure>
+</div>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/fasori4.png" class="img-fluid figure-img" width="300"></p>
+<figcaption>Composizione grafica dei due fasori (b)</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-fasori2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;4
+</figcaption>
+</figure>
+</div>
+<p>La differenza tra l’espressione dell’equazione <a href="#eq-sft" class="quarto-xref">Equazione&nbsp;3</a> e quella della <a href="#eq-ft2" class="quarto-xref">Equazione&nbsp;9</a> è che nel primo caso si tratta di coefficienti <span class="math inline">a_n</span> e <span class="math inline">b_n</span> reali, nel secondo di coefficienti complessi di cui, come è schematizzato in <a href="#fig-2_3" class="quarto-xref">Figura&nbsp;5</a>, è possibile rappresentare le due funzioni modulo e fase in funzione della frequenza. Tali moduli e fasi, è facile convincersene tenendo conto dei passaggi che hanno condotto dalla <a href="#eq-sft" class="quarto-xref">Equazione&nbsp;3</a> alla <a href="#eq-ft" class="quarto-xref">Equazione&nbsp;11</a> e la rappresentazione dei fasori appena riportata, sono proprio i moduli e le fasi delle componenti armoniche che compongono il segnale <span class="math inline">s(t)</span>.</p>
+<div id="fig-2_3" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-2_3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/fig2.3.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-2_3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;5: Corrispondenza tra un segnale periodico e l’insieme delle componenti secondo una base di funzioni complesse ortonormali oppure con due funzioni discrete che rappresentano l’andamento dell’insieme dei coefficienti in modulo e fase.
+</figcaption>
+</figure>
+</div>
+<p>Rappresentiamo di nuovo i segnali in maniera analoga a quanto facciamo con i vettori. La <a href="#eq-spettro" class="quarto-xref">Equazione&nbsp;10</a> suggerisce ora la rappresentazione di <a href="#fig-2_3" class="quarto-xref">Figura&nbsp;5</a>, analoga a quella riportate in figure <a href="#fig-2_2" class="quarto-xref">Figura&nbsp;2</a> e <a href="#fig-2_1" class="quarto-xref">Figura&nbsp;1</a>.</p>
+<p>La proprietà della reversibilità, valida per l’eguaglianza espressa nella <a href="#eq-sft" class="quarto-xref">Equazione&nbsp;3</a>, permette di effettuare operazioni di manipolazione in frequenza, quindi di antitrasformare tornando nel dominio del tempo avendo la certezza di non aver introdotto ulteriori elaborazioni a causa della doppia trasformazione. Un classico esempio è l’operazione di filtraggio passa-basso su segnali aventi una componente additiva di rumore in alta frequenza. In tale caso l’operazione di filtraggio passa-basso assicura l’eliminazione delle sole componenti in alta frequenza ipotizzate appartenenti al rumore.</p>
+<p><strong>Funzioni non periodiche possono essere immaginate come funzioni periodiche dal periodo</strong> <span class="math inline">T \rightarrow \infty</span> e quindi la frequenza fondamentale <span class="math inline">f_0 \rightarrow 0</span>. Le scomposizioni di <a href="#eq-ft2" class="quarto-xref">Equazione&nbsp;9</a> e <a href="#eq-spettro" class="quarto-xref">Equazione&nbsp;10</a> assumono la forma definita come Trasformata di Fourier:</p>
+<p><span id="eq-ft"><span class="math display">
+\begin{aligned}
+g(t) &amp;= \frac{1}{2\pi}\int_{-\infty}^\infty G(\omega)~e^{i\omega t}~d\omega \\
+G(\omega) &amp;= \int_{-\infty}^\infty g(t)~e^{-i\omega t}~dt
+\end{aligned}
+\tag{11}</span></span> notare la convenzione impiegata per indicare la trasformata di una funzione <span class="math inline">g(t)</span> con la lettera maiuscola, ovvero come <span class="math inline">G(\omega)</span>.</p>
+<p>Di seguito la dimostrazione delle <a href="#eq-ft" class="quarto-xref">Equazione&nbsp;11</a>:</p>
+<p>Se definiamo:</p>
+<p><span class="math display">
+A_n := T \bullet G_n = \int_0^Tg(t)~e^{-i\omega_nt}~dt
+</span> questo corrispondere semplicemente a modificare la definizione di prodotto scalare tra funzioni del tempo, che da <span class="math display">
+f(t)\bullet g(t) = \frac{1}{T}\int_0^Tf(t)~g(t)^*~dt
+</span> diventa: <span class="math display">
+f(t)\bullet g(t) = \int_0^Tf(t)~g(t)^*~dt
+</span></p>
+<p>Questo serve in quanto, dovendo tendere <span class="math inline">T\rightarrow\infty</span>, si avrebbe uno <span class="math inline">0</span> che moltiplica l’integrale. Questo viene quindi eliminato dalla definizione.</p>
+<p>Ora facciamo tendere <span class="math inline">T\rightarrow\infty</span>: si ottiene: <span class="math display">
+A_{f=\frac{n}{T}} = A(\omega_n) = \int_{-\infty}^\infty g(t)~e^{-i\omega_nt}~dt
+</span> Questa corrisponde alla seconda delle <a href="#eq-ft" class="quarto-xref">Equazione&nbsp;11</a>. In particolare, i coefficienti discreti <span class="math inline">A_n</span> diventano una funzione continua della frequenza (o pulsazione) in quanto il passo tra frequenze successive diviene infinitesimo. Dunque, <strong>le funzioni che rappresentano le componenti della scomposizione</strong> (analoghe a quelle rappresentate in <a href="#fig-2_3" class="quarto-xref">Figura&nbsp;5</a>) non saranno più funzioni discrete, bensì continue <strong>in quanto l’intervallo di spaziatura sulle ascisse</strong> (nel dominio della pulsazione) <strong>pari a</strong> <span class="math inline">2\pi/T</span> tende a zero.</p>
+<p>Consideriamo ora la <a href="#eq-ft2" class="quarto-xref">Equazione&nbsp;9</a>:</p>
+<p><span class="math display">
+g(t) = \sum_{n=-\infty}^\infty G_n~e^{i\omega_nt} = \sum_{n=-\infty}^\infty \frac{A_n}{T}~e^{i\omega_nt} = \frac{1}{T} \sum_{n=-\infty}^\infty A~e^{i\omega_nt}
+</span> se facciamo tendere <span class="math inline">T\rightarrow\infty</span>, <span class="math inline">A_n</span> diviene una funzione continua della pulsazione <span class="math inline">A(\omega)</span> per cui la sommatoria diviene un integrale ottenendo: <span class="math display">
+\int_{-\infty}^\infty A(\omega)~e^{i\omega t}~df = \int_{-\infty}^\infty A(\omega)~e^{i\omega t}\frac{2\pi}{2\pi}~df = \frac{1}{2\pi}\int_{-\infty}^\infty A(\omega)~e^{i\omega t}~d\omega
+</span> Che corrisponde alla prima delle <a href="#eq-ft" class="quarto-xref">Equazione&nbsp;11</a>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/fig2.4.png" class="img-fluid figure-img"></p>
+<figcaption>Corrispondenza tra un segnale non periodico e l’insieme delle sue componenti secondo una base di funzioni complesse ortonormali oppure con due funzioni continue che rappresentano l’andamento dell’insieme dei coefficienti in modulo e fase.</figcaption>
+</figure>
+</div>
+</section>
+<section id="alcune-proprietà-della-trasformata-di-fourier" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="alcune-proprietà-della-trasformata-di-fourier"><span class="header-section-number">2.6</span> Alcune proprietà della trasformata di Fourier</h2>
+<p>La trasformata di Fourier gode delle proprietà elencate in <a href="#tbl-ftprop" class="quarto-xref">Tabella&nbsp;1</a>.</p>
+<div id="tbl-ftprop" class="striped hover quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ftprop-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabella&nbsp;1: Proprietà della trasformata di Fourier
+</figcaption>
+<div aria-describedby="tbl-ftprop-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="table-striped table-hover caption-top table">
+<colgroup>
+<col style="width: 22%">
+<col style="width: 77%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Proprietà</th>
+<th>Relazione nel dominio del tempo e dello spettro</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Linearità</td>
+<td><span class="math inline">a x(t) + b y(t)\rightarrow a X(\omega) + b Y(\omega)</span></td>
+</tr>
+<tr class="even">
+<td>Derivata</td>
+<td><span class="math inline">\dot x(t) \rightarrow i\omega X(\omega)</span></td>
+</tr>
+<tr class="odd">
+<td>Integrale</td>
+<td><span class="math inline">\int_0^t x(\tau)~d\tau \rightarrow \frac{1}{i\omega}X(\omega)</span></td>
+</tr>
+<tr class="even">
+<td>Variazione scala</td>
+<td><span class="math inline">x(at)\rightarrow\frac{1}{|a|}X(\frac{\omega}{a}</span></td>
+</tr>
+<tr class="odd">
+<td>Anticipo/Ritardo</td>
+<td><span class="math inline">x(t-\tau)\rightarrow X(\omega)~e^{-i\omega\tau}</span></td>
+</tr>
+<tr class="even">
+<td>Modulazione</td>
+<td><span class="math inline">x(t)~e^{-i\omega_0t}\rightarrow X(\omega-\omega_0)</span></td>
+</tr>
+<tr class="odd">
+<td>Convoluzione</td>
+<td><span class="math inline">x(t) \otimes y(t)\rightarrow X(\omega)Y(\omega)</span></td>
+</tr>
+<tr class="even">
+<td>Prodotto</td>
+<td><span class="math inline">x(t)y(t)\rightarrow X(\omega)\otimes Y(\omega)</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</section>
+<section id="dimostrazione-di-alcune-proprietà" class="level2" data-number="2.7">
+<h2 data-number="2.7" class="anchored" data-anchor-id="dimostrazione-di-alcune-proprietà"><span class="header-section-number">2.7</span> Dimostrazione di alcune proprietà</h2>
+<p>Di seguito le dimostrazioni:</p>
+<section id="linearità" class="level3" data-number="2.7.1">
+<h3 data-number="2.7.1" class="anchored" data-anchor-id="linearità"><span class="header-section-number">2.7.1</span> Linearità</h3>
+<p><span class="math display">
+\begin{aligned}
+\Im(a~x(t) + b~y(t)) &amp;= \int_{-\infty}^\infty \left[a~x(t) + b~y(t)\right]~e^{-i\omega t}~dt \\
+&amp;= \int_{-\infty}^\infty a~x(t)~e^{-i\omega t}~dt + \int_{-\infty}^\infty b ~x(t)~e^{-i\omega t}~dt \\
+&amp;= a\int_{-\infty}^\infty x(t)~e^{-i\omega t}~dt + b\int_{-\infty}^\infty~x(t)~e^{-i\omega t}~dt \\
+&amp;= a~X(\omega) + b~Y(\omega)
+\end{aligned}
+</span></p>
+</section>
+<section id="derivata" class="level3" data-number="2.7.2">
+<h3 data-number="2.7.2" class="anchored" data-anchor-id="derivata"><span class="header-section-number">2.7.2</span> Derivata</h3>
+<p>Differenziando la trasformata inversa di <span class="math inline">X(\omega)</span> rispetto al tempo (che equivale a derivare il segnale <span class="math inline">x(t)</span>), si ottiene:</p>
+<p><span class="math display">
+\begin{aligned}
+\frac{d}{dt}x(t) &amp;= \frac{d}{dt}\left\{\frac{1}{2\pi}\int_{-\infty}^\infty X(\omega)~e^{i\omega t}~d\omega \right\} \\
+&amp;= \frac{1}{2\pi} \int_{-\infty}^\infty X(\omega)~\frac{d}{dt}\left(e^{i\omega t}\right)~d\omega \\
+&amp;= \frac{1}{2\pi} \int_{-\infty}^\infty \left[i\omega X(\omega)\right]~e^{i\omega t}~d\omega \\
+&amp;= \Im^{-1}\left\{i\omega X(\omega)\right\}
+\end{aligned}
+</span></p>
+</section>
+<section id="convoluzione" class="level3" data-number="2.7.3">
+<h3 data-number="2.7.3" class="anchored" data-anchor-id="convoluzione"><span class="header-section-number">2.7.3</span> Convoluzione</h3>
+<p><span class="math display">
+\begin{aligned}
+x(t) \otimes y(t) &amp;= \int_{-\infty}^\infty x(\tau)y(t-\tau)~d\tau \\
+\Im\left\{x(t) \otimes y(t)\right\} &amp;= \int_{-\infty}^\infty\left[ \int_{-\infty}^\infty x(\tau)y(t-\tau)~d\tau \right]~e^{-i\omega t}~dt \\
+&amp;= \int_{-\infty}^\infty x(\tau)\left[ \int_{-\infty}^\infty y(t-\tau)~e^{-i\omega t}~dt\right]~d\tau  \\
+&amp;= \int_{-\infty}^\infty x(\tau)\left[ \int_{-\infty}^\infty y(\xi)~e^{-i\omega \xi}~e^{-i\omega \tau}~d\xi\right]~d\tau  \\
+&amp;= \int_{-\infty}^\infty x(\tau)~e^{-i\omega\tau} \left[ \int_{-\infty}^\infty y(\xi)~e^{-i\omega \xi}~d\xi\right]~d\tau  \\
+&amp;= X(\omega)Y(\omega)
+\end{aligned}
+</span></p>
+<p>Si noti che si è sostituita la variabile <span class="math inline">t</span> con <span class="math inline">t-\tau</span> nell’integrale ‘interno’ nella seguente maniera: <span class="math display">
+\begin{aligned}
+\xi &amp;= t - \tau \\
+t &amp;= \xi + \tau \\
+d\xi &amp;= dt
+\end{aligned}
+</span></p>
+<p>Gli estremi di integrazione, essendo da <span class="math inline">-\infty</span> a <span class="math inline">+\infty</span> rimangono invariati. Questa proprietà è connessa con la soluzione di equazioni differenziali lineari che nel dominio del tempo corrisponde ad una operazione di convoluzione, nel dominio della frequenza ad una semplice moltiplicazione di funzioni della frequenza.</p>
+</section>
+<section id="ritardoanticipo" class="level3" data-number="2.7.4">
+<h3 data-number="2.7.4" class="anchored" data-anchor-id="ritardoanticipo"><span class="header-section-number">2.7.4</span> Ritardo/anticipo</h3>
+<p><span class="math display">
+\begin{aligned}
+\Im\left\{x(t\pm t_0)\right\} &amp;= \int_{-\infty}^\infty x(t\pm t_0)~e^{-i\omega t}~dt \\
+&amp;= \int_{-\infty}^\infty x(t')~e^{-i\omega (t'\mp t_0)}~dt' \\
+&amp;= e^{\pm i\omega t_0} \int_{-\infty}^\infty x(t')e^{-i\omega t'}~dt' \\
+&amp;= X(\omega)~e^{\pm i \omega t_0}
+\end{aligned}
+</span></p>
+<p>Questa proprietà evidenzia come un ritardo/anticipo di un segnale nel tempo ha influenza solo sulla fase dello spettro mentre ne lascia invariato il modulo (il fattore esponenziale con argomento immaginario ha modulo unitario e fase pari all’argomento stesso). Intuitivamente questo è ovvio in quanto le componenti dello sviluppo in serie saranno identiche come ampiezza mentre saranno ritardate/anticipate di <span class="math inline">t_0</span>. Considerando una singola componente dello sviluppo inserire ad esempio: <span class="math display">
+a_n\cos(\omega_n(t\pm t_0)) = a_n\cos(\omega_n t \pm \omega_n t_0)
+</span> che evidenzia lo sfasamento proporzionale alla pulsazione moltiplicato per <span class="math inline">t_0</span>.</p>
+</section>
+</section>
+<section id="trasformazione-di-unequazione-differenziale-in-unequazione-algebrica-nel-dominio-delle-frequenze-funzione-di-trasferimento" class="level2" data-number="2.8">
+<h2 data-number="2.8" class="anchored" data-anchor-id="trasformazione-di-unequazione-differenziale-in-unequazione-algebrica-nel-dominio-delle-frequenze-funzione-di-trasferimento"><span class="header-section-number">2.8</span> Trasformazione di un’equazione differenziale in un’equazione algebrica nel dominio delle frequenze: <strong>Funzione di Trasferimento</strong></h2>
+<p>Supponiamo di avere un sistema regolato da una equazione differenziale del secondo ordine:</p>
+<p><span class="math display">
+\frac{d^2y(t)}{dt^2} + a\frac{dy(t)}{dt} + b~y(t) = c~u(t)
+</span></p>
+<p>dove la <span class="math inline">u(t)</span> è la forzante, ovvero l’ingresso, mentre la <span class="math inline">y(t)</span> è la risposta, ovvero l’uscita.</p>
+<p>Trasformando secondo Fourier la derivata prima e seconda dell’uscita, tenendo presente le proprietà enunciate in <a href="#tbl-ftprop" class="quarto-xref">Tabella&nbsp;1</a>, si ottiene:</p>
+<p><span class="math display">
+\frac{dy(t)}{dt}\rightarrow i\omega Y(\omega)
+</span> e <span class="math display">
+\frac{d^2y(t)}{dt^2}\rightarrow i\omega(i\omega Y(\omega))
+</span> e quindi la equazione differenziale diventa: <span class="math display">
+(i\omega)^2Y(\omega) + i\omega a~Y(\omega) + b~Y(\omega) = c~U(\omega)
+</span> che non è altro se non una equazione algebrica che può essere risolta rispetto all’uscita: <span class="math display">
+Y(\omega) = \frac{c}{b + i\omega~a + (i\omega)^2}~U(\omega)
+</span></p>
+<p>Tale relazione indica che la trasformata dell’uscita del sistema è pari alla trasformata dell’ingresso moltiplicata per una funzione anch’essa della frequenza (o pulsazione) che dipende solamente dalla forma dell’equazione differenziale che regola il sistema stesso, ovvero dai parametri <span class="math inline">a</span>, <span class="math inline">b</span> e <span class="math inline">c</span>. Tale funzione complessa viene definita <strong>Funzione di Trasferimento</strong>.</p>
+<p>Per convenzione la funzione di trasferimento viene indicata come <span class="math inline">H(\omega)</span> per cui la precedente relazione si scrive in forma generale: <span id="eq-transffunc"><span class="math display">
+Y(\omega) = H(\omega)U(\omega)
+\tag{12}</span></span></p>
+<p>Dalla precedente è immediato ricavare la funzione di trasferimento come rapporto delle trasformate: <span class="math display">
+H(\omega) = \frac{Y(\omega)}{U(\omega)}
+</span> In generale l’uscita di un sistema lineare si può ottenere in due maniere:</p>
+<ul>
+<li>in frequenza: moltiplicazione della trasformata dell’ingresso per la funzione di trasferimento</li>
+<li>nel tempo: convoluzione tra ingresso ed antitrasformata della funzione di trasferimento (risposta del sistema ad un impulso ideale).</li>
+</ul>
+<p>La funzione di trasferimento, oltre che esplicitamente ricavata dalla relazione differenziale data dalla fisica del fenomeno, può essere ricavata trasformando la risposta del sistema ad un impulso.</p>
+<p>Per fare ciò introduciamo il concetto di <em>delta di Dirac</em> che modella <strong>un impulso ideale</strong>. Essa vale infinito per un tempo infinitesimo. Si definisce <span class="math inline">\delta(t-t_0)</span> quella funzione che vale infinito per <span class="math inline">t = t_0</span> ed è nulla altrove. Se integrata tale funzione, avendo dominio infinitesimo ma valore infinito, risulta: <span class="math display">
+\int_{-\infty}^\infty \delta(t-t_0)~dt = 1
+</span></p>
+<p>Calcoliamone dunque la sua trasformata: <span class="math display">
+\delta(t)\rightarrow \int_{-\infty}^\infty \delta(t)~e^{-i\omega t}~dt = \int_{-\infty}^\infty \delta(t)~e^{-i\omega (t=0)}~dt = \int_{-\infty}^\infty \delta(t) = 1\quad \forall\omega
+</span></p>
+<p>Se quindi si impiega tale funzione come ingresso ad un generico sistema, si ottiene che <span class="math inline">U(\omega) = 1</span> per ogni frequenza e quindi <span class="math inline">Y(\omega) = H(\omega)</span>. Questo è il principale motivo per il quale chi si occupa di identificazione/caratterizzazione dei sistemi meccanici impiega martelletti strumentati per imporre degli impulsi sulle strutture e registrarne le vibrazioni nei diversi punti di interesse per ricavare la <span class="math inline">h(t)</span> ovvero, tramite trasformata di Fourier, la <span class="math inline">H(\omega)</span> che lega sollecitazioni nel punto di applicazioni dell’impulso alla risposta nel punto di registrazione delle vibrazioni. Torneremo su questo argomento nel terzo paragrafo.</p>
+<p>Nel prossimo paragrafo evidenziamo un ulteriore punto di vista sulla funzione di trasferimento che può essere vista come quella funzione che in modulo indica l’attenuazione di una qualsiasi armonica venga posta in ingresso ed in fase il suo sfasamento. Da ciò prende anche il nome di funzione di trasferimento ‘sinusoidale’.</p>
+</section>
+<section id="funzione-di-trasferimento-sinusoidale" class="level2" data-number="2.9">
+<h2 data-number="2.9" class="anchored" data-anchor-id="funzione-di-trasferimento-sinusoidale"><span class="header-section-number">2.9</span> Funzione di trasferimento sinusoidale</h2>
+<p>Consideriamo un sistema dinamico lineare caratterizzato da una funzione di trasferimento <span class="math inline">H(\omega)</span>. Iniettiamo un ingresso puramente armonico di tipo sinusoidale, come schematizzato nel diagramma a blocchi di <a href="#fig-2_5" class="quarto-xref">Figura&nbsp;6</a>.</p>
+<div id="fig-2_5" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-2_5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/fig2.5.drawio.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-2_5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;6: Rappresentazione ingresso-uscita di un sistema dinamico regolato da equazione differenziale lineare.
+</figcaption>
+</figure>
+</div>
+<p>Imponendo in ingresso <span class="math inline">u(t)=\sin(\omega_0 t)</span> vogliamo determinare l’uscita <span class="math inline">y(t)</span>. Vedremo che si determina in maniera immediata dalla conoscenza di modulo e fase della funzione di trasferimento in corrispondenza della pulsazione dell’ingresso.</p>
+<p>Per determinarlo passiamo attraverso le trasformate, dunque trasformiamo l’ingresso: <span class="math display">
+u(t)=\sin(\omega_0 t) \otimes U(\omega) = \int_{-\infty}^\infty \sin(\omega_0 t)~e^{-i\omega t}~ dt = \\
+= \int_{-\infty}^\infty \sin(\omega_0 t)(\cos(\omega t) - i\sin(\omega t)) ~dt
+</span></p>
+<p>Tale trasformata vale chiaramente zero <span class="math inline">\forall\omega \neq\pm\omega_0</span> grazie alla proprietà di ortonormalità delle funzioni armoniche. Per <span class="math inline">\omega = \omega_0</span> ed <span class="math inline">\omega = -\omega_0</span> occorre invece calcolarne i valori.</p>
+<p><span class="math display">
+\begin{aligned}
+U(\omega_0) &amp;= \int_{-\infty}^\infty \sin(\omega_0 t)(- i\sin(\omega_0 t)) ~dt = -i\int_{-\infty}^\infty \sin^2(\omega_0 t)~dt \\
+&amp;= -i \int_{-\infty}^\infty \frac{1-\cos(2\omega_0 t)}{2}~dt = -\frac{i}{2} \cdot\infty \\
+U(-\omega_0) &amp;= \int_{-\infty}^\infty \sin(\omega_0 t)(i\sin(\omega_0 t)) ~dt = i\int_{-\infty}^\infty \sin^2(\omega_0 t)~dt \\
+&amp;= i \int_{-\infty}^\infty \frac{1-\cos(2\omega_0 t)}{2}~dt = \frac{i}{2} \cdot\infty \\
+\end{aligned}
+</span></p>
+<p>Volendo rappresentare lo spettro della funzione seno si ha dunque il grafico in <a href="#fig-2_6" class="quarto-xref">Figura&nbsp;7</a>.</p>
+<div id="fig-2_6" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-2_6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/fig2.6.drawio.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-2_6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;7: Rappresentazione dello spettro della funzione sinusoidale. In modulo ha due componenti di valore infinito del primo ordine con modulo 1/2 (ovvero due delta di Dirac di valore 1/2). Come fase due valori antisimmetrici di 90° e -90°. Globalmente lo spettro delle componenti a pulsazioni positive risultano essere i valori coniugati delle componenti a pulsazioni negative, come risulta anche dall’equazione <a href="#eq-7prime" class="quarto-xref">Equazione&nbsp;8</a>.
+</figcaption>
+</figure>
+</div>
+<p>Globalmente la trasformata dell’ingresso si può scrivere quindi come somma di due delta di Dirac: <span class="math display">
+U(\omega) = \frac{i}{2}\delta(\omega + \omega_0)- \frac{i}{2}\delta(\omega-\omega_0)
+</span> dove con delta di Dirac <span class="math inline">\delta(\omega-\omega_0)</span> si intende la funzione che vale infinito per <span class="math inline">\omega=\omega_0)</span> ed è nulla altrove. Se integrata, tale funzione, avendo dominio infinitesimo ma valore infinito, risulta <span class="math inline">\int_{-\infty}^\infty\delta(\omega-\omega_0)~d\omega</span>. Se come argomento dell’integrale si ha una generica funzione <span class="math inline">H(\omega)</span>, risulta <span class="math inline">\int_{-\infty}^\infty H(\omega)\delta(\omega-\omega_0)~d\omega = H(\omega_0)</span>. Questo semplicemente perché l’infinito rappresentato dalla delta di Dirac moltiplica il valore della funzione in corrispondenza della pulsazione <span class="math inline">\omega_0</span> facendo assumere al prodotto un valore infinito di modulo <span class="math inline">H(\omega_0)</span> che, integrato su di un dominio infinitesimo produce un risultato finito pari al valore assunto dalla funzione in corrispondenza della pulsazione <span class="math inline">\omega_0)</span>. A questo punto è immediato determinare il valore della trasformata dell’uscita: <span class="math display">
+Y(\omega) = H(\omega)U(\omega) = H(\omega) \left( \frac{i}{2}\delta(\omega + \omega_0) - \frac{i}{2}\delta(\omega - \omega_0) \right)
+</span> che porta ad avere una somma di due delta con moduli pari al valore della funzione di trasferimento in corrispondenza dei due infiniti: <span class="math display">
+Y(\omega) = H(-\omega_0)\frac{i}{2}\delta(\omega+\omega_0) - H(\omega_0)\frac{i}{2}\delta(\omega-\omega_0)
+</span></p>
+<p>La funzione di trasferimento può essere scomposta in modulo e fase: <span class="math display">
+H(\omega) = M(\omega)~e^{-i\Phi(\omega)}
+</span> per cui si ha: <span class="math display">
+Y(\omega)=M(\omega_0)\frac{i}{2}\delta(\omega + \omega_0)~e^{-i\Phi(\omega_0)} - M(\omega_0)\frac{i}{2}\delta(\omega - \omega_0)~e^{-i\Phi(\omega_0)}
+</span> In cui si sono semplicemente sostituiti i valori e considerata la proprietà dello spettro si un segnale reale: modulo simmetrico e fase antisimmetrica, secondo la <a href="#eq-7prime" class="quarto-xref">Equazione&nbsp;8</a>.</p>
+<p>Considerando l’equazione di Eulero: <span class="math inline">e^{i\Phi(\omega_0)}=\cos(\Phi(\omega_0)) + i\sin(\Phi(\omega_0))</span> si ottiene, dopo semplice manipolazione: <span class="math display">
+\frac{Y(\omega)}{M(\omega_0)} = \cos(\Phi(\omega_0)) \left[ \frac{i}{2}\delta(\omega+\omega_0) - \frac{i}{2}\delta(\omega-\omega_0) \right] + \\
++ \sin(\Phi(\omega_0)) \left[ \frac{1}{2}\delta(\omega+\omega_0) + \frac{1}{2}\delta(\omega-\omega_0) \right]
+</span></p>
+<p>Del primo termine sappiamo immediatamente calcolare l’antitrasformata avendo appena calcolato la trasformata della funzione seno. Il secondo termine è anche immediatamente antitrasformabile in quanto vale: <span class="math display">
+\cos(\omega_0 t) = \frac{1}{2}\delta(\omega+\omega_0) + \frac{1}{2}\delta(\omega-\omega_0)
+</span></p>
+<p>In definitiva, quindi: <span class="math display">
+y(y) = M(\omega_0)\cos(\Phi(\omega_0)) \sin(\omega_0 t) +  M(\omega_0)\sin(\Phi(\omega_0)) \cos(\omega_0 t)
+</span> ovvero: <span class="math display">
+y(t) = M(\omega_0)\sin(\omega_0t + \Phi(\omega_0))
+</span> Che esprime il fatto che se si pone in ingresso ad un sistema regolato da equazioni differenziali lineari un ingresso armonico di modulo unitario e pulsazione <span class="math inline">\omega_0</span>, l’uscita sarà un’armonica di pari pulsazione <span class="math inline">\omega_0</span> ma di modulo pari al modulo della funzione di trasferimento <span class="math inline">H(\omega_0)</span> calcolata per la pulsazione <span class="math inline">\omega_0</span> e sfasata della fase della funzione di trasferimento <span class="math inline">\Phi(\omega_0))</span> calcolata per la stessa pulsazione <span class="math inline">\omega_0</span>.</p>
+<div id="fig-2_7" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-2_7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/fig2.7.drawio.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-2_7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;8: Trasformata del seno
+</figcaption>
+</figure>
+</div>
+<p>A tale risultato era possibile giungere semplicemente considerando la <a href="#eq-transffunc" class="quarto-xref">Equazione&nbsp;12</a>: <span class="math display">
+\begin{aligned}
+Y(\omega) &amp;= H(\omega)U(\omega)=M_H(\omega)~e^{i\Phi_H(\omega)} M_U(\omega)~e^{i\Phi_U(\omega)} \\
+&amp;= M_H(\omega) M_U(\omega)~e^{i(\Phi_H(\omega) + \Phi_U(\omega))}
+\end{aligned}
+</span> che esprime appunto il fatto che i moduli si moltiplicano e le fasi si sommano.</p>
+</section>
+<section id="rappresentazione-dello-spettro-di-un-segnale-campionato-mediante-dft" class="level2" data-number="2.10">
+<h2 data-number="2.10" class="anchored" data-anchor-id="rappresentazione-dello-spettro-di-un-segnale-campionato-mediante-dft"><span class="header-section-number">2.10</span> Rappresentazione dello spettro di un segnale campionato mediante DFT</h2>
+<p>Nell’elaborazione dei segnali occorre passare a segnali di tipo discreto poiché i dati acquisiti dal modulo di acquisizione digitale e registrati sono delle sequenze finite di valori quantizzati, ovvero dei vettori come già visto. Dunque, nell’elaborazione computerizzata dei segnali non si manipola un segnale <span class="math inline">s(t)</span>, ma un vettore <span class="math inline">[s(1), s(2), \dots, s(N)]</span> di N valori <span class="math inline">s(n)</span> campionati alla frequenza di campionamento <span class="math inline">f_c = 1/T_c</span>.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fft_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Segnale digitale campionato da un segnale continuo con 20 campioni</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>La <strong>Trasformata di Fourier Discreta</strong> (DFT) è formulata così: <span class="math display">
+s(n)\rightarrow S(k) = \sum_{n=1}^N s(n)~e^{-\frac{2\pi i}{N}k(n-1)}\quad k=0, 1, \dots, N-1
+</span></p>
+<p>Come era prevedibile, ciascun elemento S(k) della trasformata del segnale discreto, ovvero del vettore, si può calcolare come prodotto di due vettori: <span class="math display">
+S(k) = [s(1), s(2), \dots, s(N)]\cdot[1, e^{-\frac{2\pi i}{N}k}, e^{-\frac{2\pi i}{N}k~2},\dots, e^{-\frac{2\pi i}{N}k~N}]^T
+</span> Ovvero tra il vettore corrispondente al segnale discreto ed uno dei vettori corrispondenti alla base (uno dei segnali discreti complessi <span class="math inline">e^{-\frac{2\pi i}{N}kn}</span> base della scomposizione). Anch’essi vettori ortonormali, in altre parole facente parte dei versori nello spazio <span class="math inline">\mathbb R^N</span>. Si noti che <strong>per ricavare le componenti tramite prodotto scalare</strong> definito in <a href="#eq-prodscal" class="quarto-xref">Equazione&nbsp;5</a> manca la normalizzazione per <span class="math inline">N</span>.</p>
+<p>La DFT la si può scrivere evidenziando la corrispondenza tra i vettori nel dominio del tempo discreto <span class="math inline">s(n)</span> e della frequenza discreta, ovvero lo spettro <span class="math inline">S(k)</span>: <span class="math display">
+[s(1), s(2), \dots, s(N)]\rightarrow [S(1), S(2), \dots, S(N)]
+</span></p>
+<p>Si noti come lo spettro <span class="math inline">[S(1), S(2), \dots, S(N)]</span> <strong>abbia lo stesso numero di campioni</strong> <span class="math inline">N</span> del segnale <span class="math inline">[s(1), s(2), \dots, s(N)]</span>.</p>
+<p>È importante ora capire: cosa rappresentano i diversi coefficienti <span class="math inline">S(k)</span>? A che frequenze corrispondono i vari <span class="math inline">k</span>?</p>
+<p><strong>Consideriamo</strong> <span class="math inline">S(1)</span> che corrisponde a frequenza nulla: <span class="math inline">K</span> parte da <span class="math inline">0</span>. Stiamo moltiplicando per un segnale costante che possiamo immaginare come un segnale armonico avente periodo infinito (inverso della frequenza: <span class="math inline">1/0 = +\infty</span>).</p>
+<p>Esso è pari a: <span class="math display">
+S(1)=S(k=0)=\sum_{n=1}^N s(n)~e^0 = \sum_{n=1}^N s(n)
+</span> Quindi è pari alla somma dei campioni del segnale. Si noti che si ha quindi <span class="math inline">S(1) = N \bar{s}</span>, sove <span class="math inline">\bar s</span> è la media del segnale sull’intervallo considerato.</p>
+<p><strong>Consideriamo</strong> <span class="math inline">S(2)</span>: <span class="math display">
+S(2)=S(k=1)=[s(1), s(2), \dots, s(N)]\cdot[1, e^{-\frac{2\pi i}{N}}, e^{-\frac{2\pi i}{N}\cdot 2},\dots, e^{-\frac{2\pi i}{N}\cdot N}]^T
+</span></p>
+<p>Quindi <span class="math inline">S(2)</span>, divisa per <span class="math inline">N</span>, fornirà la componente del segnale <span class="math inline">s(n)</span> lungo la prima armonica. Si noti infatti che l’esponenziale complesso ha fase che parte da <span class="math inline">0</span> ed arriva a <span class="math inline">2\pi</span> esattamente in <span class="math inline">N</span> campioni eseguendo quindi un solo periodo o giro per il <em>fasore</em> corrispondente. Il periodo totale di campionamento è pari a <span class="math inline">(N-1)T_c</span></p>
+<p>Di conseguenza la frequenza corrispondente sarà <span class="math inline">\frac{1}{(N-1)T_c}</span>.</p>
+<p><strong>Consideriamo</strong> <span class="math inline">S(3)</span>: <span class="math display">
+S(3)=S(k=3)=[s(1), s(2), \dots, s(N)]\cdot[1, e^{-\frac{4\pi i}{N}}, e^{-\frac{4\pi i}{N}\cdot 2},\dots, e^{-\frac{4\pi i}{N}\cdot N}]^T
+</span></p>
+<p><span class="math inline">S(3)</span>, diviso sempre per <span class="math inline">N</span> è la componente del segnale <span class="math inline">s(n)</span> lungo la seconda armonica. Si noti che l’esponenziale complesso ha fase che parte da <span class="math inline">0</span> ed arriva a <span class="math inline">4\pi</span> esattamente in <span class="math inline">N</span> campioni eseguendo quindi due periodi, o giri, per il fasore corrispondente. Di conseguenza la frequenza corrispondente sarà <span class="math inline">\frac{2}{(N-1)T_c}</span>. E così via.</p>
+<p>Continuando in questo modo, l’ultimo valore dello spettro corrisponderebbe alla frequenza <span class="math inline">1/T_c</span> pari alla frequenza di campionamento <span class="math inline">f_c</span>. Ma sappiamo che ciò non è possibile. Il teorema di Nyquist assegna infatti significato alla sola banda <span class="math inline">0\div f_c/2</span>. è questo il motivo per cui dalla frequenza di Nyquist (<span class="math inline">f_c/2</span>) in poi si ha una ripetizione dello spettro tramite le componenti negative che, assieme alle corrispondenti positive, consentono di ottenere le armoniche come segnali reali.</p>
+<div id="fig-cap" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-cap-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/dft.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cap-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;9: Rappresentazione dei coefficienti della scomposizione di Fourier mediante DFT. La trasformazione possiede contenuto informativo sino alla frequenza di Nyquist, oltre si ha uno specchio delle componenti (per segnali reali il modulo sarà simmetrico, la fase antisimmetrica).
+</figcaption>
+</figure>
+</div>
+<p>Si veda la <a href="#sec-example-fft" class="quarto-xref">Sezione&nbsp;3.1.1</a> per un esempio.</p>
+</section>
+<section id="tabella-riassuntiva" class="level2" data-number="2.11">
+<h2 data-number="2.11" class="anchored" data-anchor-id="tabella-riassuntiva"><span class="header-section-number">2.11</span> Tabella riassuntiva</h2>
+<div id="tbl-riassunto" class="striped quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-riassunto-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Tabella&nbsp;2: Riassunto delle relazioni principali.
+</figcaption>
+<div aria-describedby="tbl-riassunto-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="table-striped caption-top table">
+<colgroup>
+<col style="width: 31%">
+<col style="width: 42%">
+<col style="width: 24%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Oggetto</th>
+<th>Sviluppo in serie o scomposizione dell’oggetto</th>
+<th>Calcolo coefficienti</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Vettore <span class="math inline">\mathbf v</span></td>
+<td><p><span class="math inline">\mathbf{v} = \alpha \mathbf{e}_1 + \beta \mathbf{e}_2</span></p>
+<p>dove <span class="math inline">\mathbf e_1, \mathbf e_2</span> sono i versori di una base ortogonale</p></td>
+<td><p><span class="math inline">\alpha = \mathbf{v}\cdot\mathbf{e}_1</span></p>
+<p><span class="math inline">\beta = \mathbf{v}\cdot\mathbf{e}_2</span></p></td>
+</tr>
+<tr class="even">
+<td><p>Segnale periodico <span class="math inline">g(t)</span> nel tempo continuo (sviluppo di Fourier)</p>
+<p>Segnale periodico <span class="math inline">g(t)</span> nel tempo continuo (sviluppo di Fourier)</p></td>
+<td><p><span class="math inline">g(t)=\frac{a_0}{2}+\sum_{n=1}^\infty a_n\cos(\omega_nt) +\sum_{n=1}^\infty b_n\sin(\omega_nt)</span></p>
+<p>dove <span class="math inline">\omega_n=2\pi nf_0</span></p></td>
+<td><p><span class="math inline">a_n=\frac{2}{T}\int_0^Tg(t)\cos(\omega_nt)~dt</span></p>
+<p><span class="math inline">b_n=\frac{2}{T}\int_0^Tg(t)\sin(\omega_nt)~dt</span></p></td>
+</tr>
+<tr class="odd">
+<td>Segnale periodico <span class="math inline">g(t)</span> nel tempo continuo (sviluppo mediante fasori)</td>
+<td><p><span class="math inline">g(t)=\sum_{n=-\infty}^\infty G_n~e^{i\omega_n t}</span></p>
+<p>dove <span class="math inline">\omega_n = 2\pi n f_0</span></p></td>
+<td><span class="math inline">G_n=\frac{1}{T}\int_0^T g(t)~e^{-i\omega_nt}~dt</span></td>
+</tr>
+<tr class="even">
+<td>Segnale generico, NON periodico nel tempo continuo</td>
+<td><span class="math inline">g(t)=\frac{1}{2\pi}\int_{-\infty}^\infty G(\omega)~e^{i\omega t}~dt</span></td>
+<td><span class="math inline">G(\omega=\frac{1}{T}\int_0^T g(t)~e^{-i\omega_nt}~dt</span></td>
+</tr>
+<tr class="odd">
+<td>Segnale digitale <span class="math inline">s(n)=[s(1),s(2),\dots,s(N)]</span></td>
+<td><p><span class="math inline">s(n)=\frac{1}{N}\sum_{k=0}^{N-1}S(k)~e^{\frac{2\pi i}{N}k(n-1)}</span></p>
+<p><span class="math inline">n=1, 2, \dots, N</span></p></td>
+<td><p><span class="math inline">S(K)=\sum_{n=1}^{N}s(n)~e^{-\frac{2\pi i}{N}k(n-1)}</span></p>
+<p><span class="math inline">k=0, 1, \dots, N-1</span></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>Notare che per <strong>segnali digitali</strong>, campionati in un intervallo di tempo finito e quantizzati, non ha senso chiedersi se siano periodici o meno. Semplicemente non lo sappiamo. In ogni caso la minima armonica contenuta vale 1/(intervallo di acquisizione) e ci saranno le sue multiple in modo analogo ai segnali periodici nel tempo continuo.</p>
+</section>
+</section>
+<section id="la-trasformata-di-fourier-rapida" class="level1 page-columns page-full" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> La trasformata di Fourier rapida</h1>
+<p>Come visto sopra, la trasformata di Fourier scompone una serie temporale nelle sue frequenze costituenti, rappresentandola cioè come una somma di oscillazioni armoniche.</p>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/fft.png" class="img-fluid figure-img"></p>
+<figcaption>Fonte: nti-audio.com</figcaption>
+</figure>
+</div>
+</div></div><p>L’algoritmo FFT è una procedura computazionale molto efficiente per calcolare la <strong>trasformata di Fourier</strong> discreta di un segnale, o serie temporale, campionato. Se <span class="math inline">x</span> è la serie storica e <span class="math inline">X</span> è la sua trasformata:</p>
+<p><span class="math display">
+X(k) = \sum_{n=1}^N x(n) e^{-j2\pi k n/N}
+</span></p>
+<p>dove <span class="math inline">k=1, 2, \dots, N-1</span> e <span class="math inline">N</span> è il numero di osservazioni campionate.</p>
+<p>Si noti che la trasformata di un segnare reale è una serie di numeri complessi, la cui parte reale rappresenta l’<strong>intensità</strong> mentre la parte immaginaria rappresenta la <strong>fase</strong>.</p>
+<section id="esempio-1" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="esempio-1"><span class="header-section-number">3.1</span> Esempio</h2>
+<section id="sec-example-fft" class="level3" data-number="3.1.1">
+<h3 data-number="3.1.1" class="anchored" data-anchor-id="sec-example-fft"><span class="header-section-number">3.1.1</span> Creiamo una serie di dati</h3>
+<p>Creiamo una serie temporale ottenuta combinando sinusoidi con diversi parametri di ampiezza <span class="math inline">w</span>, frequenza <span class="math inline">f</span> e fase <span class="math inline">\phi</span>. Per farlo definiamo una funzione di supporto:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>signal <span class="ot">&lt;-</span> <span class="cf">function</span>(t, pars, <span class="at">rad=</span><span class="cn">FALSE</span>) {</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stopifnot</span>(<span class="fu">is.data.frame</span>(pars))</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span>rad) {</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    pars<span class="sc">$</span>phi <span class="ot">&lt;-</span> pars<span class="sc">$</span>phi<span class="sc">/</span><span class="dv">180</span><span class="sc">*</span>pi</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    pars<span class="sc">$</span>f <span class="ot">&lt;-</span> <span class="dv">2</span><span class="sc">*</span>pi<span class="sc">*</span>pars<span class="sc">$</span>f</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">with</span>(</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    pars,</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">map_dbl</span>(t, \(t) <span class="fu">map_vec</span>(<span class="fu">seq_along</span>(w), <span class="sc">~</span> w[.]<span class="sc">*</span><span class="fu">sin</span>(t<span class="sc">*</span>f[.]<span class="sc">+</span>phi[.])) <span class="sc">%&gt;%</span> <span class="fu">sum</span>())</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Ora creiamo un segnale composto da tre sinusoidi,</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>pars <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">w =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">0.2</span>, <span class="fl">0.5</span>, <span class="fl">0.25</span>),</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">f =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">10</span>, <span class="dv">2</span>, <span class="dv">30</span>),</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">phi =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">90</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Tabella dei parametri</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;"><span class="math inline">w</span> (-)</th>
+<th style="text-align: right;"><span class="math inline">f</span> (Hz)</th>
+<th style="text-align: right;"><span class="math inline">\phi</span> (°)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0.20</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0.50</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">90</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">t =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">10</span>, <span class="at">length.out =</span> <span class="dv">5000</span>),</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">signal</span>(t, pars, <span class="at">rad=</span><span class="cn">FALSE</span>) <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">length</span>(t), <span class="dv">0</span>, <span class="fl">0.5</span>) <span class="sc">+</span> <span class="fl">1.25</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>) </span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>s <span class="sc">%&gt;%</span> </span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>t, <span class="at">y=</span>y)) <span class="sc">+</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth=</span><span class="fl">0.1</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fft_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Segnale composto, con rumore normale</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="spettrogramma-mediante-fft" class="level3" data-number="3.1.2">
+<h3 data-number="3.1.2" class="anchored" data-anchor-id="spettrogramma-mediante-fft"><span class="header-section-number">3.1.2</span> Spettrogramma mediante FFT</h3>
+<p>R mette a disposizione la funzione <code>fft()</code> nella libreria base:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>s.fft <span class="ot">&lt;-</span> <span class="fu">fft</span>(s<span class="sc">$</span>y)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(s.fft)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> Length   Class    Mode 
+   5000 complex complex </code></pre>
+</div>
+</div>
+<p>Quindi la trasformata è un vettore complesso con lo stesso numero di osservazioni del segnale iniziale.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>s <span class="sc">%&gt;%</span> </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">n</span>(),</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">fft =</span> <span class="fu">fft</span>(y),</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">intensity =</span> <span class="fu">Mod</span>(fft),</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">phase =</span> <span class="fu">Arg</span>(fft)<span class="sc">/</span>pi<span class="sc">*</span><span class="dv">180</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>i, <span class="at">y=</span>intensity)) <span class="sc">+</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fft_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>FFT grezza</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Cosa c’è in ascissa? La trasformata copre un intervallo di frequenze <span class="math inline">[0, N/T]</span>, con <span class="math inline">T=N\delta t</span> la durata complessiva del segnale. L’intensità dei picchi (cioè il modulo del valore complesso) corrisponde invece all’ampiezza delle componenti, scalata con il numero di osservazioni:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>s.fft <span class="ot">&lt;-</span> s <span class="sc">%&gt;%</span> </span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">n</span>()<span class="sc">-</span><span class="dv">1</span>,</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">fft =</span> <span class="fu">fft</span>(y),</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">intensity =</span> <span class="fu">Mod</span>(fft) <span class="sc">/</span> <span class="fu">n</span>() <span class="sc">*</span> <span class="dv">2</span>,</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">phase =</span> <span class="fu">Arg</span>(fft)<span class="sc">/</span>pi<span class="sc">*</span><span class="dv">180</span>,</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">f =</span> i <span class="sc">/</span> <span class="fu">max</span>(t)</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">nrow</span>(.)<span class="sc">/</span><span class="dv">2</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Messa in grafico otteniamo lo <strong>spettro in frequenza</strong> del segnale:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>s.fft <span class="sc">%&gt;%</span> </span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>f, <span class="at">y=</span>intensity)) <span class="sc">+</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept=</span>pars<span class="sc">$</span>f, <span class="at">color=</span><span class="st">"red"</span>, <span class="at">linewidth=</span><span class="fl">0.25</span>) <span class="sc">+</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth=</span><span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size=</span><span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">35</span>)) <span class="sc">+</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"frequenza (Hz)"</span>, <span class="at">y=</span><span class="st">"intensità (-)"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fft_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>FFT riscalata. In rosso le frequenze originali nella tabella <code>pars</code></figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="finestre" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="finestre"><span class="header-section-number">3.2</span> Finestre</h2>
+<p>Consideriamo un segnale sinusoidale privo di disturbo, campionato per un tempo pari a 10 volte il suo periodo più mezzo periodo:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>pars <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">w =</span> <span class="fu">c</span>(<span class="dv">1</span>),</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">f =</span> <span class="fu">c</span>(<span class="dv">10</span>),</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">phi =</span> <span class="fu">c</span>(<span class="dv">0</span>)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">t =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span><span class="sc">+</span><span class="dv">1</span><span class="sc">/</span>pars<span class="sc">$</span>f<span class="sc">/</span><span class="dv">2</span>, <span class="at">length.out =</span> <span class="dv">512</span>),</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">signal</span>(t, pars, <span class="at">rad=</span><span class="cn">FALSE</span>) <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">length</span>(t), <span class="dv">0</span>, <span class="fl">0.0</span>)</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>) </span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>s <span class="sc">%&gt;%</span> </span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>t, <span class="at">y=</span>y)) <span class="sc">+</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="fft_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Ora osserviamo la FFT</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>s <span class="sc">%&gt;%</span> </span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">f =</span> <span class="dv">0</span><span class="sc">:</span>(<span class="fu">n</span>()<span class="sc">-</span><span class="dv">1</span>)<span class="sc">/</span><span class="fu">max</span>(t),</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">fft =</span> <span class="fu">fft</span>(y),</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">intensity =</span> <span class="fu">Mod</span>(fft) <span class="sc">/</span> <span class="fu">n</span>() <span class="sc">*</span> <span class="dv">2</span>,</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">phase =</span> <span class="fu">Arg</span>(fft)<span class="sc">/</span>pi<span class="sc">*</span><span class="dv">180</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n=</span><span class="fu">nrow</span>(.)<span class="sc">/</span><span class="dv">2</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>f, <span class="at">y=</span>intensity)) <span class="sc">+</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept=</span><span class="dv">10</span>, <span class="at">linetype=</span><span class="dv">2</span>, <span class="at">color=</span><span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spoke</span>(<span class="fu">aes</span>(<span class="at">angle=</span>pi<span class="sc">/</span><span class="dv">2</span>, <span class="at">y=</span><span class="dv">0</span>, <span class="at">radius=</span>intensity), <span class="at">linewidth=</span><span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">shape=</span><span class="dv">21</span>) <span class="sc">+</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="fft_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Come si vede, la FFT è allargata, in maniera inattesa, attorno al picco a 10 Hz: <strong>come mai?</strong></p>
+<p>Bisogna ricordare che la FFT assume che il segnale sia periodico e campionato per un numero di cicli interi. Cioè è come se il segnale si ripetesse all’infinito uguale a se stesso dopo (e prima) la fine del campionamento. Nel nostro caso, quindi, è come se il segnale fosse come il seguente:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>s <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">step=</span><span class="st">"A"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(<span class="fu">mutate</span>(s, <span class="at">step=</span><span class="st">"B"</span>, <span class="at">t=</span>t<span class="sc">+</span><span class="fu">last</span>(t))) <span class="sc">%&gt;%</span> </span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>t, <span class="at">y=</span>y, <span class="at">color=</span>step)) <span class="sc">+</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="fft_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>È evidente come ogni <span class="math inline">\Delta T=1.05+0.05</span> secondi ci sia un evento con una discontinuità sulla derivata del segnale, che si ripete periodicamente. Cioè si ha un evento con un ampio contenuto in frequenza (per ottenere uno spigolo bisogna sommare molte componenti!) attorno alla frequenza pari all’inverso della durata del campionamento. È altrettanto evidente come, ad eccezione del caso in cui la durata del campionamento è un multiplo esatto di tutti i periodi contenuti nel segnale, ciò significa che la parte a bassa frequenza dello spettro sarà sempre sporcata alla frequenza pari all’inverso della durata del campionamento.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Esercizio">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Esercizio
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Provare a modificare i parametri di frequenza e durata del campionamento per osservare il risultato.</p>
+</div>
+</div>
+<p>Per mitigare questo problema si ricorre alla <strong>finestratura</strong> (<em>windowing</em>) del segnale: si moltiplica il segnale per una funzione che va a zero, o quasi, all’inizio e alla fine del campionamenti. Esistono diverse funzioni di finestratura, le più utilizzate sono quella di <strong>Hamming</strong> e quella di <strong>Hann</strong>.</p>
+<p>Il pacchetto <code>gsignal</code> le mette a disposizione entrambi (ed altre):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>s <span class="sc">%&gt;%</span> </span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">n</span>(),</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">win =</span> <span class="fu">hann</span>(<span class="fu">n</span>()),</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">yw =</span> y <span class="sc">*</span> win</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>i)) <span class="sc">+</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>win), <span class="at">color=</span><span class="st">"red"</span>, <span class="at">linetype=</span><span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span><span class="sc">-</span>win), <span class="at">color=</span><span class="st">"red"</span>, <span class="at">linetype=</span><span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>yw))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="fft_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>A questo punto il segnale è ovviamente perfettamente periodico e, se calcoliamo la FFT del segnale modificato con la finestra di Hann, otteniamo:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>s <span class="sc">%&gt;%</span> </span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">f =</span> <span class="dv">0</span><span class="sc">:</span>(<span class="fu">n</span>()<span class="sc">-</span><span class="dv">1</span>)<span class="sc">/</span><span class="fu">max</span>(t),</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">yw =</span> <span class="fu">hann</span>(<span class="fu">n</span>()) <span class="sc">*</span> y,</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">fft =</span> <span class="fu">fft</span>(yw),</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">intensity =</span> <span class="fu">Mod</span>(fft) <span class="sc">/</span> <span class="fu">n</span>()<span class="sc">*</span><span class="dv">2</span>,</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">phase =</span> <span class="fu">Arg</span>(fft)<span class="sc">/</span>pi<span class="sc">*</span><span class="dv">180</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n=</span><span class="fu">nrow</span>(.)<span class="sc">/</span><span class="dv">2</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>f, <span class="at">y=</span>intensity)) <span class="sc">+</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept=</span><span class="dv">10</span>, <span class="at">linetype=</span><span class="dv">2</span>, <span class="at">color=</span><span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spoke</span>(<span class="fu">aes</span>(<span class="at">angle=</span>pi<span class="sc">/</span><span class="dv">2</span>, <span class="at">y=</span><span class="dv">0</span>, <span class="at">radius=</span>intensity), <span class="at">linewidth=</span><span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">shape=</span><span class="dv">21</span>) <span class="sc">+</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="fft_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Possiamo osservare come il contributo della durata del campionamento sia pressoché svanito, anche se risulta ovviamente ridotta l’intensità dei picchi a 10&nbsp;Hz, dato che l’ampiezza media del segnale è anch’essa ridotta.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Esercizio">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Esercizio
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Provare a cambiare funzione finestra utilizzando <code>hamming()</code> o una delle altre finestre messe a disposizione da <code>gsignal</code>.</p>
+</div>
+</div>
+
+
+</section>
+</section>
+
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Note</h2>
+
+<ol>
+<li id="fn1"><p>F. Angrilli, Misure Meccaniche e Termiche, Cedam 2005<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiato!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiato!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

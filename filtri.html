@@ -1,0 +1,1791 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="it" xml:lang="it"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Mariolino De Cecco e Paolo Bosetti">
+
+<title>Filtri – Misure Industriali</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-3e869bf4211dfe387421f5099c41857e.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-91ed04e8770893e4b33077ae46dd6466.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "Nessun risultato",
+    "search-matching-documents-text": "documenti trovati",
+    "search-copy-link-title": "Copiare il link nella ricerca",
+    "search-hide-matches-text": "Nascondere i risultati aggiuntivi",
+    "search-more-match-text": "ci sono altri risultati in questo documento",
+    "search-more-matches-text": "ulteriori risultati in questo documento",
+    "search-clear-button-title": "Pulire",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancellare",
+    "search-submit-button-title": "Inviare",
+    "search-label": "Ricerca"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./logo.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Misure Industriali</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Ricerca"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Attiva/disattiva la navigazione" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./r_brief.html"> 
+<span class="menu-text">R in breve</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./fft.html"> 
+<span class="menu-text">Trasformate</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./filtri.html" aria-current="page"> 
+<span class="menu-text">Filtri</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">In questa pagina</h2>
+   
+  <ul>
+  <li><a href="#impiego-della-funzione-di-trasferimento-per-lelaborazione-dei-segnali-filtraggio-in-frequenza" id="toc-impiego-della-funzione-di-trasferimento-per-lelaborazione-dei-segnali-filtraggio-in-frequenza" class="nav-link active" data-scroll-target="#impiego-della-funzione-di-trasferimento-per-lelaborazione-dei-segnali-filtraggio-in-frequenza"><span class="header-section-number">1</span> Impiego della Funzione di trasferimento per l’elaborazione dei segnali: Filtraggio in frequenza</a>
+  <ul class="collapse">
+  <li><a href="#esempio-di-riduzione-del-rumore-in-alta-frequenza-su-di-un-segnale-di-temperatura" id="toc-esempio-di-riduzione-del-rumore-in-alta-frequenza-su-di-un-segnale-di-temperatura" class="nav-link" data-scroll-target="#esempio-di-riduzione-del-rumore-in-alta-frequenza-su-di-un-segnale-di-temperatura"><span class="header-section-number">1.1</span> Esempio di riduzione del rumore in alta frequenza su di un segnale di temperatura</a></li>
+  </ul></li>
+  <li><a href="#filtri-online" id="toc-filtri-online" class="nav-link" data-scroll-target="#filtri-online"><span class="header-section-number">2</span> Filtri online</a>
+  <ul class="collapse">
+  <li><a href="#esempi" id="toc-esempi" class="nav-link" data-scroll-target="#esempi"><span class="header-section-number">2.1</span> Esempi</a></li>
+  <li><a href="#ricorsione" id="toc-ricorsione" class="nav-link" data-scroll-target="#ricorsione"><span class="header-section-number">2.2</span> Ricorsione</a></li>
+  <li><a href="#filtri-iir-e-fir" id="toc-filtri-iir-e-fir" class="nav-link" data-scroll-target="#filtri-iir-e-fir"><span class="header-section-number">2.3</span> Filtri IIR e FIR</a></li>
+  <li><a href="#stabilità" id="toc-stabilità" class="nav-link" data-scroll-target="#stabilità"><span class="header-section-number">2.4</span> Stabilità</a></li>
+  </ul></li>
+  <li><a href="#filtri-offline" id="toc-filtri-offline" class="nav-link" data-scroll-target="#filtri-offline"><span class="header-section-number">3</span> Filtri offline</a></li>
+  <li><a href="#taratura-dinamica" id="toc-taratura-dinamica" class="nav-link" data-scroll-target="#taratura-dinamica"><span class="header-section-number">4</span> Taratura dinamica</a>
+  <ul class="collapse">
+  <li><a href="#termocoppia" id="toc-termocoppia" class="nav-link" data-scroll-target="#termocoppia"><span class="header-section-number">4.1</span> Termocoppia</a>
+  <ul class="collapse">
+  <li><a href="#primo-metodo-intercetta" id="toc-primo-metodo-intercetta" class="nav-link" data-scroll-target="#primo-metodo-intercetta"><span class="header-section-number">4.1.1</span> Primo metodo: intercetta</a></li>
+  <li><a href="#secondo-metodo-linearizzazione" id="toc-secondo-metodo-linearizzazione" class="nav-link" data-scroll-target="#secondo-metodo-linearizzazione"><span class="header-section-number">4.1.2</span> Secondo metodo: linearizzazione</a></li>
+  <li><a href="#terzo-metodo-regressione-non-lineare" id="toc-terzo-metodo-regressione-non-lineare" class="nav-link" data-scroll-target="#terzo-metodo-regressione-non-lineare"><span class="header-section-number">4.1.3</span> Terzo metodo: regressione non-lineare</a></li>
+  </ul></li>
+  <li><a href="#considerazioni-sulla-relazione-tra-costante-di-tempo-e-funzione-di-trasferimento" id="toc-considerazioni-sulla-relazione-tra-costante-di-tempo-e-funzione-di-trasferimento" class="nav-link" data-scroll-target="#considerazioni-sulla-relazione-tra-costante-di-tempo-e-funzione-di-trasferimento"><span class="header-section-number">4.2</span> Considerazioni sulla relazione tra costante di tempo e funzione di trasferimento</a></li>
+  <li><a href="#compensazione-o-misura-dinamica" id="toc-compensazione-o-misura-dinamica" class="nav-link" data-scroll-target="#compensazione-o-misura-dinamica"><span class="header-section-number">4.3</span> Compensazione o misura dinamica</a></li>
+  </ul></li>
+  <li><a href="#determinazione-funzioni-di-trasferimento-mediante-parametri-concentrati-ed-impedenze-generalizzate" id="toc-determinazione-funzioni-di-trasferimento-mediante-parametri-concentrati-ed-impedenze-generalizzate" class="nav-link" data-scroll-target="#determinazione-funzioni-di-trasferimento-mediante-parametri-concentrati-ed-impedenze-generalizzate"><span class="header-section-number">5</span> Determinazione Funzioni di Trasferimento mediante Parametri Concentrati ed Impedenze Generalizzate</a></li>
+  <li><a href="#funzioni-di-trasferimento" id="toc-funzioni-di-trasferimento" class="nav-link" data-scroll-target="#funzioni-di-trasferimento"><span class="header-section-number">6</span> Funzioni di trasferimento</a>
+  <ul class="collapse">
+  <li><a href="#esempio-sistema-per-isolamento-da-vibrazioni." id="toc-esempio-sistema-per-isolamento-da-vibrazioni." class="nav-link" data-scroll-target="#esempio-sistema-per-isolamento-da-vibrazioni."><span class="header-section-number">6.1</span> Esempio: sistema per isolamento da vibrazioni.</a></li>
+  <li><a href="#esempio-accoppiamento-rotativo-motore-carico." id="toc-esempio-accoppiamento-rotativo-motore-carico." class="nav-link" data-scroll-target="#esempio-accoppiamento-rotativo-motore-carico."><span class="header-section-number">6.2</span> Esempio: accoppiamento rotativo motore-carico.</a></li>
+  </ul></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Altri Formati</h2><ul><li><a href="filtri.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Filtri</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Autore/Autrice</div>
+    <div class="quarto-title-meta-contents">
+             <p>Mariolino De Cecco e Paolo Bosetti </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Data di Pubblicazione</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">24 febbraio 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="impiego-della-funzione-di-trasferimento-per-lelaborazione-dei-segnali-filtraggio-in-frequenza" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Impiego della Funzione di trasferimento per l’elaborazione dei segnali: Filtraggio in frequenza</h1>
+<p>Un sistema dinamico lineare per il quale esiste una funzione di trasferimento sinusoidale può rappresentare diverse cose:</p>
+<ul>
+<li><strong>un elemento che elabora segnali</strong>: la funzione di trasferimento non è utile solo per la soluzione di equazioni differenziali che divengo semplici equazioni algebriche, ma anche per effettuare elaborazioni sulle componenti armoniche di un generico segnale e prevedere quali armoniche conterrà l’uscita in base al suo diagramma di Bode. Tali blocchi di elaborazione possono servire per ridurre il rumore in alta frequenza (filtri passa basso), quello in bassa (filtri passa alto), etc;</li>
+<li><strong>uno strumento di misura</strong>: la funzione di trasferimento in questo caso descrive come lo strumento modifica le componenti armoniche di un segnale da misurare (misurando) e prevedere quali armoniche conterrà l’uscita dello strumento in base al suo diagramma di Bode. Va da sé che uno strumento ideale dovrebbe far passare tutte le armoniche del misurando inalterate. Ovvero né alterate in ampiezza e neppure sfasate. In questo modo esiste una corrispondenza esatta (a meno di un fattore di conversione proporzionale) tra uscita e misurando in ingresso. Questo a volte è possibile, a volte no. Come vedremo, se uno strumento è particolarmente ‘lento’, esso distorcerà significativamente le ampiezze e sfaserà altrettanto significativamente le fasi delle componenti armoniche tanto più si va su in frequenza. In questi casi, per stimare correttamente il misurando, occorre invertire la funzione di trasferimento in una procedura analoga a quella vista per l’operazione di misura di una grandezza statica. Questa procedura può essere definita <strong>Compensazione Dinamica</strong> che vedremo in uno dei prossimi paragrafi.</li>
+</ul>
+<section id="esempio-di-riduzione-del-rumore-in-alta-frequenza-su-di-un-segnale-di-temperatura" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="esempio-di-riduzione-del-rumore-in-alta-frequenza-su-di-un-segnale-di-temperatura"><span class="header-section-number">1.1</span> Esempio di riduzione del rumore in alta frequenza su di un segnale di temperatura</h2>
+<p>Si consideri il segnale ed il modulo del suo spettro mostrate in <a href="#fig-2_5" class="quarto-xref">Figura&nbsp;1</a> (una misura di temperatura tramite PT100 su di una piastra termostatata che regola la temperatura tra due valori soglia). Se il segnale viene posto in ingresso ad un sistema che possiede una funzione di trasferimento passa basso, si ottiene un segnale in uscita con le medesime componenti in bassa frequenza mentre quelle in alta sono attenuate.</p>
+<div id="fig-2_5" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-2_5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/fig2.5.drawio.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-2_5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;1: Rappresentazione ingresso-uscita di un sistema dinamico regolato da equazione differenziale lineare.
+</figcaption>
+</figure>
+</div>
+<div id="fig-pt100" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-pt100-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/fig-pt100.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pt100-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;2: Schema a blocchi di un processo di riduzione delle componenti in alta frequenza. In altre parole filtraggio in alta frequenza mediante un passa-basso. Nella figura sono rappresentati i segnali d’ingresso ed uscita in funzione del tempo ed il modulo (fase omessa) del loro spettro e la funzione di trasferimento che ha elaborato l’ingresso in modulo e fase.
+</figcaption>
+</figure>
+</div>
+<p>È possibile notare che il segnale in uscita non mostra più il rumore originario in alta frequenza in quanto la funzione di trasferimento ha attenuato proprio le componenti armoniche ad alta frequenza che non appartenevano ad un andamento di temperatura. La dinamica termica è infatti generalmente ‘lenta’. Appartenevano, ad esempio, al rumore elettromagnetico di natura interferente.</p>
+<p>Le tipologie di filtri sono dette</p>
+<ul>
+<li><strong>passa-basso</strong> nel caso in cui vengano mantenute le componenti a bassa frequenza ed eliminate quelle ad lata frequenza;</li>
+<li><strong>passa-alto</strong> nel caso contrario;</li>
+<li><strong>passa-banda</strong> nel caso in cui vengano lasciate immutate le componenti appartenenti ad una data frequenza ed eliminate le altre;</li>
+<li><strong>elimina-banda</strong> nel caso opposto.</li>
+</ul>
+<p>L’<strong>ordine del filtro</strong> coincide con l’ordine del sistema lineare corrispondente al filtro e definisce, nel diagramma di Bode, la pendenza di modulo(espresso nel diagramma logaritmico in decibel per decade) ed andamento della fase. Altro parametro importante è la frequenza di taglio <span class="math inline">\(f_c\)</span> definita come quella frequenza alla quale il segnale viene distorto in modo trascurabile, quindi:</p>
+<ul>
+<li>la massima attenuazione (o amplificazione) della potenza delle armoniche è pari al 50%, ovvero l’ampiezza viene attenuata di un fattore uno su radice di due, in termini logaritmici quindi <span class="math inline">\(\pm 3\)</span> dB;</li>
+<li>lo sfasamento è pressoché lineare (introducendo eventualmente un ritardo ma non una distorsione). A tale conclusione si arriva considerando la proprietà dell’anticipo-ritardo della trasformata.</li>
+</ul>
+<p>Alla frequenza di taglio corrisponde implicitamente una banda passante che sarà da 0 ad <span class="math inline">\(f_c\)</span> nel caso di passa basso, da <span class="math inline">\(f_c\)</span> ad infinito nel caso di passa alto.</p>
+</section>
+</section>
+<section id="filtri-online" class="level1 page-columns page-full" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Filtri online</h1>
+<p>Il filtro online opera direttamente sul segnale temporale elaborandolo mano mano che esso si presenta, campione dopo campione tramite una successione per ricorrenza. La dimostrazione del fatto che un sistema reale si comporta nel dominio discreto come una successione per ricorrenza la si ottiene:</p>
+<ul>
+<li>moltiplicando la trasformata di un segnale d’ingresso per la funzione di trasferimento</li>
+<li>antitrasformando</li>
+<li>discretizzando la derivata</li>
+</ul>
+<p>Proviamo quanto detto con un filtro del primo ordine avente uno zero ed un polo:</p>
+<div id="fig-filtro-online" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-filtro-online-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/fig-filtro-online.drawio.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-filtro-online-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figura&nbsp;3: Filtro con un polo e uno zero
+</figcaption>
+</figure>
+</div>
+<p>Sappiamo che: <span class="math display">\[
+Y(\omega) = \frac{1+i\omega\tau_N}{1+i\omega\tau_D}U(\omega)
+\]</span> da cui: <span class="math display">\[
+Y(\omega)(1+i\omega\tau_D) = U(\omega)(1+i\omega\tau_N)
+\]</span> quindi: <span class="math display">\[
+Y(\omega)+i\omega\tau_DY(\omega)=U(\omega)+i\omega\tau_nU(\omega)
+\]</span></p>
+<p>Anti-trasformando otteniamo: <span class="math display">\[
+y(t) + \dot y(t)\tau_D=u(t)+\dot u(t)\tau_N
+\]</span> e applicando la formula di Eulero per la discretizzazione (anche conosciuta come formula alle differenze finite): <span class="math display">\[
+y_k+\frac{y_k-y_{k-1}}{T_c}\tau_D=u_k\frac{u_k-u_{k-1}}{T_c}\tau_n
+\]</span> e, in definitiva: <span class="math display">\[
+y_k\left(1+\frac{\tau_D}{T_c}\right) = y_{k-1}\frac{\tau_D}{T_c}+ u_k\left(1+\frac{\tau_N}{T_c}\right) - u_{k-1}\frac{\tau_N}{T_c}
+\]</span> che, normalizzando, diventa la seguente ricorrenza: <span class="math display">\[
+y_k=y_{k-1}\frac{\tau_D/T_c}{1+\tau_D/T_c} + u_k\frac{\tau_N/T_c}{1+\tau_D/T_c}+u_{k-1}\frac{\tau_N/T_c}{1+\tau_D/T_c}
+\]</span></p>
+<p><strong>Che significato assumono in R i vettori <code>A</code> e <code>B</code>?</strong></p>
+<p>Se <span class="math inline">\(n_a\)</span> è l’ordine del denominatore ed <span class="math inline">\(n_b\)</span> è l’ordine del numeratore, <span class="math inline">\(A = [A(1), A(2),\dots, A(n_a+1)]\)</span>, <span class="math inline">\(B = [B(1), B(2),\dots, B(n_b+1)]\)</span>: <span class="math display">\[
+\begin{aligned}
+a(1)y(n) =&amp; b(1)x(n) + b(2)x(n-1) + \dots + b(n_b+1)x(n-n_b) + \\
+&amp;- a(2)y(n-1)-\dots-a(n_a+1)y(n-n_a)
+\end{aligned}
+\]</span></p>
+<p>Grazie alla normalizzazione, si impone <span class="math inline">\(a(1)=1\)</span></p>
+<p>Nel caso sopra citato della funzione di trasferimento con un polo ed uno zero del primo ordine i vettori A e B sono: <span class="math display">\[
+\begin{aligned}
+A &amp;= \left[ 1\quad -\frac{\tau_D/T_c}{1+\tau_D/T_c}\right] \\
+B &amp;= \left[ \frac{1+\tau_N/T_c}{1+\tau_D/T_c} \quad -\frac{\tau_N/T_c}{1+\tau_D/T_c}\right]
+\end{aligned}
+\]</span></p>
+<p>Notare che essendo <span class="math inline">\(n_a = n_b = 1\)</span> entrambi i vettori hanno 2 elementi.</p>
+<p>In R il comando <code>butter(n, fn)</code> restituisce i coefficienti della funzione di trasferimento di un filtro Butterworth digitale passa basso di ordine <span class="math inline">\(n\)</span> in grado di operare in tempo reale con frequenza di taglio normalizzata alla frequenza di Nyquist <span class="math inline">\(f_n\)</span>.</p>
+<p>La frequenza di taglio per filtri digitali, ovvero filtri che elaborano sequenze di segnali campionati e convertiti viene solitamente normalizzata per la frequenza di Nyquist. Il motivo è semplice: un vettore corrispondente ad un segnale digitale non possiede esplicitamente informazioni circa la frequenza di campionamento per cui ha senso normalizzare il suo massimo contenuto in frequenza (ponendo quindi la fn pari ad 1) ed esprimendo i parametri di elaborazione (quali ad esempio il filtraggio) rispetto a tale valore, quindi tra 0 ed 1.</p>
+<p>Si noti come, perdendo l’informazione circa la frequenza o tempo di campionamento è possibile ragionare equivalentemente in termini di numeri di campioni. Per la frequenza di Nyquist ad esempio l’armonica corrispondente ha 2 campioni: <span class="math inline">\(f_c = 1 / 1\)</span> campione, quindi <span class="math inline">\(f_n = fc / 2 = 1 / 2\)</span> campioni, ovvero periodo 2 campioni.</p>
+<section id="esempi" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="esempi"><span class="header-section-number">2.1</span> Esempi</h2>
+<p>Riutilizziamo la funzione <code>signal()</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>signal <span class="ot">&lt;-</span> <span class="cf">function</span>(t, pars, <span class="at">rad=</span><span class="cn">FALSE</span>) {</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stopifnot</span>(<span class="fu">is.data.frame</span>(pars))</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span>rad) {</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    pars<span class="sc">$</span>phi <span class="ot">&lt;-</span> pars<span class="sc">$</span>phi<span class="sc">/</span><span class="dv">180</span><span class="sc">*</span>pi</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    pars<span class="sc">$</span>f <span class="ot">&lt;-</span> <span class="dv">2</span><span class="sc">*</span>pi<span class="sc">*</span>pars<span class="sc">$</span>f</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">with</span>(</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    pars,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">map_dbl</span>(t, \(t) <span class="fu">map_vec</span>(<span class="fu">seq_along</span>(w), <span class="sc">~</span> w[.]<span class="sc">*</span><span class="fu">sin</span>(t<span class="sc">*</span>f[.]<span class="sc">+</span>phi[.])) <span class="sc">%&gt;%</span> <span class="fu">sum</span>())</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Definiamo una sinusoide base con due disturbi armonici, più un disturbo normale:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>pars <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">w =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">0.1</span>, <span class="fl">0.3</span>),</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">f =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">/</span><span class="dv">25</span>, <span class="dv">1</span><span class="sc">/</span><span class="dv">5</span>, <span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>),</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">phi =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Cominciamo con realizzare il grafico del segnale e delle sue componenti:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">t =</span> <span class="dv">0</span><span class="sc">:</span>N,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">s =</span> <span class="fu">signal</span>(t, pars[<span class="dv">1</span>,]),</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">signal</span>(t, pars), </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">yn =</span> y <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">length</span>(t), <span class="dv">0</span>, pars<span class="sc">$</span>w[<span class="dv">1</span>] <span class="sc">/</span> <span class="dv">10</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>s <span class="sc">%&gt;%</span> </span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(t, <span class="at">sine=</span>s, <span class="at">signal=</span>y, <span class="st">`</span><span class="at">signal+noise</span><span class="st">`</span><span class="ot">=</span>yn) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>t) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>t, <span class="at">y=</span>value)) <span class="sc">+</span> </span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">color=</span>name)) <span class="sc">+</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"time (s)"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="filtri_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Segnale armonico con disturbo</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>La trasformata di Fourier mostra i tre picchi attesi:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>s <span class="sc">%&gt;%</span> </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">f =</span> <span class="dv">0</span><span class="sc">:</span>(<span class="fu">n</span>()<span class="sc">-</span><span class="dv">1</span>)<span class="sc">/</span><span class="fu">max</span>(t),</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">fft =</span> <span class="fu">fft</span>(yn),</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">intensity =</span> <span class="fu">Mod</span>(fft) <span class="sc">/</span> <span class="fu">n</span>()<span class="sc">*</span><span class="dv">2</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">phase =</span> <span class="fu">Arg</span>(fft)<span class="sc">/</span>pi<span class="sc">*</span><span class="dv">180</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n=</span><span class="fu">as.integer</span>(<span class="fu">nrow</span>(.)<span class="sc">/</span><span class="dv">2</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>f, <span class="at">y=</span>intensity)) <span class="sc">+</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_spoke</span>(<span class="fu">aes</span>(<span class="at">y=</span><span class="dv">0</span>, <span class="at">radius=</span>intensity, <span class="at">angle=</span>pi<span class="sc">/</span><span class="dv">2</span>)) <span class="sc">+</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="filtri_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>FFT del segnale armonico di riferimento</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Il filtraggio online viene realizzato in due passi: prima si <strong>progetta il filtro</strong>, selezionando il tipo di filtro e i parametri che si adattano al segnale che si vuole filtrare e alla sua trasformata nel dominio delle frequenze, poi si applica il filtro al segnale.</p>
+<p>Nel nostro caso scegliamo un filtro di tipo <em>Butterworth</em> di ordine 3:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>ft <span class="ot">&lt;-</span> <span class="dv">2</span><span class="sc">/</span>pars<span class="sc">$</span>f[<span class="dv">1</span>] <span class="sc">/</span> (<span class="dv">1</span><span class="sc">/</span><span class="dv">2</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Doppio della frequenza base</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>fn <span class="ot">&lt;-</span> pars<span class="sc">$</span>f[<span class="dv">1</span>]<span class="sc">*</span><span class="dv">2</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Frequenza di Nyquist</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>fny <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span>(s<span class="sc">$</span>t[<span class="dv">2</span>] <span class="sc">-</span> s<span class="sc">$</span>t[<span class="dv">1</span>]) <span class="sc">/</span> <span class="dv">2</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Frequenza di taglio</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>ft <span class="ot">&lt;-</span> fn<span class="sc">/</span>fny</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Filtro Butterworth di ordine 3 con cut-off al doppio della frequenza base</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Il parametro w è normalizzato tra 0 e 1, con 1 = fny</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>flt <span class="ot">&lt;-</span> <span class="fu">butter</span>(<span class="dv">3</span>, <span class="at">w=</span>ft)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>flt</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$b
+[1] 0.01018258 0.03054773 0.03054773 0.01018258
+
+$a
+[1]  1.0000000 -2.0037975  1.4470540 -0.3617959
+
+attr(,"class")
+[1] "Arma"</code></pre>
+</div>
+</div>
+<p>Come si vede, l’oggetto filtro contiene i due vettori coi coefficienti polinomiali di un modello ARMA.</p>
+<p>La funzione <code>freqz()</code> consente di valutare le caratteristiche del filtro:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>(fq <span class="ot">&lt;-</span> <span class="fu">freqz</span>(flt))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="filtri_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Caratteristiche del filtro Butterworth di ordine 3</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Il grafico <em>Stop band</em> è lo stesso grafico <em>Pass band</em> ma con limiti dell’asse y più ampi, in modo da evidenziare come poco oltre 3&nbsp;Hz c’è un’attenuazione completa.</p>
+<p>Grafici simili possono essere ottenuti in <code>ggplot</code> come segue, estraendo direttamente le componenti dall’oggetto restituito da <code>freqz</code>. Si noti che la componente <code>fq$h</code> va scomposta in modulo e fase; il modulo va poi convertito in decibel (dB) e la fase va “srotolata” (<code>unwrap</code>):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">h =</span> fq<span class="sc">$</span>h,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">mod =</span> <span class="dv">20</span><span class="sc">*</span><span class="fu">log10</span>(<span class="fu">Mod</span>(h)),</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">phase =</span> <span class="fu">Arg</span>(h) <span class="sc">%&gt;%</span> <span class="fu">unwrap</span>() <span class="sc">/</span> pi <span class="sc">*</span> <span class="dv">180</span>,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">frequency =</span> fq<span class="sc">$</span>w,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> {</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  (<span class="fu">ggplot</span>(., <span class="fu">aes</span>(<span class="at">x=</span>frequency)) <span class="sc">+</span> </span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>     <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>mod)) <span class="sc">+</span> </span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>     <span class="fu">coord_cartesian</span>(<span class="at">ylim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">4</span>, <span class="fl">0.5</span>)) <span class="sc">+</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>     <span class="fu">geom_vline</span>(<span class="at">xintercept=</span>ft, <span class="at">color=</span><span class="st">"red"</span>, <span class="at">linetype=</span><span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>     <span class="fu">labs</span>(<span class="at">y=</span><span class="st">"Intensity (dB)"</span>, <span class="at">x=</span><span class="st">""</span>)) <span class="sc">/</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  (<span class="fu">ggplot</span>(., <span class="fu">aes</span>(<span class="at">x=</span>frequency)) <span class="sc">+</span> </span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>     <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>phase)) <span class="sc">+</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>     <span class="fu">geom_vline</span>(<span class="at">xintercept=</span>ft, <span class="at">color=</span><span class="st">"red"</span>, <span class="at">linetype=</span><span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>     <span class="fu">labs</span>(<span class="at">y=</span><span class="st">"phase (°)"</span>, <span class="at">x=</span><span class="st">"frequency (Hz)"</span>))</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="filtri_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Caratteristiche del filtro Butterworth di ordine 3 (con GGplot)</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Il filtro può poi essere applicato con <code>filter()</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>s <span class="sc">%&gt;%</span> </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">sflt =</span> flt <span class="sc">%&gt;%</span> <span class="fu">filter</span>(yn)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(t, <span class="st">`</span><span class="at">signal+noise</span><span class="st">`</span><span class="ot">=</span>yn, <span class="at">sine=</span>s, <span class="at">filtered=</span>sflt) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>t) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>t, <span class="at">y=</span>value)) <span class="sc">+</span> </span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">color=</span>name)) <span class="sc">+</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"time (s)"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="filtri_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Segnale di riferimento filtrato</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Come si vede, il filtro ripulisce sia il disturbo casuale che le armoniche con frequenza superiore alla frequenza di taglio 0.16&nbsp;Hz., seppure <strong>introducendo un ritardo di fase</strong>.</p>
+<p>Per eliminare il ritardo, se il filtro è applicato <strong>offline</strong>, si può ricorrere a <code>filtfilt()</code> al posto di <code>filter()</code>: questa funzione applica il filtraggio in avanti e indietro, compensando quindi il ritardo:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>s <span class="sc">%&gt;%</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">sflt =</span> flt <span class="sc">%&gt;%</span> <span class="fu">filtfilt</span>(yn)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(t, <span class="st">`</span><span class="at">signal+noise</span><span class="st">`</span><span class="ot">=</span>yn, <span class="at">sine=</span>s, <span class="at">filtered=</span>sflt) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>t) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>t, <span class="at">y=</span>value)) <span class="sc">+</span> </span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">color=</span>name)) <span class="sc">+</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"time (s)"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="filtri_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Segale di riferimento filtrato in avanti e indietro, eliminando il ritardo</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="ricorsione" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="ricorsione"><span class="header-section-number">2.2</span> Ricorsione</h2>
+<p>Il vantaggio dei filtri online è che possono essere calcolati direttamente durante l’acquisizione di un segnale, grazie al fatto che il filtro è esprimibile come una formula di ricorsione.</p>
+<p>La funzione <code>butter()</code> restituisce infatti un filtro in forma dei coefficienti di un modello <span class="math inline">\(\mathrm{ARMA}(p, q)\)</span>, per cui è possibile calcolare la nuova osservazione filtrata <span class="math inline">\(y_n\)</span> in funzione delle precedenti osservazioni:</p>
+<p><span class="math display">\[
+a_1 y_n + a_2y_{n-1} + \dots + a_{n_a}y_{n-p+1} = b_1x_n + b_2 x_{n-1} + \dots + b_{n_b}x_{n-q+1}
+\]</span></p>
+<p>dove le <span class="math inline">\(y_i\)</span> sono i valori filtrati, le <span class="math inline">\(x_i\)</span> i valori originari, e i due vettori <code>A</code> e <code>B</code> contengono i termini <span class="math inline">\(a_i\)</span> e <span class="math inline">\(b_i\)</span>, con <span class="math inline">\(a_1 = 1\)</span>. Quindi:</p>
+<p><span id="eq-IIR"><span class="math display">\[
+y_n = b_1x_n + b_2 x_{n-1} + \dots + b_{n_b}x_{n-n_b+1} - \left(a_2y_{n-1} + \dots + a_{n_a}y_{n-n_a+1}\right)
+\tag{1}\]</span></span></p>
+<p>Per un filtro Butterworth di ordine <span class="math inline">\(m\)</span>, si ha che <span class="math inline">\(p=q=m\)</span> e i vettori <code>A</code> e <code>B</code> hanno entrambi <span class="math inline">\(m+1\)</span> elementi.</p>
+<p>È facile implementare la <a href="#eq-IIR" class="quarto-xref">Equazione&nbsp;1</a> in un qualsiasi linguaggio di programmazione. Ad esempio in R definiamo una funzione che prende in ingresso una tabella, una nuova osservazione e il filtro (con le componenti ARMA <span class="math inline">\(A\)</span> e <span class="math inline">\(B\)</span>), e restituisce la stessa tabella con una riga in più (con il nuovo campione e il valore filtrato con la <a href="#eq-IIR" class="quarto-xref">Equazione&nbsp;1</a>). L’inizializzazione della formula ricorsiva viene fatta con una tabella vuota (o <code>NA</code>):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>my_filter <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">t =</span> <span class="cn">NA</span>, sample, flt) {</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Inizializzazione o aggiornamento tabella:</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.data.frame</span>(t) <span class="sc">||</span> <span class="fu">nrow</span>(t) <span class="sc">==</span> <span class="dv">0</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    t <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">i=</span><span class="dv">1</span>, <span class="at">x=</span>sample, <span class="at">y=</span><span class="dv">0</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">else</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    t <span class="ot">&lt;-</span> <span class="fu">add_row</span>(t, <span class="at">i =</span> <span class="fu">tail</span>(t, <span class="dv">1</span>)<span class="sc">$</span>i <span class="sc">+</span> <span class="dv">1</span>, <span class="at">x=</span>sample)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  A <span class="ot">&lt;-</span> flt<span class="sc">$</span>a</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  B <span class="ot">&lt;-</span> flt<span class="sc">$</span>b</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(t)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  nb <span class="ot">&lt;-</span> <span class="fu">min</span>(n, <span class="fu">length</span>(B))</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Termini Moving Average:</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  MA <span class="ot">&lt;-</span> <span class="fu">rev</span>(B[<span class="dv">1</span><span class="sc">:</span>nb]) <span class="sc">*</span> <span class="fu">tail</span>(t<span class="sc">$</span>x, nb)</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Termini Auto-Regressive:</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>  AR <span class="ot">&lt;-</span> <span class="fu">rev</span>(A[<span class="dv">1</span><span class="sc">:</span>nb]) <span class="sc">*</span> <span class="fu">tail</span>(t<span class="sc">$</span>y, nb)</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Nuova osservazione filtrata:</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>  t<span class="sc">$</span>y[n] <span class="ot">&lt;-</span> <span class="fu">sum</span>(MA) <span class="sc">-</span> <span class="fu">sum</span>(AR, <span class="at">na.rm=</span><span class="cn">TRUE</span>)</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(t)</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>In questo modo il filtro può essere applicato <strong>un’osservazione alla volta</strong>, e per questo si chiama <em>filtro online</em>: può cioè essere aggiornato durante l’acquisizione del segnale, pena ovviamente un ritardo sul segnale filtrato:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">my_filter</span>(<span class="dv">1</span>, flt) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">my_filter</span>(<span class="dv">2</span>, flt) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">my_filter</span>(<span class="dv">3</span>, flt) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">my_filter</span>(<span class="dv">4</span>, flt) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">my_filter</span>(<span class="dv">5</span>, flt) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">my_filter</span>(<span class="dv">5</span>, flt) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">my_filter</span>(<span class="dv">5</span>, flt) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: right;">i</th>
+<th style="text-align: right;">x</th>
+<th style="text-align: right;">y</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0101826</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0.0713167</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0.2503604</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">0.6058080</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">1.1625457</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">1.8998389</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">2.7409252</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Utilizziamolo sul segnale originale è più evidente il ritardo:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>filtered_signal <span class="ot">&lt;-</span> <span class="fu">tibble</span>()</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (sample <span class="cf">in</span> s<span class="sc">$</span>yn) {</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  filtered_signal <span class="ot">&lt;-</span> <span class="fu">my_filter</span>(filtered_signal, sample, flt)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>filtered_signal <span class="sc">%&gt;%</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>i)) <span class="sc">+</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>y), <span class="at">color=</span><span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>x))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="filtri_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Segnale di riferimento filtrato con la funzione <code>my_filter()</code></figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Sfruttando la programmazione funzionale di <code>purrr</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>s<span class="sc">$</span>yn <span class="sc">%&gt;%</span> </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reduce</span>(\(tbl, obs) <span class="fu">my_filter</span>(tbl, obs, flt), <span class="at">.init=</span><span class="fu">tibble</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>i)) <span class="sc">+</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>y), <span class="at">color=</span><span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>x))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="filtri_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Segnale di riferimento filtrato con la funzione <code>my_filter()</code>, usando <code>purrr</code></figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="filtri-iir-e-fir" class="level2 page-columns page-full" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="filtri-iir-e-fir"><span class="header-section-number">2.3</span> Filtri IIR e FIR</h2>
+<p>Tra i filtri online c’è un’importante differenza, che classifica filtri <em>Infinite Impulse Response (IIR)</em> e filtri <em>Finite Impulse Response (FIR)</em>: considerando un impulso unitario:</p>
+<p><span class="math display">\[
+y(x)=\begin{cases}
+0 &amp; x &lt; 0 \\
+1 &amp; x \geqslant 0
+\end{cases}
+\]</span> le due classi di filtri si comportano come segue:</p>
+<ul>
+<li><strong>IIR</strong>: sono filtri con memoria infinita: il valore filtrato dell’impulso mantiene memoria di ogni osservazione precedente e quindi non si stabilizza mai a 1 (seppure avvicinandosi sempre più). Corrispondono a <strong>filtri ARMA</strong>, in cui la parte AR ha un numero di coefficienti maggiore di uno;</li>
+<li><strong>FIR</strong>: sono filtri con memoria limitata: dopo un numero di osservazioni pari alla memoria del filtro il valore filtrato è uguale a 1. Corrispondono a <strong>filtri MA</strong> (che ha memoria <strong>finita</strong>), un cui manca la parte AR (che ha memoria <strong>infinita</strong>).</li>
+</ul>
+<p>Osserviamo la risposta al gradino dello stesso filtro <code>flt</code> sopra definito:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">i=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>, <span class="at">x=</span><span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">xf =</span> <span class="fu">filter</span>(flt, x)) <span class="sc">%&gt;%</span> </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>i, <span class="at">names_to =</span> <span class="st">"signal"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>i)) <span class="sc">+</span> </span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>value, <span class="at">color=</span>signal)) </span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="filtri_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Risposta all’impulso di un filtro <strong>IIR</strong></figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Se osserviamo un dettaglio della parte finale (<code>i&gt;80</code>), possiamo verificare come in realtà il segnale filtrato non si stabilizzi mai a 1:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">i=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>, <span class="at">x=</span><span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">xf =</span> <span class="fu">filter</span>(flt, x)) <span class="sc">%&gt;%</span> </span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(i<span class="sc">&gt;</span><span class="dv">80</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>i, <span class="at">names_to =</span> <span class="st">"signal"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>i)) <span class="sc">+</span> </span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>value<span class="dv">-1</span>, <span class="at">color=</span>signal)) <span class="sc">+</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">n.breaks =</span> <span class="dv">10</span>,</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">label_scientific</span>(<span class="at">digits=</span><span class="dv">6</span>)</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="filtri_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Risposta all’impulso di un filtro <strong>IIR</strong> (dettaglio)</figcaption>
+</figure>
+</div>
+</div>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p><strong>Attenzione</strong>: sia il pacchetto <code>gsignal</code> che <code>dplyr</code> (parte di <code>tidyverse</code>) forniscono una funzione <code>filter()</code>. Siccome <code>gsignal</code> è stato caricato <strong>dopo</strong> <code>tidyverse</code>, è necessario disambiguare la funzione desiderata premettendo il nome del pacchetto. Per questo motivo scriviamo <code>dplyr::filter(i&gt;80)</code> anziché semplicemente <code>filter(i&gt;80)</code>.</p>
+</div></div><p>Ora creiamo invece un filtro FIR di ordine 3, con la stessa frequenza di taglio, osservando come possa essere rappresentato da un modello MA con 4 termini (3+1):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>(flt_fir <span class="ot">&lt;-</span> <span class="fu">fir1</span>(<span class="dv">3</span>, <span class="at">w=</span>ft))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.04355854 0.45644146 0.45644146 0.04355854
+attr(,"class")
+[1] "Ma"</code></pre>
+</div>
+</div>
+<p>Le caratteristiche del filtro sono le seguenti:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">freqz</span>(flt_fir)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="filtri_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Caratteristiche di un filtro FIR di ordine 3</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Si noti, in particolare, che la fase è lineare: ciò è un vantaggio perché può essere facilmente utilizzata per <strong>compensare il ritardo</strong>, come si vedrà più sotto.</p>
+<p>La risposta al gradino è la seguente, notando che dopo tre osservazioni il filtro è identico al segnale:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">i=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>, <span class="at">x=</span><span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">xf =</span> <span class="fu">filter</span>(flt_fir, x)) <span class="sc">%&gt;%</span> </span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>i, <span class="at">names_to =</span> <span class="st">"signal"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>i)) <span class="sc">+</span> </span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>value, <span class="at">color=</span>signal)) </span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="filtri_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Risposta all’impulso di un filtro <strong>FIR</strong></figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Vediamo come si comporta un filtro FIR sul segnale armonico di riferimento. Anzitutto notiamo come la caratteristica del filtro FIR sia meno aggressiva del filtro IIR a parità di banda e di ordine. Pertanto utilizziamo un filtro di ordine superiore:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>flt_fir <span class="ot">&lt;-</span> <span class="fu">fir1</span>(<span class="dv">6</span>, <span class="at">w=</span>ft)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>s <span class="sc">%&gt;%</span> </span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">sflt =</span> flt_fir <span class="sc">%&gt;%</span> <span class="fu">filter</span>(yn)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(t, <span class="st">`</span><span class="at">signal+noise</span><span class="st">`</span><span class="ot">=</span>yn, <span class="at">sine=</span>s, <span class="at">filtered=</span>sflt) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>t) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>t, <span class="at">y=</span>value)) <span class="sc">+</span> </span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">color=</span>name)) <span class="sc">+</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"time (s)"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="filtri_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Segnale di riferimento filtrato con filtro FIR</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Dato che il ritardo di fase è lineare, è facile compensarlo: la funzione <code>grpdelay()</code> valuta il ritardo, e la funzione <code>lead()</code> (cioè <code>lag()</code> per ritardi negativi) lo compensa:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>flt_fir <span class="ot">&lt;-</span> <span class="fu">fir1</span>(<span class="dv">6</span>, <span class="at">w=</span>ft)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>delay <span class="ot">&lt;-</span> <span class="fu">grpdelay</span>(flt_fir)<span class="sc">$</span>gd <span class="sc">%&gt;%</span> <span class="fu">mean</span>() <span class="sc">%&gt;%</span> <span class="fu">round</span>() <span class="sc">%&gt;%</span> <span class="fu">as.integer</span>()</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>s <span class="sc">%&gt;%</span> </span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">sflt =</span> flt_fir <span class="sc">%&gt;%</span> <span class="fu">filter</span>(yn),</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">sflt_nd =</span> sflt <span class="sc">%&gt;%</span> <span class="fu">lead</span>(delay)</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(t, <span class="st">`</span><span class="at">signal+noise</span><span class="st">`</span><span class="ot">=</span>yn, <span class="at">signal=</span>s, <span class="st">`</span><span class="at">filtered nd</span><span class="st">`</span><span class="ot">=</span>sflt_nd) <span class="sc">%&gt;%</span> </span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>t) <span class="sc">%&gt;%</span> </span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>t, <span class="at">y=</span>value)) <span class="sc">+</span> </span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">color=</span>name)) <span class="sc">+</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"time (s)"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="filtri_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Segnale di riferimento filtrato con filtro FIR, ritardo compensato</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Ovviamente, la compensazione del ritardo rende un filtro FIR <strong>offline</strong>: se così non fosse, ci consentirebbe di conoscere il futuro.</p>
+</section>
+<section id="stabilità" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="stabilità"><span class="header-section-number">2.4</span> Stabilità</h2>
+<p>Come abbiamo visto un filtro può essere rappresentato come un processo ARMA. In quanto tale, può presentare problemi di stabilità. Un filtro è detto <strong>stabile</strong> se la sua risposta al gradino decade a zero indefinitamente, e viceversa.</p>
+<p>Per verificare la stabilità di un filtro lo si converte in formato <em>zero-pole-gain</em>, un formato che rappresenta il filtro come radici dei polinomi al numeratore della funzione di trasferimento (<em>zeroes</em>) e come radici del polinomio al denominatore (<em>poles</em>):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># poles</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="sc">/</span>(<span class="fu">polyroot</span>(flt<span class="sc">$</span>a)) <span class="sc">%&gt;%</span> <span class="fu">zapsmall</span>() <span class="sc">%&gt;%</span> <span class="fu">rev</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.5913983+0.0000000i 0.7061996+0.3362227i 0.7061996-0.3362227i</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># zeroes</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="sc">/</span>(<span class="fu">polyroot</span>(flt<span class="sc">$</span>b)) <span class="sc">%&gt;%</span> <span class="fu">zapsmall</span>() <span class="sc">%&gt;%</span> <span class="fu">rev</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -1+0i -1+0i -1+0i</code></pre>
+</div>
+</div>
+<p>Mediante <code>gsignal</code> è più semplice convertire il filtro in formato <code>Zpg</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>flt <span class="sc">%&gt;%</span> <span class="fu">as.Zpg</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$z
+[1] -1.0000016-2.850647e-06i -1.0000016+2.850647e-06i -0.9999967+0.000000e+00i
+
+$p
+[1] 0.5913984+0.0000000i 0.7061996-0.3362227i 0.7061996+0.3362227i
+
+$g
+NULL
+
+attr(,"class")
+[1] "Zpg"</code></pre>
+</div>
+</div>
+<p><strong>Un filtro è stabile quando tutti i poli sono all’interno del cerchio unitario sul piano immaginario</strong>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>circle <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">r=</span><span class="dv">1</span>, <span class="at">x0=</span><span class="dv">0</span>, <span class="at">y0=</span><span class="dv">0</span>, <span class="at">n=</span><span class="dv">100</span>, <span class="at">phi =</span> <span class="dv">0</span>) {</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">i =</span> <span class="dv">0</span><span class="sc">:</span>n,</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">theta =</span> i <span class="sc">*</span> <span class="dv">2</span><span class="sc">*</span>pi <span class="sc">/</span> n,</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> x0 <span class="sc">+</span> r<span class="sc">*</span><span class="fu">cos</span>(theta <span class="sc">+</span> phi),</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> y0 <span class="sc">+</span> r<span class="sc">*</span><span class="fu">sin</span>(theta <span class="sc">+</span> phi)</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>flt <span class="sc">%&gt;%</span> <span class="fu">as.Zpg</span>() <span class="sc">%&gt;%</span> {</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">zr =</span> <span class="fu">Re</span>(.<span class="sc">$</span>z),</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">zi =</span> <span class="fu">Im</span>(.<span class="sc">$</span>z),</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">pr =</span> <span class="fu">Re</span>(.<span class="sc">$</span>p),</span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">pi =</span> <span class="fu">Im</span>(.<span class="sc">$</span>p)</span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>  )} <span class="sc">%&gt;%</span> </span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>zr, <span class="at">y=</span>zi), <span class="at">shape=</span><span class="dv">21</span>) <span class="sc">+</span></span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>pr, <span class="at">y=</span>pi), <span class="at">shape=</span><span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_path</span>(<span class="at">data=</span><span class="fu">circle</span>(), <span class="fu">aes</span>(<span class="at">x=</span>x, <span class="at">y=</span>y), <span class="at">color=</span><span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Real"</span>, <span class="at">y=</span><span class="st">"Imaginary"</span>, <span class="at">title=</span><span class="st">"Zero-Pole diagram"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="filtri_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Grafico <em>zero-pole</em> per fil filtro IIR</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="filtri-offline" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Filtri offline</h1>
+<p>Se non è necessario applicare il filtro durante l’acquisizione ma si può farlo <em>ex-post</em>, è possibile ricorrere alla trasformata di Fourier. Il processo è il seguente:</p>
+<ol type="1">
+<li>Si calcola la FFT del segnale (<strong>senza applicare una finestra</strong>)</li>
+<li>Si definisce una <em>funzione maschera</em> che, moltiplicata per lo spettro, riduca o annulli le bande di frequenza che si desidera attenuare</li>
+<li>si calcola la <strong>trasformata inversa</strong> della trasformata moltiplicata per la maschera.</li>
+</ol>
+<p>Vediamo ad esempio il caso di un segnale ottenuto da un elettrocardiogramma, con frequenza di 256 Hz per una durata di 10 s, disponibile nel data frame <code>gsignal::signals</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>signals <span class="sc">%&gt;%</span> </span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">t =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">10</span>, <span class="at">length.out=</span><span class="fu">n</span>()),</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>t, <span class="at">y=</span>ecg)) <span class="sc">+</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">color=</span><span class="st">"segnale"</span>, <span class="at">x=</span><span class="st">"tempo (s)"</span>, <span class="at">y=</span><span class="st">"tensione (µV)"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="filtri_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Segnale di elettrocardiogramma</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Osserviamo il modulo della trasformata: decidiamo di filtrare le frequenze sopra 10 Hz.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>signals <span class="sc">%&gt;%</span> </span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">i =</span> (<span class="dv">1</span><span class="sc">:</span><span class="fu">n</span>())<span class="sc">-</span><span class="dv">1</span>,</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">t =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">10</span>, <span class="at">length.out=</span><span class="fu">n</span>()),</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">f =</span> i <span class="sc">/</span> <span class="fu">max</span>(t),</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">fft =</span> <span class="fu">fft</span>(ecg),</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">intensity =</span> <span class="fu">Mod</span>(fft) <span class="sc">/</span> <span class="fu">n</span>() <span class="sc">*</span> <span class="dv">2</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>f)) <span class="sc">+</span></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>intensity)) <span class="sc">+</span></span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">minor_breaks =</span> scales<span class="sc">::</span><span class="fu">minor_breaks_n</span>(<span class="dv">11</span>)) <span class="sc">+</span></span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"frequenza (Hz)"</span>, <span class="at">y=</span><span class="st">"tensione (µV)"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="filtri_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>FFT del segnale ECG</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Per farlo definiamo una funzione filtro mediante una gaussiana <code>dnorm()</code> (anche se potremmo usare altre funzioni a piacere, a seconda del risultato desiderato). Si noti che la funzione maschera deve essere <strong>simmetrica attorno alla frequenza di Nyquist</strong> come lo è la trasformata.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>width <span class="ot">&lt;-</span> <span class="dv">8</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>off <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>sig <span class="ot">&lt;-</span> signals <span class="sc">%&gt;%</span> </span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">i =</span> (<span class="dv">1</span><span class="sc">:</span><span class="fu">n</span>())<span class="sc">-</span><span class="dv">1</span>,</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">t =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">10</span>, <span class="at">length.out=</span><span class="fu">n</span>()),</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">f =</span> i <span class="sc">/</span> <span class="fu">max</span>(t),</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">filter =</span> </span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>      (<span class="fu">dnorm</span>(f, <span class="at">mean=</span>off, <span class="at">sd=</span>width) <span class="sc">+</span> <span class="fu">dnorm</span>(f, <span class="at">mean=</span><span class="fu">max</span>(f)<span class="sc">-</span>off, <span class="at">sd=</span>width)) <span class="sc">/</span> </span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">mean=</span><span class="dv">0</span>, <span class="at">sd=</span>width),</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">fft =</span> <span class="fu">fft</span>(ecg),</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">fft_f =</span> fft <span class="sc">*</span> filter,</span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">intensity =</span> <span class="fu">Mod</span>(fft) <span class="sc">/</span> <span class="fu">n</span>() <span class="sc">*</span> <span class="dv">2</span>,</span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">intensity_f =</span> <span class="fu">Mod</span>(fft_f) <span class="sc">/</span> <span class="fu">n</span>() <span class="sc">*</span> <span class="dv">2</span>,</span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">phase =</span> <span class="fu">Arg</span>(fft)<span class="sc">/</span>pi<span class="sc">*</span><span class="dv">180</span></span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a>  ) </span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a>sf <span class="ot">&lt;-</span> <span class="dv">30</span></span>
+<span id="cb32-19"><a href="#cb32-19" aria-hidden="true" tabindex="-1"></a>sig <span class="sc">%&gt;%</span> </span>
+<span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>f)) <span class="sc">+</span></span>
+<span id="cb32-21"><a href="#cb32-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>intensity)) <span class="sc">+</span></span>
+<span id="cb32-22"><a href="#cb32-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>filter<span class="sc">*</span>sf), <span class="at">color=</span><span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb32-23"><a href="#cb32-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">minor_breaks =</span> scales<span class="sc">::</span><span class="fu">minor_breaks_n</span>(<span class="dv">11</span>)) <span class="sc">+</span></span>
+<span id="cb32-24"><a href="#cb32-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(</span>
+<span id="cb32-25"><a href="#cb32-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">sec.axis =</span> <span class="fu">sec_axis</span>(<span class="sc">~</span> . <span class="sc">/</span> sf, <span class="at">name =</span> <span class="st">"filter"</span>)</span>
+<span id="cb32-26"><a href="#cb32-26" aria-hidden="true" tabindex="-1"></a>  )<span class="sc">+</span></span>
+<span id="cb32-27"><a href="#cb32-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"frequenza (Hz)"</span>, <span class="at">y=</span><span class="st">"tensione (µV)"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="filtri_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>FFT del segnale ECG e funzione maschera (in rosso)</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>La funzione maschera è stata riscalata in modo da valere 1 al suo massimo. Inoltre, l’ultimo grafico riporta la maschera sul secondo asse verticale, per leggibilità.</p>
+<p>La trasformata moltiplicata per la maschera risulta:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>sig <span class="sc">%&gt;%</span> </span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>f)) <span class="sc">+</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>intensity_f)) <span class="sc">+</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>filter<span class="sc">*</span>sf), <span class="at">color=</span><span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">minor_breaks =</span> scales<span class="sc">::</span><span class="fu">minor_breaks_n</span>(<span class="dv">11</span>)) <span class="sc">+</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">sec.axis =</span> <span class="fu">sec_axis</span>(<span class="sc">~</span> . <span class="sc">/</span> sf, <span class="at">name =</span> <span class="st">"filter"</span>)</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>  )<span class="sc">+</span></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"frequenza (Hz)"</span>, <span class="at">y=</span><span class="st">"tensione (µV)"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="filtri_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>FFT del segnale ECG con applicata la funzione maschera</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>A questo punto possiamo anti-trasformare la trasformata mascherata, per ottenere il segnale filtrato e <strong>privo di ritardo</strong>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>sig <span class="sc">%&gt;%</span> </span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">ecg_f =</span> <span class="fu">Re</span>(<span class="fu">ifft</span>(fft_f))</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(t, <span class="at">ECG=</span>ecg, <span class="st">`</span><span class="at">ECG (filt.)</span><span class="st">`</span><span class="ot">=</span>ecg_f) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>t) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>t)) <span class="sc">+</span> </span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>value, <span class="at">color=</span>name)) <span class="sc">+</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">2</span>), <span class="at">ylim=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">200</span>, <span class="dv">200</span>)) <span class="sc">+</span></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">color=</span><span class="st">"segnale"</span>, <span class="at">x=</span><span class="st">"tempo (s)"</span>, <span class="at">y=</span><span class="st">"tensione (µV)"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="filtri_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Segnale ECG filtrato (dettaglio)</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Si noti che la anti-trasformata restituisce un segnale complesso, per cui è necessario scartare la parte immaginaria.</p>
+<p><strong>ESERCIZIO</strong>: cambiare i valori di <code>off</code> e <code>width</code> per osservare come modificando la maschera cambia il segnale filtrato.</p>
+</section>
+<section id="taratura-dinamica" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Taratura dinamica</h1>
+<section id="termocoppia" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="termocoppia"><span class="header-section-number">4.1</span> Termocoppia</h2>
+<p>Consideriamo il caso di una sonda PT100 immersa repentinamente in un bagno termostatato. La temperatura della sonda raggiunge quella del bagno secondo la legge:</p>
+<p><span id="eq-pt100"><span class="math display">\[
+T(t) = (T_i - T_f)e^{-\frac{t}{\tau}} + T_f
+\tag{2}\]</span></span></p>
+<p>Sappiamo che <span class="math inline">\(T_i = 33.4\)</span> °C, <span class="math inline">\(T_f = 95\)</span> °C e stimiamo che l’immersione inizi a <span class="math inline">\(t_0 = 50\)</span> s.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(temp, <span class="fu">aes</span>(<span class="at">x=</span>t, <span class="at">y=</span>T)) <span class="sc">+</span> </span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>Tn), <span class="at">color=</span><span class="st">"red"</span>, <span class="at">linewidth=</span><span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"tempo (s)"</span>, <span class="at">y=</span><span class="st">"temperatura (°C)"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="filtri_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Acquisizione con termocoppia PT100. In rosso la nominale</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<section id="primo-metodo-intercetta" class="level3" data-number="4.1.1">
+<h3 data-number="4.1.1" class="anchored" data-anchor-id="primo-metodo-intercetta"><span class="header-section-number">4.1.1</span> Primo metodo: intercetta</h3>
+<p>Secondo la <a href="#eq-pt100" class="quarto-xref">Equazione&nbsp;2</a>, a <span class="math inline">\(t=\tau\)</span> si ha che <span class="math inline">\(T(\tau) = (T_i-T_f)e^{-1} + T_f\)</span>, cioè:</p>
+<p><span class="math display">\[\begin{align}
+T_f - T(\tau) &amp;= (T_f - T_i)e^{-1} \\
+&amp;= (95 - 33.4) \cdot 0.368 \\
+&amp;= 61.6 \cdot 0.368 \\
+&amp;=  22.661
+\end{align}\]</span></p>
+<p>cioè <span class="math inline">\(T(\tau) = 72.339\)</span> °C. In grafico:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>Ttau <span class="ot">&lt;-</span> Tf <span class="sc">-</span> (Tf <span class="sc">-</span> Ti)<span class="sc">*</span><span class="fu">exp</span>(<span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(temp, <span class="fu">aes</span>(<span class="at">x=</span>t, <span class="at">y=</span>T)) <span class="sc">+</span> </span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> Ttau, <span class="at">color=</span><span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"tempo (s)"</span>, <span class="at">y=</span><span class="st">"temperatura (°C)"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="filtri_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Identificazione della temperatura <span class="math inline">\(T(\tau)\)</span></figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Cioè risulta graficamente che <span class="math inline">\(\tau\)</span> è la distanza tra l’inizio del transitorio e l’intersezione con la linea blu. Sui dati:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>temp <span class="sc">%&gt;%</span> </span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(t, T) <span class="sc">%&gt;%</span>          <span class="co"># solo le colonne t e T</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">t =</span> t <span class="sc">-</span> <span class="dv">50</span>) <span class="sc">%&gt;%</span>    <span class="co"># traslo i tempi all'inizio</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(T<span class="sc">&lt;</span>Ttau) <span class="sc">%&gt;%</span> <span class="co"># solo i valori &lt; Ttau</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_tail</span>(<span class="at">n=</span><span class="dv">1</span>) <span class="sc">%&gt;%</span>       <span class="co"># prendo solo l'ultima riga</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: right;">t</th>
+<th style="text-align: right;">T</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">33.5</td>
+<td style="text-align: right;">71.0994</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="secondo-metodo-linearizzazione" class="level3" data-number="4.1.2">
+<h3 data-number="4.1.2" class="anchored" data-anchor-id="secondo-metodo-linearizzazione"><span class="header-section-number">4.1.2</span> Secondo metodo: linearizzazione</h3>
+<p>La <a href="#eq-pt100" class="quarto-xref">Equazione&nbsp;2</a> può essere linearizzata così:</p>
+<p><span class="math display">\[\begin{align}
+\frac{T(t) -T_f}{T_i - T_f} &amp;= e^{-\frac{t}{\tau}} \\
+\ln\left(\frac{T(t) -T_f}{T_i - T_f}\right) &amp;= \ln(e^{-\frac{t}{\tau}}) \\
+\ln\left(\frac{T(t) -T_f}{T_i - T_f}\right) &amp;= -\frac{t}{\tau}
+\end{align}\]</span></p>
+<p>Posso riorganizzare i dati come segue:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>temp.l <span class="ot">&lt;-</span> temp <span class="sc">%&gt;%</span> </span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(t, T) <span class="sc">%&gt;%</span> </span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">t =</span> t <span class="sc">-</span> <span class="dv">50</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(t<span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">&amp;</span> t <span class="sc">&lt;</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">y =</span> <span class="fu">log</span>((T<span class="sc">-</span>Tf)<span class="sc">/</span>(Ti <span class="sc">-</span> Tf))) <span class="sc">%&gt;%</span> </span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.nan</span>(y))</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>temp.lm <span class="ot">&lt;-</span> temp.l <span class="sc">%&gt;%</span> <span class="fu">lm</span>(y<span class="sc">~</span>t<span class="dv">-1</span>, <span class="at">data=</span>.) </span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>temp.lm <span class="sc">%&gt;%</span> <span class="fu">summary</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = y ~ t - 1, data = .)
+
+Residuals:
+      Min        1Q    Median        3Q       Max 
+-0.254494 -0.023759 -0.004018  0.020228  0.253887 
+
+Coefficients:
+    Estimate Std. Error t value Pr(&gt;|t|)    
+t -2.975e-02  7.284e-05  -408.5   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.05925 on 198 degrees of freedom
+Multiple R-squared:  0.9988,    Adjusted R-squared:  0.9988 
+F-statistic: 1.669e+05 on 1 and 198 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>tau <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="sc">-</span><span class="dv">1</span><span class="sc">/</span>temp.lm<span class="sc">$</span>coefficients, <span class="dv">1</span>)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste</span>(<span class="st">"tau:"</span>, tau))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>tau: 33.6</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>temp.l <span class="sc">%&gt;%</span> </span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>t, <span class="at">y=</span>y)) <span class="sc">+</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method=</span><span class="st">"lm"</span>, <span class="at">formula =</span> y<span class="sc">~</span>x<span class="dv">-1</span>) <span class="sc">+</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size=</span><span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"tempo (s)"</span>, </span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span>latex2exp<span class="sc">::</span><span class="fu">TeX</span>(<span class="st">"$</span><span class="sc">\\</span><span class="st">log_{10}(</span><span class="sc">\\</span><span class="st">frac{T-T_f}{T_i-T_f})$ (T in °C)"</span>))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="filtri_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Regressione del modello dopo linearizzazione</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="terzo-metodo-regressione-non-lineare" class="level3" data-number="4.1.3">
+<h3 data-number="4.1.3" class="anchored" data-anchor-id="terzo-metodo-regressione-non-lineare"><span class="header-section-number">4.1.3</span> Terzo metodo: regressione non-lineare</h3>
+<p>Con il terzo metodo si usa la regressione non-lineare ai minimi quadrati per ottenere direttamente tutti e tre i parametri <span class="math inline">\(T_i, T_f, \tau\)</span>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>temp.l <span class="ot">&lt;-</span> temp <span class="sc">%&gt;%</span> </span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(t, T) <span class="sc">%&gt;%</span> </span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">t =</span> t <span class="sc">-</span> <span class="dv">50</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(t<span class="sc">&gt;</span><span class="dv">0</span>) </span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">nls</span>(T<span class="sc">~</span>(Ti <span class="sc">-</span> Tf)<span class="sc">*</span><span class="fu">exp</span>(<span class="sc">-</span>t<span class="sc">/</span>tau) <span class="sc">+</span> Tf, </span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> temp.l, </span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">start =</span> <span class="fu">list</span>(</span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">Ti=</span><span class="dv">30</span>,</span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">Tf=</span><span class="dv">100</span>,</span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">tau=</span><span class="dv">10</span></span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a>    ))</span>
+<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a>fit</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Nonlinear regression model
+  model: T ~ (Ti - Tf) * exp(-t/tau) + Tf
+   data: temp.l
+   Ti    Tf   tau 
+33.58 95.00 33.65 
+ residual sum-of-squares: 137.7
+
+Number of iterations to convergence: 5 
+Achieved convergence tolerance: 1.104e-07</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>temp.l <span class="sc">%&gt;%</span> </span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  modelr<span class="sc">::</span><span class="fu">add_predictions</span>(fit, <span class="at">var=</span><span class="st">"fit"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>t, <span class="at">y=</span>T)) <span class="sc">+</span> </span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>fit), <span class="at">color=</span><span class="st">"red"</span>, <span class="at">linewidth=</span><span class="dv">1</span><span class="sc">/</span><span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"tempo (s)"</span>, <span class="at">y=</span><span class="st">"temperatura (°C)"</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="filtri_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Si notino i valori iniziali approssimativi passati per i tre parametri.</p>
+<p>I vantaggi di questo terzo metodo sono:</p>
+<ul>
+<li>non è necessario stimare <strong>soggettivamente</strong> <span class="math inline">\(T_i\)</span> e <span class="math inline">\(T_f\)</span>, ma vengono identificati direttamente dalla regressione</li>
+<li>definendo il modello per parti (cioè costante per <span class="math inline">\(t&lt;t_i\)</span>), è possibile identificare anche <span class="math inline">\(t_i\)</span> (lo si lascia per esercizio)</li>
+<li>mediante il metodo bootstrap è possibile ottenere gli intervalli di confidenza su tutti e tre i parametri (lo si lascia per esercizio)</li>
+</ul>
+<p>Per contro, è computazionalmente più complesso, mentre il primo e al limite anche il secondo metodo possono essere applicati anche “a mano”.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Esercizio">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Esercizio
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Definire una funzione piecewise costante fino a <span class="math inline">\(T_i\)</span> e poi esponenziale e regredire tale funzione, identificando anche <span class="math inline">\(T_i\)</span></p>
+</div>
+</div>
+</section>
+</section>
+<section id="considerazioni-sulla-relazione-tra-costante-di-tempo-e-funzione-di-trasferimento" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="considerazioni-sulla-relazione-tra-costante-di-tempo-e-funzione-di-trasferimento"><span class="header-section-number">4.2</span> Considerazioni sulla relazione tra costante di tempo e funzione di trasferimento</h2>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Importante
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Mancano pagine 53-54.</p>
+</div>
+</div>
+</section>
+<section id="compensazione-o-misura-dinamica" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="compensazione-o-misura-dinamica"><span class="header-section-number">4.3</span> Compensazione o misura dinamica</h2>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Importante
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Mancano pagine 55-58.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="determinazione-funzioni-di-trasferimento-mediante-parametri-concentrati-ed-impedenze-generalizzate" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Determinazione Funzioni di Trasferimento mediante Parametri Concentrati ed Impedenze Generalizzate</h1>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Importante
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Mancano pagine 66-81, ma i due esempi originariamente in tabella sono qui riportati per esteso nel capitolo seguente.</p>
+</div>
+</div>
+</section>
+<section id="funzioni-di-trasferimento" class="level1 page-columns page-full" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Funzioni di trasferimento</h1>
+<p>Di seguito, anziché utilizzare la funzione <code>gsignal::bodeplot()</code>, che usa la vecchia interfaccia per i grafici, utilizzeremo una funzione da noi definita, <code>ggbodeplot()</code>, basata su <code>ggplot2</code>. La definizione di questa funzione non è essenziale.</p>
+<details>
+<summary>
+ggbodeplot function
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(control)</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(signal)</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>ggbodeplot <span class="ot">&lt;-</span> <span class="cf">function</span>(tf, <span class="at">fmin=</span><span class="dv">1</span>, <span class="at">fmax=</span><span class="fl">1e4</span>, <span class="at">df=</span><span class="fl">0.01</span>) {</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># vector of points for each order of magnitude (OOM):</span></span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>  pts <span class="ot">&lt;-</span> <span class="dv">10</span><span class="sc">^</span><span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, df) <span class="sc">%&gt;%</span> <span class="fu">tail</span>(<span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># vector of OOMs:</span></span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>  ooms <span class="ot">&lt;-</span> <span class="dv">10</span><span class="sc">^</span>(<span class="fu">floor</span>(<span class="fu">log10</span>(fmin))<span class="sc">:</span><span class="fu">ceiling</span>(<span class="fu">log10</span>(fmax)<span class="sc">-</span><span class="dv">1</span>))</span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># combine pts and ooms:</span></span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>  freqs <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(pts <span class="sc">%o%</span> ooms)</span>
+<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># warning: bode wants pulsation!</span></span>
+<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bode</span>(tf, freqs<span class="sc">*</span><span class="dv">2</span><span class="sc">*</span>pi) <span class="sc">%&gt;%</span> {</span>
+<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tibble</span>(<span class="at">f=</span>.<span class="sc">$</span>w<span class="sc">/</span>(<span class="dv">2</span><span class="sc">*</span>pi), <span class="st">`</span><span class="at">magnitude (dB)</span><span class="st">`</span><span class="ot">=</span>.<span class="sc">$</span>mag, <span class="st">`</span><span class="at">phase (deg)</span><span class="st">`</span><span class="ot">=</span>.<span class="sc">$</span>phase)} <span class="sc">%&gt;%</span></span>
+<span id="cb46-14"><a href="#cb46-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="sc">-</span>f) <span class="sc">%&gt;%</span> </span>
+<span id="cb46-15"><a href="#cb46-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>f, <span class="at">y=</span>value)) <span class="sc">+</span></span>
+<span id="cb46-16"><a href="#cb46-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb46-17"><a href="#cb46-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_log10</span>(</span>
+<span id="cb46-18"><a href="#cb46-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">minor_breaks=</span>scales<span class="sc">::</span><span class="fu">minor_breaks_n</span>(<span class="dv">10</span>), </span>
+<span id="cb46-19"><a href="#cb46-19" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels=</span> <span class="sc">~</span> latex2exp<span class="sc">::</span><span class="fu">TeX</span>(<span class="fu">paste0</span>(<span class="st">"$10^{"</span>, <span class="fu">log10</span>(.), <span class="st">"}$"</span>))) <span class="sc">+</span></span>
+<span id="cb46-20"><a href="#cb46-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>name, <span class="at">nrow=</span><span class="dv">2</span>, <span class="at">scales=</span><span class="st">"free"</span>) <span class="sc">+</span></span>
+<span id="cb46-21"><a href="#cb46-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"frequency (Hz)"</span>)</span>
+<span id="cb46-22"><a href="#cb46-22" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</details>
+<section id="esempio-sistema-per-isolamento-da-vibrazioni." class="level2 page-columns page-full" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="esempio-sistema-per-isolamento-da-vibrazioni."><span class="header-section-number">6.1</span> Esempio: sistema per isolamento da vibrazioni.</h2>
+<p>Con il metodo delle impedenze generalizzate si ottiene:</p>
+<p><span id="eq-tf"><span class="math display">\[
+H(i\omega)=\frac{V_\mathrm{out}(i\omega)}{V_\mathrm{in}(i\omega)}=\frac{C i\omega + K}{M (i\omega)^2 + C i\omega + K}
+\tag{3}\]</span></span></p>
+<p>La frequenza naturale del sistema è <span class="math inline">\(f_0=\frac{1}{2\pi}\sqrt{\frac{K}{M}}\)</span>, e l’attenuazione comincia a <span class="math inline">\(\sqrt{2}f_0\)</span>.</p>
+<p>Possiamo definire la funzione di trasferimento in <a href="#eq-tf" class="quarto-xref">Equazione&nbsp;3</a> con la funzione <code>control::tf()</code>, che prende come due argomenti due vettori con i coefficienti della <a href="#eq-tf" class="quarto-xref">Equazione&nbsp;3</a>, in ordine decrescente di grado della variabile <span class="math inline">\(i\omega\)</span>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>M <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>K <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>C <span class="ot">&lt;-</span> <span class="dv">50</span></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Frequenza naturale:</span></span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>f0 <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span>(<span class="dv">2</span><span class="sc">*</span>pi) <span class="sc">*</span> <span class="fu">sqrt</span>(K<span class="sc">/</span>M)</span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a><span class="fu">tf</span>(<span class="fu">c</span>(C, K),<span class="fu">c</span>(M, C, K)) <span class="sc">%&gt;%</span> </span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggbodeplot</span>(<span class="at">fmin=</span><span class="fl">0.1</span>, <span class="at">fmax=</span><span class="dv">100</span>) <span class="sc">+</span></span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept=</span><span class="fu">c</span>(<span class="dv">1</span>, <span class="fu">sqrt</span>(<span class="dv">2</span>)) <span class="sc">*</span> f0, <span class="at">color=</span><span class="st">"red"</span>, <span class="at">linetype=</span><span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">paste</span>(</span>
+<span id="cb47-12"><a href="#cb47-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Natural frequency:"</span>, <span class="fu">round</span>(f0, <span class="dv">2</span>), <span class="st">"Hz"</span>, </span>
+<span id="cb47-13"><a href="#cb47-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">" - Isolation: &gt;"</span>, <span class="fu">round</span>(<span class="fu">sqrt</span>(<span class="dv">2</span>)<span class="sc">*</span>f0, <span class="dv">2</span>), <span class="st">"Hz"</span>))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="filtri_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Bode plot per il sistema di isolamento da vibrazioni</figcaption>
+</figure>
+</div>
+</div>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p><strong>Decibel</strong> — La magnitudine della funzione di trasferimento è espressa in decibel (dB). Un decibel corrisponde a <span class="math inline">\(10 \log_{10}(X)\)</span>. Tuttavia è d’uso scalare la magnitudine in modo che rappresenti il <strong>rapporto tra le potenze</strong>, che dipende dal quadrato della variabile in oggetto. Quindi l’effettiva relazione diventa <span class="math inline">\(20 \log_{10}(X)\)</span>.</p>
+<p>In altre parole, un rapporto pari a 1:10 sulla variabile corrisponde a 1:100 sulla potenza; quindi se esprimo la magnitudine come <span class="math inline">\(20 \log_{10}(X)\)</span> significa che un’attenuazione di -10 dB<span class="math inline">\(_{20}\)</span> sul segnale corrisponde a -10 dB<span class="math inline">\(_{10}\)</span> sulla potenza. Ancora più chiaramente: -20 dB sulla magnitudine significa un’attenuazione di 10 volte sul segnale, 100 volte sulla potenza.</p>
+<hr>
+</div></div><p>Si noti che lo stesso risultato si ottiene a partire dalle equazioni della dinamica del sistema, effettuando la trasformata di Laplace <span class="math inline">\(\mathcal{L}\)</span>:</p>
+<p><span class="math display">\[\begin{align}
+M\ddot y + C\dot y + Ky &amp;= C\dot x + K x \\
+&amp;\downarrow \mathcal{L}\left(\frac{\mathrm{d}^nx}{\mathrm{d}t^n}\right) = s^n X(s) \\
+M s^2 Y(s) + C s Y(s) + K Y(s) &amp;= CsX(s) + KX(s)
+\end{align}\]</span></p>
+<p>dalla quale otteniamo l’espressione per la funzione di trasferimento:</p>
+<p><span class="math display">\[
+H(s) = \frac{Y(s)}{X(s)} = \frac{Cs + K}{Ms^2 + Cs  + K }
+\]</span> che corrisponde alla <a href="#eq-tf" class="quarto-xref">Equazione&nbsp;3</a> a meno della sostituzione <span class="math inline">\(s=i\omega\)</span>.</p>
+</section>
+<section id="esempio-accoppiamento-rotativo-motore-carico." class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="esempio-accoppiamento-rotativo-motore-carico."><span class="header-section-number">6.2</span> Esempio: accoppiamento rotativo motore-carico.</h2>
+<p>Con il metodo delle impedenze generalizzate si ottiene:</p>
+<p><span class="math display">\[
+H(i\omega) = \frac{1}{I_c (i\omega)^2 + Ci\omega + K} = \frac{1}{I_c/K (i\omega)^2 + C/K i\omega + 1}
+\]</span></p>
+<p>La frequenza naturale può essere ottenuta con la funzione <code>control::damp()</code>, campo <code>omega</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>Ic <span class="ot">&lt;-</span>  <span class="fl">10e-3</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>K <span class="ot">&lt;-</span>  <span class="dv">5000</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>C <span class="ot">&lt;-</span>  <span class="dv">1</span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>H <span class="ot">&lt;-</span> <span class="fu">tf</span>(<span class="dv">1</span>,<span class="fu">c</span>(Ic<span class="sc">/</span>K, C<span class="sc">/</span>K, <span class="dv">1</span>)) </span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>H.d <span class="ot">&lt;-</span> <span class="fu">damp</span>(H, <span class="at">doPrint=</span><span class="cn">FALSE</span>)</span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>H <span class="sc">%&gt;%</span> </span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggbodeplot</span>(<span class="at">fmin=</span><span class="dv">10</span>, <span class="at">fmax=</span><span class="fl">1e4</span>) <span class="sc">+</span></span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept=</span><span class="fu">c</span>(<span class="dv">1</span>, <span class="fu">sqrt</span>(<span class="dv">2</span>)) <span class="sc">*</span> H.d<span class="sc">$</span>omega[<span class="dv">1</span>]<span class="sc">/</span>(<span class="dv">2</span><span class="sc">*</span>pi), <span class="at">color=</span><span class="st">"red"</span>, <span class="at">linetype=</span><span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="fu">paste</span>(</span>
+<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Natural frequency:"</span>, <span class="fu">round</span>(f0, <span class="dv">2</span>), <span class="st">"Hz"</span>, </span>
+<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">" - Isolation: &gt;"</span>, <span class="fu">round</span>(<span class="fu">sqrt</span>(<span class="dv">2</span>)<span class="sc">*</span>f0, <span class="dv">2</span>), <span class="st">"Hz"</span>))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="filtri_files/figure-html/unnamed-chunk-38-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption>Bode plot per l’accoppiamento rotativo</figcaption>
+</figure>
+</div>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiato!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiato!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -1,0 +1,14 @@
+---
+title: "Esercizi"
+format: html
+date: "02/17/2025"
+date-modified: today
+listing:
+  type: table
+  contents: esercizi
+  fields: [date, title, author, description, categories, reading-time]
+  sort-ui: [title, categories, date]
+  filter-ui: true
+---
+
+# Applicazioni pratiche ed esercizi
