@@ -551,7 +551,7 @@ Da ciò prende anche il nome di funzione di trasferimento 'sinusoidale'.
 Consideriamo un sistema dinamico lineare caratterizzato da una funzione di trasferimento $H(\omega)$.
 Iniettiamo un ingresso puramente armonico di tipo sinusoidale, come schematizzato nel diagramma a blocchi di @fig-2_5.
 
-![Rappresentazione ingresso-uscita di un sistema dinamico regolato da equazione differenziale lineare.](images/fig2.5.png){#fig-2_5 height="100px"}
+![Rappresentazione ingresso-uscita di un sistema dinamico regolato da equazione differenziale lineare.](images/fig2.5.drawio.png){#fig-2_5}
 
 Imponendo in ingresso $u(t)=\sin(\omega_0 t)$ vogliamo determinare l’uscita $y(t)$.
 Vedremo che si determina in maniera immediata dalla conoscenza di modulo e fase della funzione di trasferimento in corrispondenza della pulsazione dell’ingresso.
@@ -575,7 +575,7 @@ $$
 
 Volendo rappresentare lo spettro della funzione seno si ha dunque il grafico in @fig-2_6.
 
-![Rappresentazione dello spettro della funzione sinusoidale. In modulo ha due componenti di valore infinito del primo ordine con modulo 1/2 (ovvero due delta di Dirac di valore 1/2). Come fase due valori antisimmetrici di 90° e -90°. Globalmente lo spettro delle componenti a pulsazioni positive risultano essere i valori coniugati delle componenti a pulsazioni negative, come risulta anche dall’equazione @eq-7prime.](images/fig2.6.png){#fig-2_6}
+![Rappresentazione dello spettro della funzione sinusoidale. In modulo ha due componenti di valore infinito del primo ordine con modulo 1/2 (ovvero due delta di Dirac di valore 1/2). Come fase due valori antisimmetrici di 90° e -90°. Globalmente lo spettro delle componenti a pulsazioni positive risultano essere i valori coniugati delle componenti a pulsazioni negative, come risulta anche dall’equazione @eq-7prime.](images/fig2.6.drawio.png){#fig-2_6}
 
 Globalmente la trasformata dell’ingresso si può scrivere quindi come somma di due delta di Dirac: $$
 U(\omega) = \frac{i}{2}\delta(\omega + \omega_0)- \frac{i}{2}\delta(\omega-\omega_0)
@@ -611,7 +611,8 @@ $$ ovvero: $$
 y(t) = M(\omega_0)\sin(\omega_0t + \Phi(\omega_0))
 $$ Che esprime il fatto che se si pone in ingresso ad un sistema regolato da equazioni differenziali lineari un ingresso armonico di modulo unitario e pulsazione $\omega_0$, l’uscita sarà un’armonica di pari pulsazione $\omega_0$ ma di modulo pari al modulo della funzione di trasferimento $H(\omega_0)$ calcolata per la pulsazione $\omega_0$ e sfasata della fase della funzione di trasferimento $\Phi(\omega_0))$ calcolata per la stessa pulsazione $\omega_0$.
 
-![Trasformata del seno](images/fig2.7.png){#fig-2_7 height="100px"}
+![Trasformata del seno](images/fig2.7.drawio.png){#fig-2_7}
+
 
 A tale risultato era possibile giungere semplicemente considerando la @eq-transffunc: $$
 \begin{aligned}

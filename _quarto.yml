@@ -17,6 +17,7 @@ execute:
   freeze: auto
 format:
   html:
+    lang: it 
     theme: cosmo
     css: styles.css
     toc: true

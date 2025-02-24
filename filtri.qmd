@@ -29,7 +29,9 @@ Un sistema dinamico lineare per il quale esiste una funzione di trasferimento si
 
 ## Esempio di riduzione del rumore in alta frequenza su di un segnale di temperatura
 
-Si consideri il segnale ed il modulo del suo spettro mostrate in figura 2.5 (una misura di temperatura tramite PT100 su di una piastra termostatata che regola la temperatura tra due valori soglia). Se il segnale viene posto in ingresso ad un sistema che possiede una funzione di trasferimento passa basso, si ottiene un segnale in uscita con le medesime componenti in bassa frequenza mentre quelle in alta sono attenuate.
+Si consideri il segnale ed il modulo del suo spettro mostrate in @fig-2_5 (una misura di temperatura tramite PT100 su di una piastra termostatata che regola la temperatura tra due valori soglia). Se il segnale viene posto in ingresso ad un sistema che possiede una funzione di trasferimento passa basso, si ottiene un segnale in uscita con le medesime componenti in bassa frequenza mentre quelle in alta sono attenuate.
+
+![Rappresentazione ingresso-uscita di un sistema dinamico regolato da equazione differenziale lineare.](images/fig2.5.drawio.png){#fig-2_5}
 
 ![Schema a blocchi di un processo di riduzione delle componenti in alta frequenza. In altre parole filtraggio in alta frequenza mediante un passa-basso. Nella figura sono rappresentati i segnali d’ingresso ed uscita in funzione del tempo ed il modulo (fase omessa) del loro spettro e la funzione di trasferimento che ha elaborato l’ingresso in modulo e fase.](images/fig-pt100.png){#fig-pt100}
 
@@ -60,7 +62,7 @@ La dimostrazione del fatto che un sistema reale si comporta nel dominio discreto
 
 Proviamo quanto detto con un filtro del primo ordine avente uno zero ed un polo:
 
-![](images/fig-filtro-online.png){height="100px"}
+![Filtro con un polo e uno zero](images/fig-filtro-online.drawio.png){#fig-filtro-online}
 
 Sappiamo che:
 $$
