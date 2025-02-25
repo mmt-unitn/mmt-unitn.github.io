@@ -47,7 +47,7 @@ signal <- function(t, pars, rad = FALSE) {
 
 Costruiamo l'uscita di uno strumento di misura, la sua modulazione in ampiezza, il rumore interferente e grafichiamo gli spettri.
 
-::: {.callout-note title="Una nota su `plotly`"}
+::: {.callout-tip title="Una nota su `plotly`"}
 Nel corso di statistica viene spiegato l'uso di GGPlot2. Quest'ultimo è studiato per l'efficacia e chiarezza di presentazione, per le quali è superiore a plotly.
 
 È comunque possibile rendere i grafici GGPlot2 interattivi, passandoli alla funzione `ggplotly()`.
@@ -134,7 +134,7 @@ ym %>%
   geom_line()
 ```
 
-::: {.callout-note title="Tidy data"}
+::: {.callout-tip title="Tidy data"}
 Cerchiamo più possibile di utilizzare dati *tidy*, cioè una variabile per colonna, un'osservazione per riga. In questo modo realizzare grafici con serie multiple è particolarmente rapido (basta identificare la variabile di classificazione, cioè il nome della colonna che contiene la chiave di raggruppamento).
 
 Per questo motivio, qui e di seguito useremo `pivot_longer`.
@@ -180,7 +180,7 @@ ym <- ym %>%
   ggplotly()
 ```
 
-:::{.callout-note title="Alternativa SENZA `pivot_longer`"}
+:::{.callout-tip title="Alternativa SENZA `pivot_longer`"}
 Ridotto all'osso, l'ultimo grafico è (evito `ggplotly` per brevità):
 
 ```{r}
@@ -326,54 +326,16 @@ tibble(
 
 
 
-# OMETTERE E FAR FARE COME ESERCIZIO
+:::{.callout-note title="Esercitazione"}
 
-Passo 1: Filtraggio e Demodulazione
+### Riconoscimento punti esame {.unnumbered}
 
-Estraiamo il segnale modulato mediante un filtro passa-alto. Di conseguenza è rimasto solo il segnale modulato che va quindi demodulato per ottenere una stima del segnale in uscita originario
+Il completamento di questo esercizio comporta il riconoscmiento di ±0.5 punti.
 
-```{r}
-cutoff <- 2 * max(pars_r$f) / fc  # Frequenza di taglio (2 volte la massima frequenza del rumore)
-bf <- butter(4, cutoff, type = "high")
-ym <- ym %>% 
-  mutate(
-    y_m_f = filtfilt(bf, y_m_in) # filtfilt non introduce ritardo
-  )
-```
+### Assegnazioni {.unnumbered}
 
-Passo 2: Demodulazione
 
-Moltiplicazione per la portante:
+### Suggerimenti {.unnumbered}
 
-```{r}
-ym <- ym %>% 
-  mutate(
-    demod_raw = 2 * y_m_f * cos(2 * pi * fp * t) - 1
-  )
-```
 
-Passo 3: Filtraggio Passa-Basso con filtro Butterworth
-
-```{r}
-cutoff <- 2 * max(pars_m$f) / fc  # Frequenza di taglio (2 volte la massima frequenza del segnale informativo)
-bf <- butter(4, cutoff, type = "low")
-ym <- ym %>% 
-  mutate(
-    demod = filtfilt(bf, demod_raw)
-  )
-```
-
-Confronto dei segnali:
-
-```{r}
-(ym %>% 
-  mutate(y_noisy = y + y_in) %>% 
-  select(t, y, y_noisy, demod) %>% 
-  pivot_longer(-t) %>% 
-  ggplot(aes(x=t, y=value, color=name)) + 
-  geom_line() +
-  coord_cartesian(xlim=c(0, 0.5))) %>% 
-  ggplotly()
-```
-
-Si noti come il segnale originario fosse affetto da rumore bianco, poi modulato e quindi sovrapposto ad un effetto interferente a tre armoniche. Alla fine del processo abbiamo ottenuto il segnale molto simile al segnale originario con una riduzione vistosa anche del rumore interferente
+:::

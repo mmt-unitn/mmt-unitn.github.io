@@ -151,7 +151,7 @@ ggbodeplot(H, fmin=0.1, fmax=100) +
 cat("Per la frequenza", f0, "Hz abbiamo: \nModulo:", Mod(freqresp(H, 2*pi*f0)), "\nFase:", Arg(freqresp(H, 2*pi*f0))*180/pi, "°\n")
 ```
 
-:::{.callout-note title="Versione alternativa"}
+:::{.callout-tip title="Versione alternativa"}
 O anche, usando `glue`, è più semplice comporre delle stringe inserendo tra graffe le espressioni da valutare:
 
 ```{r}
@@ -183,7 +183,7 @@ pp
 
 ```
 
-:::{.callout-note title="Versione alternativa"}
+:::{.callout-tip title="Versione alternativa"}
 **Attenzione**: i grafici che usano plotly sono oggetti Javascript e in quanto tali non sono compatibili con LaTeX, quindi non è possibile generare anche la versione pdf se il documento contiene grafici plotly.
 
 ```{r}
@@ -200,13 +200,19 @@ pp
 
 Se avete usato come parametro frequenza della funzione creata 10 Hz potete verificare come il segnale in uscita si sia effettivamente attenuato di parecchio!
 
-:::{.callout-note}
+:::{.callout-note title="Esercitazione"}
 
-**# DA FARE:** Stimare il segnale in ingresso originale a partire dal segnale in uscita e dal modulo e la fase della funzione di trasferimento
+### Riconoscimento punti esame {.unnumbered}
+
+Il completamento di questo esercizio comporta il riconoscmiento di ±1 punto.
+
+### Da fare {.unnumbered}
+
+Stimare il segnale in ingresso originale a partire dal segnale in uscita e dal modulo e la fase della funzione di trasferimento
 
 NOTA: impiegare funzioni che processano automaticamente tutte le armoniche che sono presenti nel segnale. In altre parole impiegare nelle funzioni che costruirete la struttura della funzione `signal()`
 
-**# SUGGERIMENTI:**
+### Suggerimenti {.unnumbered}
 
 - calcolare FFT
 - trovare i picchi FFT
@@ -218,108 +224,3 @@ NOTA: impiegare funzioni che processano automaticamente tutte le armoniche che s
 
 
 
-# OMETTERE E FAR FARE COME ESERCIZIO
-
-## Funzioni da costruire
-```{r}
-
-# FUNZIONE: calcola il modulo di una funzione di trasferimento
-# w è la pulsazione in radianti
-# num e den numeratore e denominatore in ordine di esponente decrescente
-valore_H <- function(num, den, w) { 
-  sum(map_vec(seq_along(num) , \(n) rev(num)[n]*(1i*w)^(n-1) )) / sum(map_vec(seq_along(den) , \(n) rev(den)[n]*(1i*w)^(n-1) ))  
-}
-
-
-# FUNZIONE: Stima ingresso da componenti armoniche in uscita 'picchi' ed H(w)
-signal_input <- function(t, picchi, H) { 
-    map_dbl(t, \(t) sum( map_vec(seq_len(nrow(picchi)) , \(i) picchi[i,1] / Mod(valore_H(num, den, picchi[i,2])) * cos( picchi[i,2]*t + picchi[i, 3] - Arg(valore_H(num, den, picchi[i,2])) ))))
-}
-```
-
-
-## Calcoliamo FFT ed i suoi picchi
-```{r}
-# Aggiungiamo l'FFT
-s <- s %>% 
-  mutate(
-    f = 0:(length(t)-1)/max(t),
-    fft_y = fft(y - mean(y)),
-    intensity_y = Mod(fft_y) / n()*2,
-    phase_y = Arg(fft_y)/pi*180
-  )
-
-plot_ly() %>%
-  add_lines(x = s$f, y = s$intensity_y, type = "bar", name = "FFT uscita", marker = list(color= "red"))  %>%
-  layout(title = "Modulo FFT Output")
-
-plot_ly() %>%
-  add_lines(x = s$f, y = s$phase_y, type = "bar", name = "FFT uscita", marker = list(color= "red")) %>%
-  layout(title = "Fase FFT Output [°]")
-
-# Troviamo i primi N picchi del modulo della FFT
-N <- length(pars$f)
-picchi <- matrix(0, nrow = N, ncol = 3)  # Inizializza la matrice dei picchi
-peaks <- findpeaks(s$intensity_y[1:(length(s$intensity_y) %/% 2)], nups = 1, ndowns = 1, sortstr = TRUE)
-
-# Controlla che ci siano picchi previsti
-if (!is.null(peaks) && nrow(peaks) >= N) {
-  picchi_values <- peaks[1:N, 1]  # Valori dei picchi
-  picchi_indices <- peaks[1:N, 2] # Indici dei picchi
-  picchi_freq <- s$f[picchi_indices]  # Frequenze corrispondenti ai picchi
-  picchi_fasi <- s$phase_y[picchi_indices] # Fasi corrispondenti ai picchi
-
-  # Assegna i valori alla matrice picchi
-  picchi[, 1] <- picchi_values
-  picchi[, 2] <- 2 * pi * picchi_freq
-  picchi[, 3] <- pi * picchi_fasi / 180
-}
-print(picchi)
-
-```
-
-:::{.callout-note title="Versione alternativa"}
-```{r}
-#| fig.asp: 0.75
-(s %>% 
-  select(f, intensity=intensity_y, phase=phase_y) %>% 
-  pivot_longer(-f) %>% 
-  ggplot(aes(x=f, y=value)) + 
-  geom_line(linewidth=0.2) + 
-  geom_point(size=0.5, color="red") +
-  facet_wrap(~name, nrow=2, scales="free")) %>% 
-  ggplotly()
-```
-:::
-
-
-
-
-## Applichiamo inversa della funz trasferimento
-
-```{r}
-
-# Applichiamo inversa della funz trasferimento ai picchi della FFT in modo da stimare l'ingresso a partire dall'uscita
-s <- s %>% 
-  mutate(
-    u_est = signal_input(t, picchi, H)
-  )
-
-pp %>%
-  add_lines(s$t, s$u_est, name = "input stimato", line= list(color= "green")) %>%
-  layout(title = "Input originario e stimato")
-
-```
-
-
-:::{.callout-note title="Versione alternativa"}
-```{r}
-#| warning: false
-s %>% 
-  select(t, y, un, u_est) %>% 
-  pivot_longer(-t) %>% 
-  ggplot(aes(x=t, y=value, color=name)) +
-  geom_line() +
-  xlim(c(0, 0.4))
-```
-:::

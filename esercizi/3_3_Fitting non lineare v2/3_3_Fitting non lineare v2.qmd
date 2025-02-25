@@ -9,7 +9,7 @@ format:
     toc: TRUE
 engine: knitr
 abstract: |
-  Esempio per la taratura dinamica di una termocoppia PT100 mediante regressione lneare e non-lineare ai minimi quadrati.
+  Esempio per la taratura dinamica di un sensore PT100 mediante regressione lneare e non-lineare ai minimi quadrati.
 ---
 
 ```{r setup, include=FALSE}
@@ -29,11 +29,6 @@ library(minpack.lm)
 ::: column-margin
 **Attenzione**: 
 1. Scriviamo `dplyr::filter(i>80)` anziché semplicemente `filter(i>80)` in quanto la funzione si trova in due pacchetti con finalità diverse
-
-**Da Fare**: 
-- acquisire dati con fornelletto di Fisica e PT100 'massiccia' in modo che risulti evidente il secondo modo
-- ......................... verificare bene equazioni in base allo schema fornito in figura (rifare in Mathematica)
-
 :::
 :::
 
@@ -74,6 +69,16 @@ pp
 
 ```
 
+:::{.callout-tip title="Con GGPlot2"}
+```{r}
+(s %>% 
+  ggplot(aes(x=t, y=Temp)) +
+  geom_line() +
+   labs(x="Tempo (s)", y="Temperatura (°C)")) %>% 
+  ggplotly()
+```
+:::
+
 ## Secondo metodo: linearizzazione
 
 La @eq-pt100 può essere **resa lineare nei coefficienti** così:
@@ -99,12 +104,14 @@ ti <- 46
 si <- s %>% 
   select(t, Temp) %>% 
   mutate(t = t - ti) %>%
-  dplyr::filter(t > 0) %>%
+  dplyr::filter(t > 0 ) %>%
   mutate(y = log((Temp-Tf)/(Ti - Tf))) %>% 
   dplyr::filter(!is.nan(y))
 
 # Fitting Lineare
-si.lm <- si %>% lm(y~t, data=.) 
+si.lm <- si %>% 
+  dplyr::filter(t< 70) %>%
+  lm(y~t, data=.) 
 si.lm %>% summary()
 
 gain = si.lm$coefficients[2]
@@ -125,6 +132,19 @@ pp
 
 ```
 
+:::{.callout-tip title="Con GGPlot2"}
+```{r}
+library(modelr)
+pp <- si %>% 
+  add_predictions(si.lm) %>% 
+  select(t, y, pred) %>% 
+  pivot_longer(-t) %>% 
+  ggplot(aes(x=t, y=value, color=name)) +
+  geom_line() +
+  labs(x="Tempo (s)", y="Temperatura (°C)")
+ggplotly(pp)
+```
+:::
 
 ## Terzo metodo: regressione non-lineare
 
@@ -145,11 +165,15 @@ $$T(t) = T_f + (T_i - T_f) * (\frac{\tau_1}{\tau_1 - \tau_2} e^{-t/\tau_1} - \fr
 
 
 
-:::{.callout-note}
+:::{.callout-note title="Esercitazione"}
 
-**# DA FARE:** Eseguire la regressione non lineare
+### Riconoscimento punti esame {.unnumbered}
 
-Elenco assegnazioni:
+Il completamento di questo esercizio comporta il riconoscmiento di ±0.5 punti.
+
+### Assegnazioni {.unnumbered}
+
+Elenco assegnazioni
 
 - A partire dal modello del sistema con guaina mostrato in figura,  
   mostrare i passaggi necessari per ottenere la funzione di trasferimento  
@@ -164,112 +188,9 @@ Elenco assegnazioni:
 - Mediante il metodo bootstrap, ottenere gli intervalli di confidenza sui  
   parametri  
 
-**# SUGGERIMENTI:**
+### Suggerimenti {.unnumbered}
 
 
 :::
-
-
-
-# OMETTERE E FAR FARE COME ESERCIZIO
-
-
-```{r}
-
-# Funzione: Generazione risposta esponenziale del 2° ordine
-ModelloSecondoOrdine <- function(t, Ti, Tf, ti, tau1, tau2){
-  ifelse(t > ti,
-         Tf + (Ti - Tf)*( (tau1 / (tau1 - tau2)) * exp(-(t-ti)/tau1) - (tau2 / (tau1 - tau2)) * exp(-(t-ti)/tau2)),
-         Ti)
-}
-
-# Selezione e trasformazione dei dati (assicurati che non ci siano NA o inf)
-# si <- s  # Assumiamo che 's' sia un dataframe già caricato
-
-# Definizione del modello con nls.lm() e miglioramento dei parametri
-fit <- tryCatch({
-  nls.lm(
-    fn = function(p, t, Temp) {
-      # p contiene i parametri da ottimizzare
-      Ti <- p[1]
-      Tf <- p[2]
-      ti <- p[3]
-      tau1 <- p[4]
-      tau2 <- p[5]
-      
-      # Calcola la previsione usando la funzione già definita (senza ridondanza)
-      predicted <- ModelloSecondoOrdine(t, Ti, Tf, ti, tau1, tau2)
-      
-      # Funzione di errore da minimizzare (differenza tra modello e dati osservati)
-      return(Temp - predicted)
-    },
-    p = c(Ti = 15, Tf = 55, ti = 50, tau1 = 2, tau2 = 3),  # Parametri iniziali
-    lower = c(Ti = 5, Tf = 25, ti = 0, tau1 = 0.1, tau2 = 0.0001),  # Limiti inferiori
-    upper = c(Ti = 50, Tf = 155, ti = 100, tau1 = 100, tau2 = 10),  # Limiti superiori
-    t = s$t,  # Variabile indipendente (tempo)
-    Temp = s$Temp  # Variabile dipendente (temperatura)
-  )
-}, error = function(e) {
-  cat("Errore nel fitting del modello:", e$message, "\n")
-  return(NULL)
-})
-
-parameters <- fit$par
-Ti <- parameters[1]
-Tf <- parameters[2]
-ti <- parameters[3]
-tau1 <- parameters[4]
-tau2 <- parameters[5]
-
-cat("Temp iniziale: ", Ti, "\nTemp finale: ", Tf, "\ntempo inserimento: ", ti, "\ntau1:", tau1, "\ntau2", tau2)
-
-# Inseriamo l'andamento stimato da modello nella struttura dati:
-s <- s %>% mutate(Temp_fit = ModelloSecondoOrdine(t, Ti, Tf, ti, tau1, tau2))
-
-# Grafici
-pp <- plot_ly(s) %>%  # 'si' è il dataframe
-  add_lines(x = ~t, y = ~Temp, name = "Temperatura", line = list(color = "blue")) %>%
-  add_lines(x = ~t, y = ~Temp_fit, name = "Temperatura \n prevista \n da modello", line = list(color = "red")) %>%
-  layout(
-    title = "Grafico Temperatura vs Tempo",
-    xaxis = list(title = "Tempo (s)"),
-    yaxis = list(title = "Temperatura (°C)")
-  )
-pp
-
-
-```
-
-
-
-
-
-
-
-# Junks
-
-```{r}
-
-#| include: false
-tau <- 33.5
-Ti <- 33.4
-Tf <- 95
-t0 <- 50
-temp <- tibble(
-  t = seq(0, 350, 0.5),
-  Tn = ifelse(t<t0, Ti, (Ti - Tf)*exp(-(t-t0)/tau) + Tf),
-  T = Tn + rnorm(length(t), 0, 0.5)
-)
-```
-
-Sappiamo che temperatura iniziale $T_i = 35$ °C, $T_f = 95$ °C e stimiamo che l'immersione inizi a $t_0 = 50$ s.
-
-```{r}
-#| fig.cap: "Acquisizione gradino con termocoppia PT100"
-ggplot(s, aes(x=t, y=Temp)) + 
-  geom_line() +
-  labs(x="tempo (s)", y="temperatura (°C)")
-```
-
 
 

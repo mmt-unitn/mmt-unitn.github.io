@@ -9,10 +9,10 @@ website:
     left:
       - href: r_brief.qmd
         text: R in breve
-      - href: fft.qmd
-        text: Trasformate
-      - href: filtri.qmd
-        text: Filtri
+      - href: teoria.qmd
+        text: Teoria
+      - href: esercizi.qmd
+        text: Esercitazioni
       - about.qmd
 execute:
   freeze: auto
