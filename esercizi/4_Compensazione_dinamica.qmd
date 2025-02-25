@@ -1,8 +1,8 @@
 ---
-title: "3. Compensazione (o Misura) dinamica"
+title: "4. Compensazione (o Misura) dinamica"
 author: Mariolino De Cecco
 date: today
-categories: [signal, filter, spectrum]
+categories: [compensazione, misura, inversione della dinamica, dinamica]
 format:
   html:
     toc: true
@@ -176,3 +176,43 @@ Il completamento di questo esercizio comporta il riconoscmiento di ±0.5 punti.
 
 
 :::
+
+
+
+# OMETTERE E FAR FARE COME ESERCIZIO
+
+Cambiamo strategia: Aggiungiamo un filtro in serie all'inversa della Funzione di Trasferimento:
+
+```{r}
+# Aggiungiamo un filtro in serie all'inversa della Funzione di Trasferimento:
+# Coefficienti del numeratore e denominatore
+numf <- c(1)   # 5s + 1
+freqT <- 10   # 1 ... 100 se alto è come se non ci fosse
+denf <- c(1/freqT, 1) # s^2 + 2s + 1
+Hf <- tf(numf, denf)
+print(Hf)
+# Diagramma di Bode
+ggbodeplot(Hf, fmin=0.01, fmax=1e2, df=1/max(u$t))
+
+Hinv_filt <- series(Hinv, Hf)  # Collegamento in serie
+print(Hinv_filt)
+# Diagramma di Bode
+ggbodeplot(Hinv_filt, fmin=0.01, fmax=1e2, df=1/max(u$t))
+
+# Simulazione dell'ingresso a partire dall'uscita per ottenere il misurando
+input <- lsim(Hinv_filt, yn, u$t, x0 = rep(0, length(pole(Hinv_filt))))
+
+# Grafici
+pp <- plot_ly() %>%
+  add_lines(u$t, input$y, name = "misurando stimato", line= list(color= "red")) %>%
+  add_lines(u$t, yn, name = "output con rumore", line= list(color= "blue"))%>%
+  add_lines(u$t, u$u, name = "misurando originario", line= list(color= "green"))
+pp
+
+```
+
+SUGGERIMENTI: - provare a cambiare la frequenza di taglio del filtro
+
+..........
+
+Cambiamo strategia: operiamo nel dominio della frequenza andando a calcolare la trasformata dell'ingresso che sarà data dalla moltiplicazione della trasformata dell'uscita per la funzione di trasferimento inversa:

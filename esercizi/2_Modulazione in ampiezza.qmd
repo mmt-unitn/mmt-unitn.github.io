@@ -1,0 +1,289 @@
+---
+title: "2. Modulazione di ampiezza"
+author: Mariolino De Cecco
+date: today
+categories: [modulazione, segnali, spettri]
+format:
+  html:
+    toc: true
+abstract: |
+  Esercizio sulla modulazione di ampiezza delle misure mediante analisi dello spettro e filtraggio offline.
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  fig.asp = 9/16
+)
+library(plotly)
+library(tibble)
+library(purrr)
+library(signal)
+library(gsignal)
+library(dplyr)
+library(control)
+library(tidyr)
+library(latex2exp)
+```
+
+# Funzioni
+
+```{r}
+# FUNZIONE: Bodeplot
+ggbodeplot <- function(tf, fmin=1, fmax=1e4, df=0.01) {
+  # vector of points for each order of magnitude (OOM):
+  pts <- 10^seq(0, 1, df) %>% tail(-1)
+  # vector of OOMs:
+  ooms <- 10^(floor(log10(fmin)):ceiling(log10(fmax)-1))
+  # combine pts and ooms:
+  freqs <- as.vector(pts %o% ooms)
+  # warning: bode wants pulsation!
+  bode(tf, freqs*2*pi) %>% {
+    tibble(f=.$w/(2*pi), `magnitude (dB)`=.$mag, `phase (deg)`=.$phase)} %>%
+    pivot_longer(-f) %>% 
+    ggplot(aes(x=f, y=value)) +
+    geom_line() +
+    scale_x_log10(
+      minor_breaks=scales::minor_breaks_n(10), 
+      labels= ~ latex2exp::TeX(paste0("$10^{", log10(.), "}$"))) +
+    facet_wrap(~name, nrow=2, scales="free") +
+    labs(x="frequency (Hz)")
+}
+
+# FUNZIONE: Generazione segnale sinusoidale con diverse armoniche
+signal <- function(t, pars, rad = FALSE) { 
+  stopifnot(is.data.frame(pars))
+  with(pars, {
+    if (!rad) {
+      phi <- phi/180*pi
+      f <- 2*pi*f
+    }
+    map_dbl(t, \(t) sum( map_vec(seq_along(w) , \(i) w[i]*sin(t*f[i] + phi[i] ))))
+  })
+}
+
+```
+
+# Modulazione in ampiezza per 'saltare' il rumore
+
+La procedura che vedremo è estremamente utile quando risulta impossibile applicare filtri tradizionali per la riduzione del rumore interferente.
+
+In questa esercitazione effettueremo i seguenti passi:
+
+- simulazione dell'uscita $y_m(t)$ di un sistema di misura di tipo armonico 
+
+- simulazione di un rumore $r(t)$ interferente ad essa associato 
+
+- valutazione dei due spettri (che risulteranno sovrapposti, altrimenti l'operazione di filtraggio risulta direttamente applicabile con filtri lineari) 
+
+- modulazione in ampiezza di $y_m(t)$ 
+
+- applicazione del rumore interferente 
+
+- filtraggio passa alto -> Esercitazione 
+
+- demodulazione -> Esercitazione 
+
+- ... -> Esercitazione 
+
+- comparazione uscita originale $y_m(t)$ con quella ottenuta al termine del processo
+
+## Premessa
+
+Nel caso si abbia un segnale sottoposto ad un rumore interferente con uno spettro ad esso sovrapposto non c'è modo di eliminarlo applicando filtri, siano essi passa-basso, alto o passa-banda.
+
+Nel caso in cui, prima di esporre il segnale al rumore, sia possibile elaborarlo in qualche modo, può essere d'aiuto la proprietà della modulazione per consentire al segnale di 'saltare' il rumore andandosi a collocare in alta frequenza ovvero dissociare il suo spettro da quello del rumore e quindi consentire l'impiego di comuni filtri lineari per soprimerne (o ridurne notevolmente) l'effetto.
+
+## La modulazione in ampiezza
+
+Una delle proprietà della trasformata ci dice che:
+
+$$ x(t)\cdot e^{-i \omega_0 t} \rightarrow X(\omega - \omega_0) $$ {#eq-prop_mod}
+
+se prendiamo quindi un segnale $x(t)$ generico e lo moltiplichiamo per $cos(\omega_0 t)$ avremo grazie alla @eq-prop_mod:
+
+$$ x(t)\cdot cos(\omega_0 t) =x(t)\cdot \frac{e^{i \omega_0 t} + e^{-i \omega_0 t} } {2}
+\rightarrow 
+\frac{X(\omega + \omega_0) + X(\omega - \omega_0)}{2} $$ {#eq-mod}
+
+L'equazione @eq-mod appena ricavata ci suggerisce come sia possibile per un qualsiasi segnale traslarne il suo spettro semplicemente moltplicandolo per una 'portante' armonica. Si noti come lo spettro traslato venga centrato in $\omega_0$ e $-\omega_0$ mantenendo quindi le prioprietà di simmetria del modulo ed antisimmetria della fase.
+
+# Esempio pratico
+
+Costruiamo l'uscita di uno strumento di misura, la sua modulazione in ampiezza, il rumore interferente e grafichiamo gli spettri
+
+```{r}
+
+# Parametri
+fc <- 2000        # Frequenza di campionamento (Hz)
+fm <- 10          # Frequenza del segnale di misura (Hz)
+fr <- 15          # Frequenza del rumore (Hz)
+fp <- 300         # Frequenza della portante (Hz)
+m <- 0.8          # Indice di modulazione (0 < m < 1)
+duration <- 2     # Durata del segnale (secondi)
+
+
+# Vettore temporale
+# t <- seq(0, duration, by = 1/fc)
+
+# Parametri del segnale di misura
+pars_m <- tibble(
+  w = c(1, 0.5, 0.3), f = c(fm, 2*fm, 4*fm), phi = c(0, 0, 0))
+
+# Generiamo il segnale di misura:
+ym <- tibble(
+  t = seq(0, duration, by = 1/fc),
+  y = signal(t, pars_m),
+  yn = y + rnorm(length(t), 0, pars_m$w[1]/10)
+)
+ym <- ym %>% mutate(
+    f = 0:(length(t)-1)/max(t),
+    fft = fft(yn),
+    intensity = Mod(fft) / length(t)*2,
+    phase = Arg(fft)/pi*180
+  ) 
+
+# Grafico a barre con plot_ly:
+pp <- plot_ly() %>%
+  add_lines(data = ym, x = ~f, y = ~intensity, type = "bar", name = "Segnale", marker = list(color= "blue"))
+
+# Generiamo il rumore con il suo spettro:
+pars_r <- tibble(
+  w = c(1, 0.5, 0.8), f = c(fr, 3*fr, 9*fr), phi = c(0, 40, 90))
+r <- tibble(
+  t = seq(0, duration, by = 1/fc),
+  y = signal(t, pars_r),
+  f = 0:(length(t)-1)/max(t),
+  fft = fft(y),
+  intensity = Mod(fft) / length(t)*2,
+  phase = Arg(fft)/pi*180
+)
+
+
+pp <- pp %>%
+  add_lines(x = r$f, y = r$intensity, type = "bar", name = "Rumore", marker = list(color= "red")) 
+pp
+
+```
+
+## Modulazione
+
+```{r}
+
+# Onda portante: carrier <- cos(2 * pi * fp * t)
+# Aggiungiamo alla struttura associata alla misura il segnale modulato:
+ym <- ym %>% mutate(
+    yn_m = (1 + m * ym$yn) * cos(2 * pi * fp * t),
+    fft_m = fft(yn_m),
+    intensity_m = Mod(fft_m) / length(t)*2,
+    phase_m = Arg(fft_m)/pi*180
+  )
+pp <- plot_ly() %>%
+  add_bars(data = ym, x = ~f, y = ~intensity, name = "Segnale", marker = list(color = "blue")) %>%
+  add_bars(x = r$f, y = r$intensity, name = "Rumore", marker = list(color = "red")) %>%
+  add_bars(data = ym, x = ~f, y = ~intensity_m, name = "Segnale Modulato", marker = list(color = "green")) %>%
+  layout(title = "Spettro di Intensità",
+       xaxis = list(title = "Frequenza (Hz)", range = c(0, 500), showgrid = TRUE),
+       yaxis = list(title = "Intensità", showgrid = TRUE),
+       legend = list(x = 0.25, y = 0.9))
+pp
+```
+
+## Esposizione all'effetto interferente
+
+Adesso che abbiamo il segnale modulato separato in frequenza dal rumore possiamo 'esporlo' al rumore interferente
+
+```{r}
+
+pp2 <- plot_ly() %>%
+  add_lines(data = ym, x = ~t, y = ~yn_m, name = "Segnale modulato", line = list(color = "blue")) 
+# %>%
+#   layout(title = "Segnale modulato", 
+#          xaxis = list(title = "Tempo (s)"), 
+#          yaxis = list(title = "Ampiezza"))
+
+  
+# simulazione dell'effetto interferente sul segnale modulato:
+ym <- ym %>% mutate(
+    yn_m_n = yn_m + r$y,
+    fft_m = fft(yn_m_n),
+    intensity_m = Mod(fft_m) / length(t)*2,
+    phase_m = Arg(fft_m)/pi*180
+  )
+
+plot_ly() %>%
+  add_lines(data = ym, x = ~f, y = ~intensity_m, type = "bar", name = "Segnale", marker = list(color= "blue")) %>%
+  layout(title = "Spettro segnale modulato affetto da rumore",
+       xaxis = list(title = "Frequenza (Hz)", range = c(0, 500), showgrid = TRUE),
+       yaxis = list(title = "Intensità", showgrid = TRUE))
+
+pp2 <- pp2 %>%
+  add_lines(data = ym, x = ~t, y = ~yn_m_n, name = "Con effetto interferente", line = list(color = "red")) %>%
+  layout(title = "Effetto interferente", 
+         xaxis = list(title = "Tempo (s)"), 
+         yaxis = list(title = "Ampiezza"))
+pp2
+
+```
+
+
+
+:::{.callout-note title="Esercitazione"}
+
+### Riconoscimento punti esame {.unnumbered}
+
+Il completamento di questo esercizio comporta il riconoscmiento di ±0.5 punti.
+
+### Assegnazioni {.unnumbered}
+
+Estrarre il segnale in uscita originale a partire da quello affetto da rumore bianco, modulato ed affetto da rumore interfente
+
+### Suggerimenti {.unnumbered}
+
+- filtraggio passa alto
+- demodulazione
+- ...
+- comparazione uscita originale $y_m(t)$ con quella ottenuta al termine del processo
+
+:::
+
+
+# OMETTERE E FAR FARE COME ESERCIZIO
+
+## Filtraggio e Demodulazione
+
+Estraiamo il segnale modulato mediante un filtro passa-alto. Di conseguenza è rimasto solo il segnale modulato che va quindi demodulato per ottenere una stima del segnale in uscita originario
+
+```{r}
+# Filtraggio Passa-Alto per l'estrazione del segnale modulato
+cutoff <- 2 * max(pars_r$f) / fc  # Frequenza di taglio (2 volte la massima frequenza del rumore)
+bf <- butter(4, cutoff, type = "high")
+ym <- ym %>% mutate(
+  yn_m_f = filtfilt(bf, yn_m_n) # filtfilt non introduce ritardo
+)
+
+# Demodulazione:
+# 1. Moltiplicazione per la portante
+ym <- ym %>% mutate(
+  demod_raw = 2 * yn_m_f * cos(2 * pi * fp * t) - 1
+)
+
+# 2. Filtraggio Passa-Basso con filtro Butterworth
+cutoff <- 2 * max(pars_m$f) / fc  # Frequenza di taglio (2 volte la massima frequenza del segnale informativo)
+bf <- butter(4, cutoff, type = "low")
+ym <- ym %>% mutate(
+  demod = filtfilt(bf, demod_raw)
+)
+
+# Grafico della demodulazione
+plot_ly() %>%
+  add_lines(data = ym, x = ~t, y = ~yn, name = "Segnale affetto da rumore bianco", line = list(color = "blue")) %>%
+  add_lines(data = ym, x = ~t, y = ~y, name = "Segnale Originale", line = list(color = "green")) %>%
+  add_lines(data = ym, x = ~t, y = ~yn + r$y, name = "Segnale affetto da rumore bianco e interferente", line = list(color = "orange")) %>%
+  add_lines(data = ym, x = ~t, y = ~demod, name = "Segnale Demodulato", line = list(color = "red")) %>%
+  layout(title = "Demodulazione AM", 
+         xaxis = list(title = "Tempo (s)"), 
+         yaxis = list(title = "Ampiezza"))
+```
+
+Si noti come il segnale originario fosse affetto da rumore bianco, poi modulato e quindi sovrapposto ad un effetto interferente a tre armoniche. Alla fine del processo abbiamo ottenuto il segnale molto simile al segnale originario con una riduzione vistosa anche del rumore interferente
