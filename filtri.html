@@ -168,6 +168,10 @@ window.Quarto = {
 <span class="menu-text">Filtri</span></a>
   </li>  
   <li class="nav-item">
+    <a class="nav-link" href="./esercizi.html"> 
+<span class="menu-text">Esercitazioni</span></a>
+  </li>  
+  <li class="nav-item">
     <a class="nav-link" href="./about.html"> 
 <span class="menu-text">About</span></a>
   </li>  
@@ -201,7 +205,7 @@ window.Quarto = {
   <li><a href="#filtri-offline" id="toc-filtri-offline" class="nav-link" data-scroll-target="#filtri-offline"><span class="header-section-number">3</span> Filtri offline</a></li>
   <li><a href="#taratura-dinamica" id="toc-taratura-dinamica" class="nav-link" data-scroll-target="#taratura-dinamica"><span class="header-section-number">4</span> Taratura dinamica</a>
   <ul class="collapse">
-  <li><a href="#termocoppia" id="toc-termocoppia" class="nav-link" data-scroll-target="#termocoppia"><span class="header-section-number">4.1</span> Termocoppia</a>
+  <li><a href="#sonda-pt100" id="toc-sonda-pt100" class="nav-link" data-scroll-target="#sonda-pt100"><span class="header-section-number">4.1</span> Sonda PT100</a>
   <ul class="collapse">
   <li><a href="#primo-metodo-intercetta" id="toc-primo-metodo-intercetta" class="nav-link" data-scroll-target="#primo-metodo-intercetta"><span class="header-section-number">4.1.1</span> Primo metodo: intercetta</a></li>
   <li><a href="#secondo-metodo-linearizzazione" id="toc-secondo-metodo-linearizzazione" class="nav-link" data-scroll-target="#secondo-metodo-linearizzazione"><span class="header-section-number">4.1.2</span> Secondo metodo: linearizzazione</a></li>
@@ -241,7 +245,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Data di Pubblicazione</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">24 febbraio 2025</p>
+      <p class="date">25 febbraio 2025</p>
     </div>
   </div>
   
@@ -1002,8 +1006,8 @@ attr(,"class")
 </section>
 <section id="taratura-dinamica" class="level1" data-number="4">
 <h1 data-number="4"><span class="header-section-number">4</span> Taratura dinamica</h1>
-<section id="termocoppia" class="level2" data-number="4.1">
-<h2 data-number="4.1" class="anchored" data-anchor-id="termocoppia"><span class="header-section-number">4.1</span> Termocoppia</h2>
+<section id="sonda-pt100" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="sonda-pt100"><span class="header-section-number">4.1</span> Sonda PT100</h2>
 <p>Consideriamo il caso di una sonda PT100 immersa repentinamente in un bagno termostatato. La temperatura della sonda raggiunge quella del bagno secondo la legge:</p>
 <p><span id="eq-pt100"><span class="math display">\[
 T(t) = (T_i - T_f)e^{-\frac{t}{\tau}} + T_f
@@ -1018,7 +1022,7 @@ T(t) = (T_i - T_f)e^{-\frac{t}{\tau}} + T_f
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="filtri_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption>Acquisizione con termocoppia PT100. In rosso la nominale</figcaption>
+<figcaption>Acquisizione con un sensore di temperatura PT100. In rosso la nominale</figcaption>
 </figure>
 </div>
 </div>
@@ -1068,7 +1072,7 @@ T_f - T(\tau) &amp;= (T_f - T_i)e^{-1} \\
 <tbody>
 <tr class="odd">
 <td style="text-align: right;">33.5</td>
-<td style="text-align: right;">71.0994</td>
+<td style="text-align: right;">72.23215</td>
 </tr>
 </tbody>
 </table>
@@ -1100,23 +1104,23 @@ Call:
 lm(formula = y ~ t - 1, data = .)
 
 Residuals:
-      Min        1Q    Median        3Q       Max 
--0.254494 -0.023759 -0.004018  0.020228  0.253887 
+     Min       1Q   Median       3Q      Max 
+-0.23880 -0.01775  0.00362  0.02367  0.35606 
 
 Coefficients:
     Estimate Std. Error t value Pr(&gt;|t|)    
-t -2.975e-02  7.284e-05  -408.5   &lt;2e-16 ***
+t -2.988e-02  8.373e-05  -356.9   &lt;2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Residual standard error: 0.05925 on 198 degrees of freedom
-Multiple R-squared:  0.9988,    Adjusted R-squared:  0.9988 
-F-statistic: 1.669e+05 on 1 and 198 DF,  p-value: &lt; 2.2e-16</code></pre>
+Residual standard error: 0.06811 on 198 degrees of freedom
+Multiple R-squared:  0.9984,    Adjusted R-squared:  0.9984 
+F-statistic: 1.274e+05 on 1 and 198 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>tau <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="sc">-</span><span class="dv">1</span><span class="sc">/</span>temp.lm<span class="sc">$</span>coefficients, <span class="dv">1</span>)</span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste</span>(<span class="st">"tau:"</span>, tau))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>tau: 33.6</code></pre>
+<pre><code>tau: 33.5</code></pre>
 </div>
 </div>
 <div class="cell">
@@ -1159,11 +1163,11 @@ F-statistic: 1.669e+05 on 1 and 198 DF,  p-value: &lt; 2.2e-16</code></pre>
   model: T ~ (Ti - Tf) * exp(-t/tau) + Tf
    data: temp.l
    Ti    Tf   tau 
-33.58 95.00 33.65 
- residual sum-of-squares: 137.7
+33.20 94.99 33.36 
+ residual sum-of-squares: 157.6
 
 Number of iterations to convergence: 5 
-Achieved convergence tolerance: 1.104e-07</code></pre>
+Achieved convergence tolerance: 1.714e-06</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>temp.l <span class="sc">%&gt;%</span> </span>
 <span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  modelr<span class="sc">::</span><span class="fu">add_predictions</span>(fit, <span class="at">var=</span><span class="st">"fit"</span>) <span class="sc">%&gt;%</span> </span>
@@ -1456,7 +1460,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp("https:\/\/mmt-unitn\.github\.io\/");
+      var filterRegex = new RegExp('/' + window.location.host + '/');
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }

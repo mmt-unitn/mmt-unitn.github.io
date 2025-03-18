@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://mmt-unitn.github.io/fft.html</loc>
-    <lastmod>2025-02-24T13:26:23.909Z</lastmod>
+    <loc>https://mmt-unitn.github.io/teoria.html</loc>
+    <lastmod>2025-02-25T13:23:56.935Z</lastmod>
   </url>
   <url>
-    <loc>https://mmt-unitn.github.io/esercizi.html</loc>
-    <lastmod>2025-02-24T13:26:23.908Z</lastmod>
+    <loc>https://mmt-unitn.github.io/esercizi/4_Inv_armoniche_pure v2.html</loc>
+    <lastmod>2025-02-25T13:52:23.524Z</lastmod>
   </url>
   <url>
-    <loc>https://mmt-unitn.github.io/esercizi/2_4_Modulazione in ampiezza.html</loc>
-    <lastmod>2025-02-24T13:26:23.909Z</lastmod>
+    <loc>https://mmt-unitn.github.io/esercizi/2_Modulazione in ampiezza.html</loc>
+    <lastmod>2025-02-25T13:51:53.838Z</lastmod>
   </url>
   <url>
     <loc>https://mmt-unitn.github.io/about.html</loc>
@@ -21,19 +21,23 @@
     <lastmod>2025-02-24T13:26:23.917Z</lastmod>
   </url>
   <url>
+    <loc>https://mmt-unitn.github.io/r-recap.html</loc>
+    <lastmod>2025-03-18T12:49:05.233Z</lastmod>
+  </url>
+  <url>
     <loc>https://mmt-unitn.github.io/index.html</loc>
     <lastmod>2025-02-24T16:16:59.664Z</lastmod>
   </url>
   <url>
-    <loc>https://mmt-unitn.github.io/esercizi/4_3_Inv_armoniche_pure v2.html</loc>
-    <lastmod>2025-02-24T13:26:23.909Z</lastmod>
+    <loc>https://mmt-unitn.github.io/esercizi/3_Taratura dinamica/3_taratura dinamica.html</loc>
+    <lastmod>2025-03-18T12:51:40.763Z</lastmod>
   </url>
   <url>
     <loc>https://mmt-unitn.github.io/esercizi/4_Compensazione_dinamica.html</loc>
-    <lastmod>2025-02-24T13:26:23.909Z</lastmod>
+    <lastmod>2025-02-25T13:49:10.616Z</lastmod>
   </url>
   <url>
-    <loc>https://mmt-unitn.github.io/filtri.html</loc>
-    <lastmod>2025-02-24T13:26:23.910Z</lastmod>
+    <loc>https://mmt-unitn.github.io/esercizi.html</loc>
+    <lastmod>2025-02-25T13:54:14.609Z</lastmod>
   </url>
 </urlset>

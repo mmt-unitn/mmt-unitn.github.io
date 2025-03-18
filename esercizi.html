@@ -156,12 +156,16 @@ window.Quarto = {
 <span class="menu-text">R in breve</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./fft.html"> 
-<span class="menu-text">Trasformate</span></a>
+    <a class="nav-link" href="./r-recap.html"> 
+<span class="menu-text">R-recap</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./filtri.html"> 
-<span class="menu-text">Filtri</span></a>
+    <a class="nav-link" href="./teoria.html"> 
+<span class="menu-text">Teoria</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./esercizi.html" aria-current="page"> 
+<span class="menu-text">Esercitazioni</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./about.html"> 
@@ -210,7 +214,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Data di modifica</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">24 febbraio 2025</p>
+      <p class="date-modified">18 marzo 2025</p>
     </div>
   </div>
     
@@ -241,6 +245,9 @@ window.Quarto = {
          <option value="listing-categories" data-direction="asc">
           Categorie
         </option>
+         <option value="listing-description" data-direction="asc">
+          Descrizione
+        </option>
          <option value="listing-date-sort" data-direction="asc">
           Data - Meno recente
         </option>
@@ -267,7 +274,7 @@ window.Quarto = {
 Autore/Autrice
 </th>
 <th>
-Descrizione
+<a class="sort" data-sort="listing-description" onclick="if (this.classList.contains('sort-asc')) { this.classList.add('sort-desc'); this.classList.remove('sort-asc') } else { this.classList.add('sort-asc'); this.classList.remove('sort-desc')} return false;">Descrizione</a>
 </th>
 <th>
 <a class="sort" data-sort="listing-categories" onclick="if (this.classList.contains('sort-asc')) { this.classList.add('sort-desc'); this.classList.remove('sort-asc') } else { this.classList.add('sort-asc'); this.classList.remove('sort-desc')} return false;">Categorie</a>
@@ -278,12 +285,52 @@ Tempo per completare la lettura
 </tr>
 </thead>
 <tbody class="list">
-<tr data-index="0" data-categories="c2lnbmFsJTJDZmlsdGVyJTJDc3BlY3RydW0=" data-listing-date-sort="1740351600000" data-listing-file-modified-sort="1740403583909" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="808" data-listing-title-sort="3. Compensazione (o Misura) dinamica" data-listing-filename-sort="4_Compensazione_dinamica.qmd">
+<tr data-index="0" data-categories="bW9kdWxhemlvbmUlMkNzZWduYWxpJTJDc3BldHRyaQ==" data-listing-date-sort="1742252400000" data-listing-file-modified-sort="1740491513838" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8" data-listing-word-count-sort="1596" data-listing-title-sort="2. Modulazione di ampiezza" data-listing-filename-sort="2_Modulazione in ampiezza.qmd">
 <td>
-<span class="listing-date">24 feb 2025</span>
+<span class="listing-date">18 mar 2025</span>
 </td>
 <td>
-<a href="./esercizi/4_Compensazione_dinamica.html" class="title listing-title">3. Compensazione (o Misura) dinamica</a>
+<a href="./esercizi/2_Modulazione in ampiezza.html" class="title listing-title">2. Modulazione di ampiezza</a>
+</td>
+<td>
+<span class="listing-author">Mariolino De Cecco</span>
+</td>
+<td>
+<span class="listing-description">Esercizio sulla modulazione di ampiezza delle misure mediante analisi dello spettro e filtraggio offline. </span>
+</td>
+<td>
+<span class="listing-categories">modulazione, segnali, spettri</span>
+</td>
+<td>
+<span class="listing-reading-time">8 minuti</span>
+</td>
+</tr>
+<tr data-index="1" data-categories="dGFyYXR1cmElMkNyZWdyZXNzaW9uZQ==" data-listing-date-sort="1742252400000" data-listing-file-modified-sort="1742302300763" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="7" data-listing-word-count-sort="1241" data-listing-title-sort="3. Taratura Dinamica tramite Regressione non lineare" data-listing-filename-sort="3_taratura dinamica.qmd">
+<td>
+<span class="listing-date">18 mar 2025</span>
+</td>
+<td>
+<a href="./esercizi/3_Taratura dinamica/3_taratura dinamica.html" class="title listing-title">3. Taratura Dinamica tramite Regressione non lineare</a>
+</td>
+<td>
+<span class="listing-author">Mariolino De Cecco e Paolo Bosetti</span>
+</td>
+<td>
+<span class="listing-description">Esempio per la taratura dinamica di un sensore PT100 mediante regressione lneare e non-lineare ai minimi quadrati. </span>
+</td>
+<td>
+<span class="listing-categories">taratura, regressione</span>
+</td>
+<td>
+<span class="listing-reading-time">7 minuti</span>
+</td>
+</tr>
+<tr data-index="2" data-categories="Y29tcGVuc2F6aW9uZSUyQ21pc3VyYSUyQ2ludmVyc2lvbmUlMjBkZWxsYSUyMGRpbmFtaWNhJTJDZGluYW1pY2E=" data-listing-date-sort="1742252400000" data-listing-file-modified-sort="1740491350616" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="827" data-listing-title-sort="4. Compensazione (o Misura) dinamica" data-listing-filename-sort="4_Compensazione_dinamica.qmd">
+<td>
+<span class="listing-date">18 mar 2025</span>
+</td>
+<td>
+<a href="./esercizi/4_Compensazione_dinamica.html" class="title listing-title">4. Compensazione (o Misura) dinamica</a>
 </td>
 <td>
 <span class="listing-author">Mariolino De Cecco</span>
@@ -292,47 +339,27 @@ Tempo per completare la lettura
 <span class="listing-description">Esercizi sulla compensazione dinamica delle misure mediante analisi dello spettro e filtraggio offline. </span>
 </td>
 <td>
-<span class="listing-categories">signal, filter, spectrum</span>
+<span class="listing-categories">compensazione, misura, inversione della dinamica, dinamica</span>
 </td>
 <td>
 <span class="listing-reading-time">5 minuti</span>
 </td>
 </tr>
-<tr data-index="1" data-categories="c2lnbmFsJTJDZmlsdGVyJTJDc3BlY3RydW0=" data-listing-date-sort="1740351600000" data-listing-file-modified-sort="1740403583909" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1693" data-listing-title-sort="4. Modulazione di ampiezza" data-listing-filename-sort="2_4_Modulazione in ampiezza.qmd">
+<tr data-index="3" data-categories="ZmlsdHJpJTJDRkZU" data-listing-date-sort="1742252400000" data-listing-file-modified-sort="1740491543524" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="7" data-listing-word-count-sort="1261" data-listing-title-sort="4. Inversione delle armoniche pure" data-listing-filename-sort="4_Inv_armoniche_pure v2.qmd">
 <td>
-<span class="listing-date">24 feb 2025</span>
+<span class="listing-date">18 mar 2025</span>
 </td>
 <td>
-<a href="./esercizi/2_4_Modulazione in ampiezza.html" class="title listing-title">4. Modulazione di ampiezza</a>
-</td>
-<td>
-<span class="listing-author">Mariolino De Cecco</span>
-</td>
-<td>
-<span class="listing-description">Esercizi sulla modulazione di ampiezza delle misure mediante analisi dello spettro e filtraggio offline. </span>
-</td>
-<td>
-<span class="listing-categories">signal, filter, spectrum</span>
-</td>
-<td>
-<span class="listing-reading-time">9 minuti</span>
-</td>
-</tr>
-<tr data-index="2" data-categories="c2lnbmFsJTJDZmlsdGVyJTJDc3BlY3RydW0=" data-listing-date-sort="1740351600000" data-listing-file-modified-sort="1740403583909" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="7" data-listing-word-count-sort="1310" data-listing-title-sort="Filtri" data-listing-filename-sort="4_3_Inv_armoniche_pure v2.qmd">
-<td>
-<span class="listing-date">24 feb 2025</span>
-</td>
-<td>
-<a href="./esercizi/4_3_Inv_armoniche_pure v2.html" class="title listing-title">Filtri</a>
+<a href="./esercizi/4_Inv_armoniche_pure v2.html" class="title listing-title">4. Inversione delle armoniche pure</a>
 </td>
 <td>
 <span class="listing-author">Mariolino De Cecco e Paolo Bosetti</span>
 </td>
 <td>
-<span class="listing-description">Definiamo un segnale d’ingresso (nel caso di sistemi di misura si tratta di un misurando) costituito da segnali armonici, più un eventuale disturbo normale:</span>
+<span class="listing-description">Questo esercizio genera delle armoniche pure in ingresso ad un sistema di isolamento delle vibrazioni, simulazione dell’uscita e—mediante inversione della dinamica—stimare quella originaria in ingresso. </span>
 </td>
 <td>
-<span class="listing-categories">signal, filter, spectrum</span>
+<span class="listing-categories">filtri, FFT</span>
 </td>
 <td>
 <span class="listing-reading-time">7 minuti</span>
