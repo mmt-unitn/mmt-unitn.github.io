@@ -9,6 +9,8 @@ website:
     left:
       - href: r_brief.qmd
         text: R in breve
+      - href: r-recap.qmd
+        text: R-recap
       - href: teoria.qmd
         text: Teoria
       - href: esercizi.qmd

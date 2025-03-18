@@ -1,0 +1,614 @@
+---
+title: "R-recap"
+subtitle: "Programmazione funzionale e manipolazione delle tabelle con Tidyverse"
+author: "Paolo Bosetti"
+date: today
+lang: it
+format:
+  html:
+    toc: true
+    number-sections: true
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+```
+
+
+# La libreria `purrr`
+
+`purrr` è parte del Tidyverse e può essere caricata da sola (`library(purrr)`) oppure assieme alle altre librerie del Tidyverse (`library(tidyverse)`).
+
+:::{.column-margin}
+![](https://purrr.tidyverse.org/logo.png)
+:::
+
+È utile tenere sotto mano il relativo cheat sheet: <https://rstudio.github.io/cheatsheets/purrr.pdf>
+
+
+## Scopo
+
+Lo scopo di `purrr` è fornire un'interfaccia *funzionale* (cioè basata sulle funzioni) per ogni procedura che richieda l'iterazione di un'operazione. In altre parole, usiamo una funzione al posto del corpo di un ciclo `for`. Invece di:
+```{r}
+#| eval: false
+for (element in array) {
+  # opero su element
+}
+```
+usiamo:
+```{r}
+#| eval: false
+array %>% map(funzione)
+```
+dove `funzione` può essere:
+
+- il **nome** di una funzione esistente (ad es. `mean`)
+- una funzione anonima (cioè senza nome) definita con `function(argomento) { espressione(argomento) }`
+- una funzione anonima definita con `\(argomento) espressione(argomento)`
+- una funzione anonima definita con la scorciatoria `~ espressione(.)`
+
+Quest'ultima sintassi è la più compatta e quella di solito utilizzata. Si noti che se il contenuto della funzione è un'unica espressione si può fare a meno delle parentesi graffe; se invece la funzione richiede più passaggi, le espressioni vanno racchiuse in `{}` (andando a capo tra un'espressione e l'altra, oppure separandole con `;`).
+
+## Vantaggi
+
+In generale: velocità, flessibilità e leggibilità del codice. 
+
+Ad esempio, consideriamo la tabella `mtcars`: vogliamo regredire il modello `mpg ~ wt` (correlazione tra consumo e massa) per ciascuna classe di numero di cilindri. Con `purrr` possiamo scrivere:
+
+
+```{r}
+mtcars %>%  
+  split(mtcars$cyl) %>%   # divide un dataframe in una lista di dataframe
+  map(~ lm(mpg ~ wt, data = .)) %>% 
+  map(summary) %>% 
+  map_dbl("r.squared") %>% 
+  round(3)
+```
+:::{.callout-note title="Esercizio"}
+Ottenere lo stesso risultato con una serie di cicli `for`: confrontare i due approcci.
+:::
+
+## Varianti
+
+### Mappe
+
+La funzione base `map` opera su un'unico vettore o lista e **restituisce sempre una lista**. È cioè una mappa $n\rightarrow n$, dove $n$ è la lunghezza dell'input, uguale a quella dell'output:
+
+```{r}
+runif(10) %>% 
+  map(~ .^2) %>% 
+  str()
+```
+
+Come si vede, il risultato di `map` è una **lista**  di 10 elementi, ciascuno dei quali è il quadrato di un elemento del vettore in ingresso generato da `runif(10)`.
+
+Nei casi pratici spesso è necessario operare su due o più vettori in ingresso, e si desidera ottenere, anziché una lista, un vettore di uno specifico tipo. Per queste operazioni ci sono varianti di `map` che hanno il nome così costituito:
+
+* `map_<tipo>` (ad es. `map_dbl`, `map_chr`, `map_int`, `map_lgl`), per restituire un vettore di numeri, caratteri, interi o logici, rispettivamente
+* `map2` e le varianti `map2_<tipo>` per operare su due vettori in ingresso (stessa lunghezza)
+* `pmap` e le varianti `pmap_<tipo>` per operare su una lista di vettori (stessa lunghezza) in ingresso (in *parallelo*)
+
+Il [cheat sheet](https://rstudio.github.io/cheatsheets/purrr.pdf){target="_blank"} di `purrr` è utile per visualizzare le differenze.
+
+
+### Cicli *muti*
+
+A volte è necessario iterare su una lista di elementi, ma non si desidera ottenere un output. In questi casi si può usare `walk` e le sue varianti `walk2`, `pwalk`. Ad esempio:
+```{r}
+LETTERS[1:10] %>% 
+  walk(~ cat(paste("Lettera", ., "\n")))
+```
+
+
+### Modifica
+
+Per modificare gli elementi di un insieme (lista o vettore), eventualmente secondo un criterio, si possono usare le funzioni `modify`, `modify_if`, `modify_at`. Ad esempio:
+```{r}
+a <- runif(10)
+a %>% 
+  modify_if(~ .>0.5, ~ .^2)
+a
+```
+
+Si noti che `modify_if` prende due funzioni come argomenti: la prima è il criterio di selezione, chiamato *predicato*, la seconda è la trasformazione da applicare agli elementi selezionati. Il predicato deve essere una funzione che restutuisce un valore logico (`TRUE` o `FALSE`).
+
+:::{.callout-warning title="Attenzione"}
+A dispetto del nome, `modify` non modifica l'oggetto in ingresso, ma ne restituisce una copia modificata.
+:::
+
+
+### Riduzione/Accumulo
+
+Infine, `purrr` offre anche funzioni di riduzione, come `reduce`, `accumulate`, `reduce2`, `accumulate2`. Queste funzioni permettono di ridurre una lista di elementi a un singolo valore, secondo un criterio specificato. Ad esempio, applico la funzione addizione per accumulare tutti i numeri da 1 a 10:
+```{r}
+1:10 %>% 
+  reduce(`+`)
+```
+
+### Nota sulle funzioni vettorializzate
+
+Gli esempi semplici sopra riportati sono in realtà inutili, perché in R tutte le funzioni base sono già **vettorializzate**, cioè in grado di operare su tutti gli elementi di un **vettore atomico** (*atomic vector*).
+
+In R, un **vettore atomico** è un vettore di elementi di tipo base. Ad esempio, un vettore di numeri interi, di numeri reali, di caratteri, di logici, ecc. 
+
+Le funzioni base, invece, **non sono in grado di operare su liste o su vettori di oggetti complessi**. Per esempio, se si vuole calcolare la media di una lista di valori numerici, non si può fare semplicemente `mean(lista)`, ma bisogna usare `map_dbl(lista, mean)`.
+
+:::{.callout-warning title="Attenzione"}
+Una funzione vettorializzata è **sempre** più veloce di un ciclo `for` o di una qualsiasi mappa `purrr`, quindi è opportuno usare `purrr` solo quando necessario, cioè solo quando:
+
+* si deve operare su liste o su vettori di oggetti complessi
+* la funzione da applicare NON è vettorializzata, ad esempio perché contiene un condizionale `if` interno (anche se `ifelse()` è vettorializzata)
+:::
+
+
+## Esempi
+
+Definiamo anzitutto una tabella dati di esempio:
+
+```{r}
+set.seed(0)
+n <- 100
+data <- tibble(
+  t = seq(0, 10, length.out = n),
+  cond = ifelse(t < 5, "A", "B"),
+  x1 = 0.5 + 0.3*t + 0.08*t^2 + rnorm(n, 0, ifelse(cond == "A", 0.5, 0.2)),
+  x2 = 3.5 - 0.4*t + 0.02*t^2 + rnorm(n, 0, ifelse(cond == "A", 0.2, 0.1)),
+) %>% 
+  pivot_longer(-(t:cond), names_to = "serie", values_to = "valore")
+
+data %>% 
+  ggplot(aes(x=t, y=valore, color=serie)) + 
+  geom_line()
+```
+
+
+### Esempio `map`
+
+Applichiamo una lista di modelli di regressione ad un set di dati. Questo esempio non è vettorializzabile, perché la funzione `lm` non è vettorializzata sull'argomento formula, cioè non accetta un vettore di formule in ingresso. Quindi passiamo la lista delle formule da regredire alla funzione `map`:
+
+```{r}
+list(x~t, x~poly(t, 2, raw=T), x~poly(t, 3, raw=T)) %>% 
+  map(~ {
+    data %>% 
+      filter(serie=="x1") %>% 
+      select(t, x=valore) %>%
+      lm(.x, data=.) %>% 
+      summary()
+  }
+)
+```
+
+:::{.callout-warning title="Attenzione"}
+L'abbreviazione `~.` per le funzioni anonime consente di usare il punto `.` come riferimento all'oggetto in ingresso. In certi casi, però (come in quello qui sopra), il punto è necessario anche per riferirsi all'oggetto passato dalla pipe `data %>% ...`, quindi ci sarebbe un'ambiguità. In questi casi si può utilizzare `.x` per riferirsi all'argomento della funzione anonima, e `.` per riferirsi all'oggetto passato dalla pipe, come sopra fatto.
+
+In alternativa, e per maggior chiarezza, si può usare la forma `\(x) ...` per la funzione anonima, e `.` per riferirsi all'oggetto passato dalla pipe.
+
+**Si lascia per esercizio modificare il codeice di conseguenza**
+:::
+
+:::{.callout-note title="Esercizio"}
+Vogliamo rendere più generale il codice precedente, consentendo di costruire automaticamente la lista delle formule a partire da un vettore di gradi polinomiali. Modificare il codice di conseguenza, ad es. per verificare i polinomi di grado 2, 5, e 3 (in quest'ordine).
+
+*Suggerimento: ricordare la funzione `as.formula()`*.
+
+```{r}
+#| eval: false
+c(2, 5, 3) %>% 
+  ... # completare
+```
+:::
+
+:::{.callout-note title="Esercizio"}
+Usando lo stesso set di dati e un'ulteriore chiamata a `map()`, ripetere l'analisi su entrambe le serie `x1` e `x2`.
+
+*Suggerimento: consultare la guida per `split()` e usare la notazione `\(arg) ...` per la funzione anonima*.
+:::
+
+
+### Esempio `map_dbl`
+
+La funzione `map` restituisce sempre una lista. Se si desidera un vettore di un tipo specifico, si può usare `map_dbl`, `map_chr`, `map_int`, `map_lgl`, ecc. Ad esempio, dalle regressioni estraiamo il valore di $R^2$:
+
+```{r}
+list(x~t, x~poly(t, 2, raw=T), x~poly(t, 3, raw=T)) %>% 
+  map(~ {
+    data %>% 
+      filter(serie=="x1") %>% 
+      select(t, x=valore) %>%
+      lm(.x, data=.) %>% 
+      summary()
+  }
+) %>% 
+  map_dbl(~ .$r.squared)
+```
+
+:::{.callout-note title="Esercizio"}
+Modificare il codice precedente in modo da eseguire una sola chiamata a una funzione `purrr`, ottenendo lo stesso risultato.
+:::
+
+
+### Esempio: `reduce`
+
+Le operazioni di riduzione sono abbastanza comuni. Di fatto ogni *statistica* (cioè indicatore comune) è una riduzione di un insieme di valori. Ad esempio, calcoliamo la media e la deviazione standard di una serie di dati mediante un loop (e senza ricorrere alle funzioni native `mean()` e `sd()`):
+
+```{r}
+set.seed(0)
+m <- 0
+sd <- 0
+v <- rnorm(10)
+
+for (e in v) {
+  m <- m + e
+}
+m <- m / length(v)
+for (e in v) {
+  sd <- sd + (e - m)^2
+}
+sd
+sd <- sqrt(sd / (length(v)-1))
+           
+list(mean=m, sd=sd)
+```
+
+Ora facciamo la stessa cosa con `purrr`, usando `reduce()`. In questo caso la funzione anonima, come specificato dall'help in linea, prende due argomenti: il primo, `.x`, è il valore accumulato, il secondo, `.y`, è il valore corrente.
+
+```{r}
+m <- reduce(v, ~ .x + .y) / length(v) 
+sd <- sqrt( reduce(v, ~ .x + (.y - m)^2) / (length(v)-1) )
+list(mean=m, sd=sd)
+```
+
+Il codice è decisamente più semplice, tuttavia il valore della deviazione standard è errato. Come mai?
+
+:::{.callout-warning title="Attenzione"}
+Consultando l'help di `reduce()`, provare a comprendere il motivo dell'errore nel calcolo della deviazione standard. Usare anche la funzione `accumulate()` sotto illustrata come versione di debug di `reduce()`.
+:::
+
+
+### Esempio: `accumulate`
+
+Accumulate si comporta come `reduce()`, ma restituisce una lista di valori intermedi. Ad esempio, calcoliamo il prodotto cumulativo di una serie di dati, osservando la differenza con reduce
+
+```{r}
+c(1, 5, 3, 9) %>% 
+  reduce(~ .x * .y)
+
+c(1, 5, 3, 9) %>% 
+  accumulate(~ .x * .y)
+```
+
+Questa funzione è spesso utile come debug per `reduce()`, dato che consente di osservare i valori intermedi.
+
+:::{.callout-note title="Nota"}
+Invece che una funzione anonima avremmo potuto usare direttamente la funzione `*` che accetta due argomenti:
+
+```{r}
+c(1, 5, 3, 9) %>% accumulate(`*`)
+```
+:::
+
+## Uso con `mutate()`
+
+`purrr` è particolarmente utile in combinazione con `mutate()`, per eseguire operazioni complesse su colonne di un dataframe. Ad esempio, consideriamo il dataframe `data` definito sopra. Vogliamo aggiungere alla colonna `valore` una valore in funzione della colonna `serie`. Dato che `if` non accetta vettori, dobbiamo usare `map()`:
+
+```{r}
+data %>% 
+  mutate(
+    valore = map2_dbl(serie, valore, ~ {
+      if (.x == "x1") {
+        .y + 0.5
+      } else {
+        .y - 0.5
+      }
+    })
+  ) %>% 
+  slice_head(n=6) %>% 
+  knitr::kable()
+```
+
+Possiam essere più sintetici e scrivere:
+
+```{r}
+data %>% 
+  mutate(
+    valore = map2_dbl(serie, valore, ~ ifelse(.x == "x1", .y + 0.5, .y - 0.5))
+  ) %>% 
+  slice_head(n=6) %>% 
+  knitr::kable()
+```
+
+Però `ifelse()` **è vettorializzata**, quindi in realtà non c'è bisogno di `map()`:
+
+```{r}
+data %>% 
+  mutate(
+    valore = ifelse(valore == "x1", valore + 0.5, valore - 0.5)
+  ) %>% 
+  slice_head(n=6) %>% 
+  knitr::kable()
+```
+
+Se invece avessimo più casi, allora dovremmo usare `map()`:
+
+```{r}
+data %>% 
+  mutate(
+    i = 1:n(),
+    r = i %% 3,
+    valore = map2_dbl(r, valore, ~ {
+      if (.x == 0) {
+        .y + 0.5
+      } else if (.x == 1) {
+        .y - 0.5
+      } else {
+        .y - 1
+      }
+    })
+  ) %>% 
+  slice_head(n=6) %>% 
+  knitr::kable()
+```
+
+:::{.callout-note title="Conclusione"}
+In generale, quindi, **valutare sempre attentamente** se sia realmente necessario utilizzare una mappa `purrr`, e non sia invece sufficiente una **funzione vettorializzata**, anche se in certe condizioni una mappa o una riduzione possono sono l'unica soluzione per operazioni complesse.
+:::
+
+
+# La libreria `dplyr`
+
+`dplyr` è una libreria del Tidyverse che fornisce un insieme di funzioni per manipolare dati in modo efficiente. È possibile caricare `dplyr` da solo (`library(dplyr)`) oppure assieme alle altre librerie del Tidyverse (`library(tidyverse)`).
+
+:::{.column-margin}
+![](https://dplyr.tidyverse.org/logo.png)
+:::
+
+L'obiettivo di `dplyr` è semplificare le operazioni su data frame e tibble, operando per riga o per colonna e permettendo il ragruppamento e la sommarizzazione dei dati.
+
+
+## Funzioni principali
+
+Le funzioni principali di `dplyr` sono presentate efficacemente nel [cheat sheet](https://rstudio.github.io/cheatsheets/data-transformation.pdf){target="_blank"}.
+
+Qui riprendiamo le più comuni, cioè:
+
+* per righe:
+  * `filter()`: seleziona righe in base a condizioni
+  * `arrange()`: ordina le righe
+* per colonne:
+  * `select()`: seleziona colonne
+  * `mutate()`: crea nuove colonne o modifica colonne esistenti
+  * `rename()`: rinomina colonne
+* raggruppamento:
+  * `group_by()`: raggruppa i dati
+  * `summarise()`: sommarizza i dati
+* unione di più tabelle:
+  * `bind_rows()`: unisce due tabelle per righe (una sopra l'altra)
+  * `join()`: unisce due tabelle per colonne (una accanto all'altra, con colonne comuni)
+  
+
+### Operazioni per righe
+
+Le operazioni più comuni sono il filtraggio e il riordino delle righe, anche chiamate *casi* o *osservazioni*:
+
+```{r}
+data %>% 
+  filter(serie == "x1") %>% 
+  arrange(t) %>% 
+  slice_head(n=6) %>% 
+  knitr::kable()
+```
+
+Si noti anche la funzione `slice_head()` che restituisce le prime `n` righe di una tabella. Sono utili anche `slice_tail()` (ultime righe) e `slice_sample()` (un campione di righe estratte casualmente).
+
+:::{.callout-note title="Esercizio"}
+* Cosa succede se cambio l'ordine dei vari passi?
+* Provare a costruire criteri di selezione più complicati, ad esempio condizione `B` e serie `x2`.
+:::
+
+
+### Operazioni per colonne
+
+Le colonne di una tabella sono anche chiamate *variabili* o *campi*. Le operazioni più comuni sono la selezione, la creazione e la modifica di variabili:
+
+```{r}
+data %>% 
+  select(t, serie, valore) %>% 
+  rename(`tempo (s)` = t) %>%
+  mutate(`valore (mV)` = valore + 0.5) %>% 
+  select(-valore) %>% 
+  slice_head(n=6) %>% 
+  knitr::kable()
+```
+
+
+Tutte queste operazioni accettano come argomento il nome o i nomi delle colonne su cui operare. La sintassi ```rename(`tempo (s)` = t)``` ad esempio crea una nuova colonna chiamata `tempo (s)` a partire dalla colonna `t`, usando i backtick perché il nuovo nome contiene uno spazio e delle parentesi.
+
+In particolare, `select()` accetta una sintassi molto flessibile per specificare le colonne, ben illustrata sull'help in linea di `select()`. Ad esempio, è possibile indicare
+
+* **intervalli di colonne**: `select(t:valore)` seleziona le colonne dalla `t` alla `valore`
+* **combinazioni di colonne**: `select(c(t, serie))` seleziona le colonne `t` e `serie` (è possibile usare anche operatori logici `&`, `|`, `!`)
+* **in base al nome**: `select(starts_with("x"))` seleziona le colonne che iniziano con `x`, `select(ends_with("e"))` quelle che finiscono con `e`, `select(contains("1"))` quelle che contengono `1`, `select(contains("t"))`, quelle che contengono `t`, ecc. 
+
+
+### Raggruppamento e sommarizzazione
+
+Il raggruppamento e la sommarizzazione sono operazioni molto comuni in statistica. Ad esempio, vogliamo calcolare la media e la deviazione standard di `valore` per ciascuna `serie`:
+
+```{r}
+data %>% 
+  group_by(serie) %>% 
+  summarise(
+    media = mean(valore),
+    sd = sd(valore)
+  ) %>% 
+  knitr::kable()
+```
+
+:::{.callout-note title="Esercizio"}
+Calcolare media e deviazione standard per ciascuna serie utilizzando invece una funzione `map()`.
+:::
+
+
+### Unione di tabelle
+
+L'operazione più semplice tra due tabelle è unirle **una sopra l'altra**, cioè per righe. È il caso in cui si vogliano aggiungere delle osservazioni ad una tabella già esistente. Questa operazione si fa con `bind_rows()`. Per fare un esempio, cominciamo col separare la tabella `data` in due parti:
+
+```{r}
+data1 <- data %>% 
+  filter(t < 5)
+data2 <- data %>% 
+  filter(t >= 5)
+```
+
+Se ora volgiamo riunire le due tabelle, possiamo fare:
+
+```{r}
+data1 %>% 
+  bind_rows(data2) %>% 
+  slice_tail(n=6) %>%
+  knitr::kable()
+```
+
+Se in una delle due tabelle mancano una o più colonne, i valori mancanti sono inseriti come `NA`:
+
+```{r}
+data1 %>% 
+  bind_rows(data2 %>% select(-serie)) %>%
+  slice_tail(n=6) %>%
+  knitr::kable()
+```
+
+L'operazione ortogonale a `bind_rows()` è `bind_cols()`, che unisce due tabelle per colonne. Questa operazione è ovviamente possibile solo se le due tabelle hanno lo stesso numero di righe, ma presenta possibili problemi logici: cosa succede se le due tabelle, pur avendo lo stesso numero di righe, hanno righe in ordine diverso? In questo caso, `bind_cols()` unisce le colonne in base all'ordine delle righe, non in base al contenuto, con **risultato inatteso e errato**.
+
+Per questo motivo è sempre da preferire `left_join()`, che unisce due tabelle per colonne in base al contenuto di una o più colonne comuni. Questa operazione è molto comune in analisi dati, ad esempio per unire dati provenienti da fonti diverse. La funzione `left_join()` accetta come argomenti la tabella di sinistra, la tabella di destra, e le colonne su cui fare il join.
+
+Il *join* è un'operazione molto comune nell'analisi dei dati, e presente in molti linguaggi e database (SQL). Lo schema a lato presenta un caso esemplare: si hanno due tabelle, una con i clienti e una con gli ordini. Si vuole unire le due tabelle in modo da avere una tabella con tutti gli ordini, e per ciascun ordine il nome del cliente che l'ha effettuato. Questo è un *left join*, cioè si vogliono tutti gli ordini, anche quelli per cui non c'è un cliente associato. Esistono ovviamente anche *right join* (tieni tutte le righe della tabella di destra), *inner join* (tieni solo le righe presenti in entrambe le tabelle), e *full join* (tieni tutte le righe di entrambe le tabelle).
+
+:::{.column-margin}
+```{mermaid}
+erDiagram
+    Clienti {
+        int ID
+        string Nome
+        string Email
+    }
+    Ordini {
+        int ID_Ordine
+        int Cliente_ID
+        string Prodotto
+    }
+    
+    Clienti ||--o{ Ordini : "LEFT JOIN ON Cliente_ID"
+```
+:::
+
+In `dplyr` il *left join* si fa con `left_join()`, il *right join* con `right_join()`, l'*inner join* con `inner_join()`, e il *full join* con `full_join()`.
+
+Il caso più comune è il *left join*:
+
+```{r}
+condizione <- tibble(
+  ID = LETTERS[1:3],
+  desc = c("freddo", "caldo", "tiepido")
+)
+
+data %>% 
+  left_join(condizione, by=c("cond"="ID")) %>% 
+  relocate(condizione=desc, .after=t) %>% 
+  select(-cond) %>%
+  slice_sample(n=6) %>% 
+  knitr::kable()
+```
+
+:::{.callout-note title="Nota"}
+Nell'ultimo chunk, notare l'uso di `relocate()` per spostare *e rinominare* la colonna `condizione` dopo la colonna `t`.
+:::
+
+
+# La libreria `tidyr`
+
+L'ultima libreria del Tidyverse che presentiamo è `tidyr`, che fornisce funzioni per manipolare la struttura dei dati, cioè per trasformare i dati da *wide* a *long* e viceversa.
+
+:::{.column-margin}
+![](https://tidyr.tidyverse.org/logo.png)
+:::
+
+Il [cheat sheet](https://rstudio.github.io/cheatsheets/tidyr.pdf){target="_blank"} di `tidyr` è molto utile per capire le differenze tra le funzioni principali. Sebbene la libreria fornisca numerose funzioni, le più comuni sono `pivot_longer()` e `pivot_wider()`. Le altre funzioni illustrate nel cheat sheet sono utili per operazioni più specifiche, le useremo meno spesso (o mai), ma vale comunque la pena sapere che esistono.
+
+## Formati *wide* e *long*
+
+Raccogliere dati provenientio da diverse *sorgenti* in una tabella in formato *wide* è piuttosto comune e intuitivo, ed ha il vantaggio di **raggruppare visivamente** dati coerenti. Per questo motivo è un modo molto comune di presentare i dati. 
+
+Se ad esempio stiamo raccogliendo ogni 0.1 s le misure di accelerazione da un sensore triassiale (assi $X, Y, Z$), è naturale avere una tabella con una riga per ciascun campionamento e una colonna per ciascun asse. Questo formato è detto *wide*:
+
+```{r}
+accel <- tribble(
+  ~ID, ~t, ~X, ~Y, ~Z,
+  1, 1.0, 128, 120, 135,
+  2, 1.1, 131, 210, 178,
+  3, 1.2, 112, 195, 112
+)
+
+accel
+```
+
+Per mettere in grafico i dati con `ggplot2` dobbiamo trattare ogni asse (colonna) come una serie differente:
+
+```{r}
+accel %>% 
+  ggplot(aes(x=t)) +
+  geom_line(aes(y=X, color="X")) +
+  geom_line(aes(y=Y, color="Y")) +
+  geom_line(aes(y=Z, color="Z"))
+```
+
+
+Tuttavia, per analizzare i dati è spesso più comodo avere i dati in formato *long*, cioè con una riga per ogni osservazione e una colonna per ogni variabile. Questo formato è più flessibile e permette di usare le funzioni di `dplyr` e `purrr`, oltre a `ggplot2`, in modo più efficiente.
+
+Per convertire i dati da *wide* a *long* si usa `pivot_longer()`. Questa funzione accetta come argomenti la tabella da trasformare, le colonne da mantenere invariate, e le colonne da trasformare in righe. Ad esempio, per trasformare la tabella `accel` in formato *long*:
+
+```{r}
+accel %>% 
+  pivot_longer(
+    cols=-c(ID, t),
+    names_to="asse", 
+    values_to="accelerazione"
+  )
+```
+
+Realizzare il grafico con i dati in formato *long* è più semplice:
+
+```{r}
+accel %>% 
+  pivot_longer(
+    cols=-c(ID, t),
+    names_to="asse", 
+    values_to="accelerazione"
+  ) %>% 
+  ggplot(aes(x=t, y=accelerazione, color=asse)) +
+  geom_line() +
+  geom_point(aes(shape=asse), size=2)
+```
+
+Lo stesso vantaggio si ha ad esempio per le sommarizzazioni:
+
+```{r}
+accel %>% 
+  pivot_longer(
+    cols=-c(ID, t),
+    names_to="asse", 
+    values_to="accelerazione"
+  ) %>% 
+  group_by(asse) %>% 
+  summarise(
+    media = mean(accelerazione),
+    sd = sd(accelerazione)
+  ) %>% 
+  knitr::kable()
+```
+
+:::{.callout-note title="Conclusioni"}
+Iin generale, il formato *wide* è più compatto, più adatto alla visualizzazione in tabella e alla presentazione dei dati, ma il formato *long* è più flessibile e permette di usare le funzioni di manipolazione dei dati in modo più efficiente.
+
+È quindi consigliabile generare e memorizzare le tabelle in formato *long*, e convertirle in *wide* solo quando necessario per la visualizzazione.
+:::

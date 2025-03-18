@@ -6,8 +6,6 @@ categories: [taratura, regressione]
 format: 
   html:
     toc: TRUE
-  pdf:
-    toc: TRUE
 engine: knitr
 abstract: |
   Esempio per la taratura dinamica di un sensore PT100 mediante regressione lneare e non-lineare ai minimi quadrati.
