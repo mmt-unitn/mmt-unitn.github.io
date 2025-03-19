@@ -213,7 +213,7 @@ window.Quarto = {
   <li><a href="#esempio-reduce" id="toc-esempio-reduce" class="nav-link" data-scroll-target="#esempio-reduce"><span class="header-section-number">1.4.3</span> Esempio: <code>reduce</code></a></li>
   <li><a href="#esempio-accumulate" id="toc-esempio-accumulate" class="nav-link" data-scroll-target="#esempio-accumulate"><span class="header-section-number">1.4.4</span> Esempio: <code>accumulate</code></a></li>
   </ul></li>
-  <li><a href="#uso-con-mutate" id="toc-uso-con-mutate" class="nav-link" data-scroll-target="#uso-con-mutate"><span class="header-section-number">1.5</span> Uso con <code>mutate()</code></a></li>
+  <li><a href="#uso-con-dplyrmutate" id="toc-uso-con-dplyrmutate" class="nav-link" data-scroll-target="#uso-con-dplyrmutate"><span class="header-section-number">1.5</span> Uso con <code>dplyr::mutate</code></a></li>
   </ul></li>
   <li><a href="#la-libreria-dplyr" id="toc-la-libreria-dplyr" class="nav-link" data-scroll-target="#la-libreria-dplyr"><span class="header-section-number">2</span> La libreria <code>dplyr</code></a>
   <ul class="collapse">
@@ -255,7 +255,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Data di Pubblicazione</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">18 marzo 2025</p>
+      <p class="date">19 marzo 2025</p>
     </div>
   </div>
   
@@ -336,16 +336,16 @@ Esercizio
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>List of 10
- $ : num 0.000334
- $ : num 0.462
- $ : num 0.59
- $ : num 0.546
- $ : num 0.000307
- $ : num 0.0646
- $ : num 0.518
- $ : num 0.421
- $ : num 0.0942
- $ : num 0.0785</code></pre>
+ $ : num 0.228
+ $ : num 0.301
+ $ : num 0.0647
+ $ : num 0.647
+ $ : num 0.141
+ $ : num 0.405
+ $ : num 0.815
+ $ : num 0.272
+ $ : num 0.0083
+ $ : num 0.269</code></pre>
 </div>
 </div>
 <p>Come si vede, il risultato di <code>map</code> è una <strong>lista</strong> di 10 elementi, ciascuno dei quali è il quadrato di un elemento del vettore in ingresso generato da <code>runif(10)</code>.</p>
@@ -385,13 +385,13 @@ Lettera J </code></pre>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>a <span class="sc">%&gt;%</span> </span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">modify_if</span>(<span class="sc">~</span> .<span class="sc">&gt;</span><span class="fl">0.5</span>, <span class="sc">~</span> .<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] 0.383832655 0.622118032 0.352274532 0.924266896 0.344488197 0.007179353
- [7] 0.201359070 0.697097108 0.484895986 0.598498323</code></pre>
+<pre><code> [1] 0.4644516 0.6669020 0.1627761 0.4462542 0.6025519 0.8241091 0.2858921
+ [8] 0.3342384 0.2808999 0.3487215</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>a</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] 0.383832655 0.788744593 0.593527195 0.961388005 0.344488197 0.007179353
- [7] 0.201359070 0.834923414 0.484895986 0.773626733</code></pre>
+<pre><code> [1] 0.4644516 0.8166407 0.1627761 0.6680226 0.7762422 0.9078046 0.2858921
+ [8] 0.5781335 0.2808999 0.3487215</code></pre>
 </div>
 </div>
 <p>Si noti che <code>modify_if</code> prende due funzioni come argomenti: la prima è il criterio di selezione, chiamato <em>predicato</em>, la seconda è la trasformazione da applicare agli elementi selezionati. Il predicato deve essere una funzione che restutuisce un valore logico (<code>TRUE</code> o <code>FALSE</code>).</p>
@@ -725,8 +725,8 @@ Nota
 </div>
 </section>
 </section>
-<section id="uso-con-mutate" class="level2" data-number="1.5">
-<h2 data-number="1.5" class="anchored" data-anchor-id="uso-con-mutate"><span class="header-section-number">1.5</span> Uso con <code>mutate()</code></h2>
+<section id="uso-con-dplyrmutate" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="uso-con-dplyrmutate"><span class="header-section-number">1.5</span> Uso con <code>dplyr::mutate</code></h2>
 <p><code>purrr</code> è particolarmente utile in combinazione con <code>mutate()</code>, per eseguire operazioni complesse su colonne di un dataframe. Ad esempio, consideriamo il dataframe <code>data</code> definito sopra. Vogliamo aggiungere alla colonna <code>valore</code> una valore in funzione della colonna <code>serie</code>. Dato che <code>if</code> non accetta vettori, dobbiamo usare <code>map()</code>:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
@@ -1030,6 +1030,7 @@ Conclusione
 <li><code>select()</code>: seleziona colonne</li>
 <li><code>mutate()</code>: crea nuove colonne o modifica colonne esistenti</li>
 <li><code>rename()</code>: rinomina colonne</li>
+<li><code>relocate()</code>: sposta colonne (e se necessario le rinomina)</li>
 </ul></li>
 <li>raggruppamento:
 <ul>
@@ -1182,18 +1183,132 @@ Esercizio
 <li><strong>combinazioni di colonne</strong>: <code>select(c(t, serie))</code> seleziona le colonne <code>t</code> e <code>serie</code> (è possibile usare anche operatori logici <code>&amp;</code>, <code>|</code>, <code>!</code>)</li>
 <li><strong>in base al nome</strong>: <code>select(starts_with("x"))</code> seleziona le colonne che iniziano con <code>x</code>, <code>select(ends_with("e"))</code> quelle che finiscono con <code>e</code>, <code>select(contains("1"))</code> quelle che contengono <code>1</code>, <code>select(contains("t"))</code>, quelle che contengono <code>t</code>, ecc.</li>
 </ul>
+<p>La funzione <code>relocate()</code> serve infine per spostare una colonna, con l’opzione di rinominarla:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(<span class="at">condizione=</span>cond, <span class="at">.before=</span>t) <span class="sc">%&gt;%</span> </span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">6</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">condizione</th>
+<th style="text-align: right;">t</th>
+<th style="text-align: left;">serie</th>
+<th style="text-align: right;">valore</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: left;">x1</td>
+<td style="text-align: right;">1.1314771</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: left;">x2</td>
+<td style="text-align: right;">3.6563718</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">0.1010101</td>
+<td style="text-align: left;">x1</td>
+<td style="text-align: right;">0.3680026</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">0.1010101</td>
+<td style="text-align: left;">x2</td>
+<td style="text-align: right;">3.3044447</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">0.2020202</td>
+<td style="text-align: left;">x1</td>
+<td style="text-align: right;">1.2287707</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">0.2020202</td>
+<td style="text-align: left;">x2</td>
+<td style="text-align: right;">3.2968102</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Anche con più colonne contemporaneamente:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(<span class="fu">c</span>(serie, <span class="at">condizione=</span>cond), <span class="at">.before=</span>t) <span class="sc">%&gt;%</span> </span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">6</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">serie</th>
+<th style="text-align: left;">condizione</th>
+<th style="text-align: right;">t</th>
+<th style="text-align: right;">valore</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">x1</td>
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">1.1314771</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">x2</td>
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">3.6563718</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">x1</td>
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">0.1010101</td>
+<td style="text-align: right;">0.3680026</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">x2</td>
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">0.1010101</td>
+<td style="text-align: right;">3.3044447</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">x1</td>
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">0.2020202</td>
+<td style="text-align: right;">1.2287707</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">x2</td>
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">0.2020202</td>
+<td style="text-align: right;">3.2968102</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </section>
 <section id="raggruppamento-e-sommarizzazione" class="level3" data-number="2.1.3">
 <h3 data-number="2.1.3" class="anchored" data-anchor-id="raggruppamento-e-sommarizzazione"><span class="header-section-number">2.1.3</span> Raggruppamento e sommarizzazione</h3>
 <p>Il raggruppamento e la sommarizzazione sono operazioni molto comuni in statistica. Ad esempio, vogliamo calcolare la media e la deviazione standard di <code>valore</code> per ciascuna <code>serie</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(serie) <span class="sc">%&gt;%</span> </span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">media =</span> <span class="fu">mean</span>(valore),</span>
-<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd =</span> <span class="fu">sd</span>(valore)</span>
-<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(serie) <span class="sc">%&gt;%</span> </span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">media =</span> <span class="fu">mean</span>(valore),</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd =</span> <span class="fu">sd</span>(valore)</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <thead>
@@ -1236,17 +1351,17 @@ Esercizio
 <h3 data-number="2.1.4" class="anchored" data-anchor-id="unione-di-tabelle"><span class="header-section-number">2.1.4</span> Unione di tabelle</h3>
 <p>L’operazione più semplice tra due tabelle è unirle <strong>una sopra l’altra</strong>, cioè per righe. È il caso in cui si vogliano aggiungere delle osservazioni ad una tabella già esistente. Questa operazione si fa con <code>bind_rows()</code>. Per fare un esempio, cominciamo col separare la tabella <code>data</code> in due parti:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>data1 <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> </span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(t <span class="sc">&lt;</span> <span class="dv">5</span>)</span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>data2 <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> </span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(t <span class="sc">&gt;=</span> <span class="dv">5</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>data1 <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> </span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(t <span class="sc">&lt;</span> <span class="dv">5</span>)</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>data2 <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> </span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(t <span class="sc">&gt;=</span> <span class="dv">5</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Se ora volgiamo riunire le due tabelle, possiamo fare:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>data1 <span class="sc">%&gt;%</span> </span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(data2) <span class="sc">%&gt;%</span> </span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_tail</span>(<span class="at">n=</span><span class="dv">6</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>data1 <span class="sc">%&gt;%</span> </span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(data2) <span class="sc">%&gt;%</span> </span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_tail</span>(<span class="at">n=</span><span class="dv">6</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <thead>
@@ -1300,10 +1415,10 @@ Esercizio
 </div>
 <p>Se in una delle due tabelle mancano una o più colonne, i valori mancanti sono inseriti come <code>NA</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>data1 <span class="sc">%&gt;%</span> </span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(data2 <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>serie)) <span class="sc">%&gt;%</span></span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_tail</span>(<span class="at">n=</span><span class="dv">6</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>data1 <span class="sc">%&gt;%</span> </span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(data2 <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>serie)) <span class="sc">%&gt;%</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_tail</span>(<span class="at">n=</span><span class="dv">6</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <thead>
@@ -1387,17 +1502,17 @@ Esercizio
 </div></div><p>In <code>dplyr</code> il <em>left join</em> si fa con <code>left_join()</code>, il <em>right join</em> con <code>right_join()</code>, l’<em>inner join</em> con <code>inner_join()</code>, e il <em>full join</em> con <code>full_join()</code>.</p>
 <p>Il caso più comune è il <em>left join</em>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>condizione <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">ID =</span> LETTERS[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>],</span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">desc =</span> <span class="fu">c</span>(<span class="st">"freddo"</span>, <span class="st">"caldo"</span>, <span class="st">"tiepido"</span>)</span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
-<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(condizione, <span class="at">by=</span><span class="fu">c</span>(<span class="st">"cond"</span><span class="ot">=</span><span class="st">"ID"</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(<span class="at">condizione=</span>desc, <span class="at">.after=</span>t) <span class="sc">%&gt;%</span> </span>
-<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>cond) <span class="sc">%&gt;%</span></span>
-<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_sample</span>(<span class="at">n=</span><span class="dv">6</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>condizione <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">ID =</span> LETTERS[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>],</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">desc =</span> <span class="fu">c</span>(<span class="st">"freddo"</span>, <span class="st">"caldo"</span>, <span class="st">"tiepido"</span>)</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(condizione, <span class="at">by=</span><span class="fu">c</span>(<span class="st">"cond"</span><span class="ot">=</span><span class="st">"ID"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(<span class="at">condizione=</span>desc, <span class="at">.after=</span>t) <span class="sc">%&gt;%</span> </span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>cond) <span class="sc">%&gt;%</span></span>
+<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_sample</span>(<span class="at">n=</span><span class="dv">6</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <thead>
@@ -1477,14 +1592,14 @@ Nota
 <p>Raccogliere dati provenientio da diverse <em>sorgenti</em> in una tabella in formato <em>wide</em> è piuttosto comune e intuitivo, ed ha il vantaggio di <strong>raggruppare visivamente</strong> dati coerenti. Per questo motivo è un modo molto comune di presentare i dati.</p>
 <p>Se ad esempio stiamo raccogliendo ogni 0.1&nbsp;s le misure di accelerazione da un sensore triassiale (assi <span class="math inline">\(X, Y, Z\)</span>), è naturale avere una tabella con una riga per ciascun campionamento e una colonna per ciascun asse. Questo formato è detto <em>wide</em>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>accel <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>ID, <span class="sc">~</span>t, <span class="sc">~</span>X, <span class="sc">~</span>Y, <span class="sc">~</span>Z,</span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="dv">1</span>, <span class="fl">1.0</span>, <span class="dv">128</span>, <span class="dv">120</span>, <span class="dv">135</span>,</span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2</span>, <span class="fl">1.1</span>, <span class="dv">131</span>, <span class="dv">210</span>, <span class="dv">178</span>,</span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  <span class="dv">3</span>, <span class="fl">1.2</span>, <span class="dv">112</span>, <span class="dv">195</span>, <span class="dv">112</span></span>
-<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>accel</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>accel <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>ID, <span class="sc">~</span>t, <span class="sc">~</span>X, <span class="sc">~</span>Y, <span class="sc">~</span>Z,</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="dv">1</span>, <span class="fl">1.0</span>, <span class="dv">128</span>, <span class="dv">120</span>, <span class="dv">135</span>,</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2</span>, <span class="fl">1.1</span>, <span class="dv">131</span>, <span class="dv">210</span>, <span class="dv">178</span>,</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>  <span class="dv">3</span>, <span class="fl">1.2</span>, <span class="dv">112</span>, <span class="dv">195</span>, <span class="dv">112</span></span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>accel</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 5
      ID     t     X     Y     Z
@@ -1496,54 +1611,11 @@ Nota
 </div>
 <p>Per mettere in grafico i dati con <code>ggplot2</code> dobbiamo trattare ogni asse (colonna) come una serie differente:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>accel <span class="sc">%&gt;%</span> </span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>t)) <span class="sc">+</span></span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>X, <span class="at">color=</span><span class="st">"X"</span>)) <span class="sc">+</span></span>
-<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>Y, <span class="at">color=</span><span class="st">"Y"</span>)) <span class="sc">+</span></span>
-<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>Z, <span class="at">color=</span><span class="st">"Z"</span>))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="r-recap_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Tuttavia, per analizzare i dati è spesso più comodo avere i dati in formato <em>long</em>, cioè con una riga per ogni osservazione e una colonna per ogni variabile. Questo formato è più flessibile e permette di usare le funzioni di <code>dplyr</code> e <code>purrr</code>, oltre a <code>ggplot2</code>, in modo più efficiente.</p>
-<p>Per convertire i dati da <em>wide</em> a <em>long</em> si usa <code>pivot_longer()</code>. Questa funzione accetta come argomenti la tabella da trasformare, le colonne da mantenere invariate, e le colonne da trasformare in righe. Ad esempio, per trasformare la tabella <code>accel</code> in formato <em>long</em>:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>accel <span class="sc">%&gt;%</span> </span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols=</span><span class="sc">-</span><span class="fu">c</span>(ID, t),</span>
-<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to=</span><span class="st">"asse"</span>, </span>
-<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to=</span><span class="st">"accelerazione"</span></span>
-<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 9 × 4
-     ID     t asse  accelerazione
-  &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;         &lt;dbl&gt;
-1     1   1   X               128
-2     1   1   Y               120
-3     1   1   Z               135
-4     2   1.1 X               131
-5     2   1.1 Y               210
-6     2   1.1 Z               178
-7     3   1.2 X               112
-8     3   1.2 Y               195
-9     3   1.2 Z               112</code></pre>
-</div>
-</div>
-<p>Realizzare il grafico con i dati in formato <em>long</em> è più semplice:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>accel <span class="sc">%&gt;%</span> </span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols=</span><span class="sc">-</span><span class="fu">c</span>(ID, t),</span>
-<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to=</span><span class="st">"asse"</span>, </span>
-<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to=</span><span class="st">"accelerazione"</span></span>
-<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>t, <span class="at">y=</span>accelerazione, <span class="at">color=</span>asse)) <span class="sc">+</span></span>
-<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">shape=</span>asse), <span class="at">size=</span><span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>accel <span class="sc">%&gt;%</span> </span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>t)) <span class="sc">+</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>X, <span class="at">color=</span><span class="st">"X"</span>)) <span class="sc">+</span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>Y, <span class="at">color=</span><span class="st">"Y"</span>)) <span class="sc">+</span></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>Z, <span class="at">color=</span><span class="st">"Z"</span>))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1552,7 +1624,86 @@ Nota
 </div>
 </div>
 </div>
-<p>Lo stesso vantaggio si ha ad esempio per le sommarizzazioni:</p>
+<p>Tuttavia, per analizzare i dati è spesso più comodo avere i dati in formato <em>long</em>, cioè con una riga per ogni osservazione e una colonna per ogni variabile. Questo formato è più flessibile e permette di usare le funzioni di <code>dplyr</code> e <code>purrr</code>, oltre a <code>ggplot2</code>, in modo più efficiente.</p>
+<p>Per convertire i dati da <em>wide</em> a <em>long</em> si usa <code>pivot_longer()</code>. Questa funzione accetta come argomenti la tabella da trasformare, le colonne da mantenere invariate, e le colonne da trasformare in righe. Ad esempio, per trasformare la tabella <code>accel</code> in formato <em>long</em>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>accel <span class="sc">%&gt;%</span> </span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols=</span><span class="sc">-</span><span class="fu">c</span>(ID, t),</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to=</span><span class="st">"asse"</span>, </span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to=</span><span class="st">"accelerazione"</span></span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: right;">ID</th>
+<th style="text-align: right;">t</th>
+<th style="text-align: left;">asse</th>
+<th style="text-align: right;">accelerazione</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1.0</td>
+<td style="text-align: left;">X</td>
+<td style="text-align: right;">128</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1.0</td>
+<td style="text-align: left;">Y</td>
+<td style="text-align: right;">120</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1.0</td>
+<td style="text-align: left;">Z</td>
+<td style="text-align: right;">135</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1.1</td>
+<td style="text-align: left;">X</td>
+<td style="text-align: right;">131</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1.1</td>
+<td style="text-align: left;">Y</td>
+<td style="text-align: right;">210</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1.1</td>
+<td style="text-align: left;">Z</td>
+<td style="text-align: right;">178</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1.2</td>
+<td style="text-align: left;">X</td>
+<td style="text-align: right;">112</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1.2</td>
+<td style="text-align: left;">Y</td>
+<td style="text-align: right;">195</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1.2</td>
+<td style="text-align: left;">Z</td>
+<td style="text-align: right;">112</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Realizzare il grafico con i dati in formato <em>long</em> è più semplice (si noti il riuso dell’estetica e che sono necessarie solo due geometrie al posto delle sei necessarie con i dati in formato <em>wide</em> per ottenere lo stesso grafico):</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>accel <span class="sc">%&gt;%</span> </span>
 <span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
@@ -1560,36 +1711,70 @@ Nota
 <span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to=</span><span class="st">"asse"</span>, </span>
 <span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to=</span><span class="st">"accelerazione"</span></span>
 <span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(asse) <span class="sc">%&gt;%</span> </span>
-<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">media =</span> <span class="fu">mean</span>(accelerazione),</span>
-<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd =</span> <span class="fu">sd</span>(accelerazione)</span>
-<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>t, <span class="at">y=</span>accelerazione, <span class="at">color=</span>asse)) <span class="sc">+</span></span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">shape=</span>asse), <span class="at">size=</span><span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="r-recap_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Lo stesso vantaggio si ha ad esempio per le sommarizzazioni:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>accel <span class="sc">%&gt;%</span> </span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols=</span><span class="sc">-</span><span class="fu">c</span>(ID, t),</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to=</span><span class="st">"asse"</span>, </span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to=</span><span class="st">"accelerazione"</span></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(asse) <span class="sc">%&gt;%</span> </span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>(),</span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">media =</span> <span class="fu">mean</span>(accelerazione),</span>
+<span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd =</span> <span class="fu">sd</span>(accelerazione),</span>
+<span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">min =</span> <span class="fu">min</span>(accelerazione),</span>
+<span id="cb51-13"><a href="#cb51-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">max =</span> <span class="fu">max</span>(accelerazione)</span>
+<span id="cb51-14"><a href="#cb51-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb51-15"><a href="#cb51-15" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
 <th style="text-align: left;">asse</th>
+<th style="text-align: right;">n</th>
 <th style="text-align: right;">media</th>
 <th style="text-align: right;">sd</th>
+<th style="text-align: right;">min</th>
+<th style="text-align: right;">max</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">X</td>
+<td style="text-align: right;">3</td>
 <td style="text-align: right;">123.6667</td>
 <td style="text-align: right;">10.21437</td>
+<td style="text-align: right;">112</td>
+<td style="text-align: right;">131</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Y</td>
+<td style="text-align: right;">3</td>
 <td style="text-align: right;">175.0000</td>
 <td style="text-align: right;">48.21825</td>
+<td style="text-align: right;">120</td>
+<td style="text-align: right;">210</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Z</td>
+<td style="text-align: right;">3</td>
 <td style="text-align: right;">141.6667</td>
 <td style="text-align: right;">33.50124</td>
+<td style="text-align: right;">112</td>
+<td style="text-align: right;">178</td>
 </tr>
 </tbody>
 </table>
