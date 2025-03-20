@@ -20,10 +20,10 @@ library(tidyverse)
 `purrr` è parte del Tidyverse e può essere caricata da sola (`library(purrr)`) oppure assieme alle altre librerie del Tidyverse (`library(tidyverse)`).
 
 :::{.column-margin}
-![](https://purrr.tidyverse.org/logo.png)
+[![](https://purrr.tidyverse.org/logo.png)](https://rstudio.github.io/cheatsheets/purrr.pdf){target="_blank"}
 :::
 
-È utile tenere sotto mano il relativo cheat sheet: <https://rstudio.github.io/cheatsheets/purrr.pdf>
+È utile tenere sotto mano il relativo cheat sheet: <https://rstudio.github.io/cheatsheets/purrr.pdf>{target="_blank"} (o cliccando sull'icona a fianco).
 
 
 ## Scopo
@@ -45,7 +45,7 @@ dove `funzione` può essere:
 - il **nome** di una funzione esistente (ad es. `mean`)
 - una funzione anonima (cioè senza nome) definita con `function(argomento) { espressione(argomento) }`
 - una funzione anonima definita con `\(argomento) espressione(argomento)`
-- una funzione anonima definita con la scorciatoria `~ espressione(.)`
+- una funzione anonima definita con la scorciatoia `~ espressione(.)`
 
 Quest'ultima sintassi è la più compatta e quella di solito utilizzata. Si noti che se il contenuto della funzione è un'unica espressione si può fare a meno delle parentesi graffe; se invece la funzione richiede più passaggi, le espressioni vanno racchiuse in `{}` (andando a capo tra un'espressione e l'altra, oppure separandole con `;`).
 
@@ -58,7 +58,7 @@ Ad esempio, consideriamo la tabella `mtcars`: vogliamo regredire il modello `mpg
 
 ```{r}
 mtcars %>%  
-  split(mtcars$cyl) %>%   # divide un dataframe in una lista di dataframe
+  split(mtcars$cyl) %>%   # divide un data frame in una lista di data frame
   map(~ lm(mpg ~ wt, data = .)) %>% 
   map(summary) %>% 
   map_dbl("r.squared") %>% 
@@ -72,7 +72,7 @@ Ottenere lo stesso risultato con una serie di cicli `for`: confrontare i due app
 
 ### Mappe
 
-La funzione base `map` opera su un'unico vettore o lista e **restituisce sempre una lista**. È cioè una mappa $n\rightarrow n$, dove $n$ è la lunghezza dell'input, uguale a quella dell'output:
+La funzione base `map` opera su un unico vettore o lista e **restituisce sempre una lista**. È cioè una mappa $n\rightarrow n$, dove $n$ è la lunghezza dell'input, uguale a quella dell'output:
 
 ```{r}
 runif(10) %>% 
@@ -110,7 +110,7 @@ a %>%
 a
 ```
 
-Si noti che `modify_if` prende due funzioni come argomenti: la prima è il criterio di selezione, chiamato *predicato*, la seconda è la trasformazione da applicare agli elementi selezionati. Il predicato deve essere una funzione che restutuisce un valore logico (`TRUE` o `FALSE`).
+Si noti che `modify_if` prende due funzioni come argomenti: la prima è il criterio di selezione, chiamato *predicato*, la seconda è la trasformazione da applicare agli elementi selezionati. Il predicato deve essere una funzione che restituisce un valore logico (`TRUE` o `FALSE`).
 
 :::{.callout-warning title="Attenzione"}
 A dispetto del nome, `modify` non modifica l'oggetto in ingresso, ma ne restituisce una copia modificata.
@@ -119,7 +119,7 @@ A dispetto del nome, `modify` non modifica l'oggetto in ingresso, ma ne restitui
 
 ### Riduzione/Accumulo
 
-Infine, `purrr` offre anche funzioni di riduzione, come `reduce`, `accumulate`, `reduce2`, `accumulate2`. Queste funzioni permettono di ridurre una lista di elementi a un singolo valore, secondo un criterio specificato. Ad esempio, applico la funzione addizione per accumulare tutti i numeri da 1 a 10:
+Infine, `purrr` offre anche funzioni di riduzione, come `reduce`, `accumulate`, `reduce2`, `accumulate2`. Queste funzioni permettono di ridurre una lista di elementi a un singolo valore (quindi sono una mappa $n\rightarrow 1$), secondo un criterio specificato. Ad esempio, applico la funzione addizione per accumulare tutti i numeri da 1 a 10:
 ```{r}
 1:10 %>% 
   reduce(`+`)
@@ -174,8 +174,7 @@ list(x~t, x~poly(t, 2, raw=T), x~poly(t, 3, raw=T)) %>%
       select(t, x=valore) %>%
       lm(.x, data=.) %>% 
       summary()
-  }
-)
+  }) 
 ```
 
 :::{.callout-warning title="Attenzione"}
@@ -183,7 +182,7 @@ L'abbreviazione `~.` per le funzioni anonime consente di usare il punto `.` come
 
 In alternativa, e per maggior chiarezza, si può usare la forma `\(x) ...` per la funzione anonima, e `.` per riferirsi all'oggetto passato dalla pipe.
 
-**Si lascia per esercizio modificare il codeice di conseguenza**
+**Si lascia per esercizio modificare il codice di conseguenza**
 :::
 
 :::{.callout-note title="Esercizio"}
@@ -250,7 +249,7 @@ sd <- sqrt(sd / (length(v)-1))
 list(mean=m, sd=sd)
 ```
 
-Ora facciamo la stessa cosa con `purrr`, usando `reduce()`. In questo caso la funzione anonima, come specificato dall'help in linea, prende due argomenti: il primo, `.x`, è il valore accumulato, il secondo, `.y`, è il valore corrente.
+Ora facciamo la stessa cosa con `purrr`, usando `reduce()`. In questo caso la funzione anonima, come specificato dall'help in linea, prende due argomenti: il primo, `.x`, è il valore accumulato, il secondo, `.y`, è il valore corrente. Il risultato della funzione anonima viene passato all'iterazione successiva come `.x`.
 
 ```{r}
 m <- reduce(v, ~ .x + .y) / length(v) 
@@ -262,6 +261,42 @@ Il codice è decisamente più semplice, tuttavia il valore della deviazione stan
 
 :::{.callout-warning title="Attenzione"}
 Consultando l'help di `reduce()`, provare a comprendere il motivo dell'errore nel calcolo della deviazione standard. Usare anche la funzione `accumulate()` sotto illustrata come versione di debug di `reduce()`.
+:::
+
+È necessario prestare attenzione all'**inizializzazione dell'accumulatore**. Come visto sopra:
+
+* la funzione anonima a due parametri (`.x` e `.y`) è chiamata per ogni elemento della lista
+* il primo valore della lista originale è usato come `.x` **iniziale** (cioè alla prima iterazione)
+* ad ogni iterazione successiva, `.x` contiene il risultato della precedente
+
+A volte è necessario inizializzare l'accumulatore con un valore diverso da quello del primo elemento della lista, ad esempio perché il risultato finale di `reduce` deve essere di tipo diverso dall'elemento della lista, o con un valore diverso da quello del primo elemento. In questi casi si può usare il parametro `.init` di `reduce()`, passandogli il valore iniziale della variabile di accumulo. Ad esempio, confrontare quanto segue:
+
+```{r}
+reduce(1:10, ~ .x + .y)
+reduce(1:10, ~ .x + .y, .init=10)
+```
+
+La prima corrisponde a $\sum_{i=1}^{10} i$, la seconda a $\sum_{i=11}^{20} i$.
+
+È forse più utile quando il tipo desiderato in uscita è diverso. Ad esempio, supponiamo di voler accodare ad una lista, inizialmente vuota, una serie di coppie nome-valore in cui i nomi sono le prime 10 lettere, e i valori sono i primi 10 numeri interi. Usiamo `reduce2()` in modo da poter lavorare sui due vettori (numeri e lettere) in parallelo:
+
+```{r}
+1:10 %>% 
+  reduce2(LETTERS[.], \(acc, n, letter) {
+    acc[[letter]] <- n; 
+    return(acc)
+  }, .init=list()) %>% 
+  str()
+```
+
+:::{.callout-note title="Nota"}
+Nell'ultimo esempio:
+
+* `LETTERS[.]` è una scorciatoia per `LETTERS[1:10]`, dove `1:10` arriva come argomento dalla pipe. In questo modo possiamo cambiare `1:10` con `1:20` senza dover cambiare anche il vettore di lettere (i due vettori devono avere **la stessa lunghezza**!).
+* `\(acc, n, letter) { ... }` è una funzione anonima che prende tre argomenti: l'accumulatore, il valore corrente di del primo argomento di `reduce2` (cioè `1:10`) e il valore corrente del secondo argomento di `reduce2` (cioè `LETTERS[.]`). 
+* La funzione aggiunge un elemento alla lista `acc` con chiave `letter` e valore `n`.
+* `return(acc)` è necessaria, perché l'assegnazione `acc[[letter]] <- n` non restituisce `acc`. La funzione anonima **deve ritornare il valore accumulato**.
+* È necessario usare la sintassi `\(...)` per la funzione anonima, perché non c'è la versione `~` con 3 argomenti.
 :::
 
 
@@ -287,9 +322,9 @@ c(1, 5, 3, 9) %>% accumulate(`*`)
 ```
 :::
 
-## Uso con `mutate()`
+## Uso con `dplyr::mutate`
 
-`purrr` è particolarmente utile in combinazione con `mutate()`, per eseguire operazioni complesse su colonne di un dataframe. Ad esempio, consideriamo il dataframe `data` definito sopra. Vogliamo aggiungere alla colonna `valore` una valore in funzione della colonna `serie`. Dato che `if` non accetta vettori, dobbiamo usare `map()`:
+`purrr` è particolarmente utile in combinazione con `mutate()`, per eseguire operazioni complesse su colonne di un data frame. Ad esempio, consideriamo il data frame `data` definito sopra. Vogliamo aggiungere alla colonna `valore` una valore in funzione della colonna `serie`. Dato che `if` non accetta vettori, dobbiamo usare `map()`:
 
 ```{r}
 data %>% 
@@ -306,7 +341,7 @@ data %>%
   knitr::kable()
 ```
 
-Possiam essere più sintetici e scrivere:
+Possiamo essere più sintetici e scrivere:
 
 ```{r}
 data %>% 
@@ -359,15 +394,15 @@ In generale, quindi, **valutare sempre attentamente** se sia realmente necessari
 `dplyr` è una libreria del Tidyverse che fornisce un insieme di funzioni per manipolare dati in modo efficiente. È possibile caricare `dplyr` da solo (`library(dplyr)`) oppure assieme alle altre librerie del Tidyverse (`library(tidyverse)`).
 
 :::{.column-margin}
-![](https://dplyr.tidyverse.org/logo.png)
+[![](https://dplyr.tidyverse.org/logo.png)](https://rstudio.github.io/cheatsheets/data-transformation.pdf){target="_blank"}
 :::
 
-L'obiettivo di `dplyr` è semplificare le operazioni su data frame e tibble, operando per riga o per colonna e permettendo il ragruppamento e la sommarizzazione dei dati.
+L'obiettivo di `dplyr` è semplificare le operazioni su data frame e tibble, operando per riga o per colonna e permettendo il raggruppamento e la sommarizzazione dei dati.
 
 
 ## Funzioni principali
 
-Le funzioni principali di `dplyr` sono presentate efficacemente nel [cheat sheet](https://rstudio.github.io/cheatsheets/data-transformation.pdf){target="_blank"}.
+Le funzioni principali di `dplyr` sono presentate efficacemente nel cheat sheet <https://rstudio.github.io/cheatsheets/data-transformation.pdf>{target="_blank"} (o cliccando sull'icona qui a fianco).
 
 Qui riprendiamo le più comuni, cioè:
 
@@ -378,6 +413,7 @@ Qui riprendiamo le più comuni, cioè:
   * `select()`: seleziona colonne
   * `mutate()`: crea nuove colonne o modifica colonne esistenti
   * `rename()`: rinomina colonne
+  * `relocate()`: sposta colonne (e se necessario le rinomina)
 * raggruppamento:
   * `group_by()`: raggruppa i dati
   * `summarise()`: sommarizza i dati
@@ -428,6 +464,25 @@ In particolare, `select()` accetta una sintassi molto flessibile per specificare
 * **intervalli di colonne**: `select(t:valore)` seleziona le colonne dalla `t` alla `valore`
 * **combinazioni di colonne**: `select(c(t, serie))` seleziona le colonne `t` e `serie` (è possibile usare anche operatori logici `&`, `|`, `!`)
 * **in base al nome**: `select(starts_with("x"))` seleziona le colonne che iniziano con `x`, `select(ends_with("e"))` quelle che finiscono con `e`, `select(contains("1"))` quelle che contengono `1`, `select(contains("t"))`, quelle che contengono `t`, ecc. 
+
+La funzione `relocate()` serve infine per spostare una colonna, con l'opzione di rinominarla:
+
+```{r}
+data %>% 
+  relocate(condizione=cond, .before=t) %>% 
+  slice_head(n=6) %>%
+  knitr::kable()
+```
+
+Anche con più colonne contemporaneamente:
+
+```{r}
+data %>% 
+  relocate(c(serie, condizione=cond), .before=t) %>% 
+  slice_head(n=6) %>%
+  knitr::kable()
+```
+
 
 
 ### Raggruppamento e sommarizzazione
@@ -530,14 +585,14 @@ Nell'ultimo chunk, notare l'uso di `relocate()` per spostare *e rinominare* la c
 L'ultima libreria del Tidyverse che presentiamo è `tidyr`, che fornisce funzioni per manipolare la struttura dei dati, cioè per trasformare i dati da *wide* a *long* e viceversa.
 
 :::{.column-margin}
-![](https://tidyr.tidyverse.org/logo.png)
+[![](https://tidyr.tidyverse.org/logo.png)](https://rstudio.github.io/cheatsheets/tidyr.pdf){target="_blank"}
 :::
 
-Il [cheat sheet](https://rstudio.github.io/cheatsheets/tidyr.pdf){target="_blank"} di `tidyr` è molto utile per capire le differenze tra le funzioni principali. Sebbene la libreria fornisca numerose funzioni, le più comuni sono `pivot_longer()` e `pivot_wider()`. Le altre funzioni illustrate nel cheat sheet sono utili per operazioni più specifiche, le useremo meno spesso (o mai), ma vale comunque la pena sapere che esistono.
+Il cheat sheet <https://rstudio.github.io/cheatsheets/tidyr.pdf)>{target="_blank"} di `tidyr` è molto utile per capire le differenze tra le funzioni principali. Sebbene la libreria fornisca numerose funzioni, le più comuni sono `pivot_longer()` e `pivot_wider()`. Le altre funzioni illustrate nel cheat sheet sono utili per operazioni più specifiche, le useremo meno spesso (o mai), ma vale comunque la pena sapere che esistono.
 
 ## Formati *wide* e *long*
 
-Raccogliere dati provenientio da diverse *sorgenti* in una tabella in formato *wide* è piuttosto comune e intuitivo, ed ha il vantaggio di **raggruppare visivamente** dati coerenti. Per questo motivo è un modo molto comune di presentare i dati. 
+Raccogliere dati provenienti da diverse *sorgenti* in una tabella in formato *wide* è piuttosto comune e intuitivo, ed ha il vantaggio di **raggruppare visivamente** dati coerenti. Per questo motivo è un modo molto comune di presentare i dati. 
 
 Se ad esempio stiamo raccogliendo ogni 0.1 s le misure di accelerazione da un sensore triassiale (assi $X, Y, Z$), è naturale avere una tabella con una riga per ciascun campionamento e una colonna per ciascun asse. Questo formato è detto *wide*:
 
@@ -573,10 +628,11 @@ accel %>%
     cols=-c(ID, t),
     names_to="asse", 
     values_to="accelerazione"
-  )
+  ) %>% 
+  knitr::kable()
 ```
 
-Realizzare il grafico con i dati in formato *long* è più semplice:
+Realizzare il grafico con i dati in formato *long* è più semplice (si noti il riuso dell'estetica e che sono necessarie solo due geometrie al posto delle sei necessarie con i dati in formato *wide* per ottenere lo stesso grafico):
 
 ```{r}
 accel %>% 
@@ -601,14 +657,17 @@ accel %>%
   ) %>% 
   group_by(asse) %>% 
   summarise(
+    n = n(),
     media = mean(accelerazione),
-    sd = sd(accelerazione)
+    sd = sd(accelerazione),
+    min = min(accelerazione),
+    max = max(accelerazione)
   ) %>% 
   knitr::kable()
 ```
 
 :::{.callout-note title="Conclusioni"}
-Iin generale, il formato *wide* è più compatto, più adatto alla visualizzazione in tabella e alla presentazione dei dati, ma il formato *long* è più flessibile e permette di usare le funzioni di manipolazione dei dati in modo più efficiente.
+In generale, il formato *wide* è più compatto, più adatto alla visualizzazione in tabella e alla presentazione dei dati, ma il formato *long* è più flessibile e permette di usare le funzioni di manipolazione dei dati in modo più efficiente.
 
 È quindi consigliabile generare e memorizzare le tabelle in formato *long*, e convertirle in *wide* solo quando necessario per la visualizzazione.
 :::
