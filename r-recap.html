@@ -255,7 +255,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Data di Pubblicazione</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">19 marzo 2025</p>
+      <p class="date">20 marzo 2025</p>
     </div>
   </div>
   
@@ -272,8 +272,8 @@ window.Quarto = {
 <p><code>purrr</code> è parte del Tidyverse e può essere caricata da sola (<code>library(purrr)</code>) oppure assieme alle altre librerie del Tidyverse (<code>library(tidyverse)</code>).</p>
 
 <div class="no-row-height column-margin column-container"><div class="">
-<p><img src="https://purrr.tidyverse.org/logo.png" class="img-fluid"></p>
-</div></div><p>È utile tenere sotto mano il relativo cheat sheet: <a href="https://rstudio.github.io/cheatsheets/purrr.pdf" class="uri">https://rstudio.github.io/cheatsheets/purrr.pdf</a></p>
+<p><a href="https://rstudio.github.io/cheatsheets/purrr.pdf" target="_blank"><img src="https://purrr.tidyverse.org/logo.png" class="img-fluid"></a></p>
+</div></div><p>È utile tenere sotto mano il relativo cheat sheet: <a href="https://rstudio.github.io/cheatsheets/purrr.pdf" target="_blank">https://rstudio.github.io/cheatsheets/purrr.pdf</a> (o cliccando sull’icona a fianco).</p>
 <section id="scopo" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="scopo"><span class="header-section-number">1.1</span> Scopo</h2>
 <p>Lo scopo di <code>purrr</code> è fornire un’interfaccia <em>funzionale</em> (cioè basata sulle funzioni) per ogni procedura che richieda l’iterazione di un’operazione. In altre parole, usiamo una funzione al posto del corpo di un ciclo <code>for</code>. Invece di:</p>
@@ -291,7 +291,7 @@ window.Quarto = {
 <li>il <strong>nome</strong> di una funzione esistente (ad es. <code>mean</code>)</li>
 <li>una funzione anonima (cioè senza nome) definita con <code>function(argomento) { espressione(argomento) }</code></li>
 <li>una funzione anonima definita con <code>\(argomento) espressione(argomento)</code></li>
-<li>una funzione anonima definita con la scorciatoria <code>~ espressione(.)</code></li>
+<li>una funzione anonima definita con la scorciatoia <code>~ espressione(.)</code></li>
 </ul>
 <p>Quest’ultima sintassi è la più compatta e quella di solito utilizzata. Si noti che se il contenuto della funzione è un’unica espressione si può fare a meno delle parentesi graffe; se invece la funzione richiede più passaggi, le espressioni vanno racchiuse in <code>{}</code> (andando a capo tra un’espressione e l’altra, oppure separandole con <code>;</code>).</p>
 </section>
@@ -301,7 +301,7 @@ window.Quarto = {
 <p>Ad esempio, consideriamo la tabella <code>mtcars</code>: vogliamo regredire il modello <code>mpg ~ wt</code> (correlazione tra consumo e massa) per ciascuna classe di numero di cilindri. Con <code>purrr</code> possiamo scrivere:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>mtcars <span class="sc">%&gt;%</span>  </span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split</span>(mtcars<span class="sc">$</span>cyl) <span class="sc">%&gt;%</span>   <span class="co"># divide un dataframe in una lista di dataframe</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split</span>(mtcars<span class="sc">$</span>cyl) <span class="sc">%&gt;%</span>   <span class="co"># divide un data frame in una lista di data frame</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(<span class="sc">~</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt, <span class="at">data =</span> .)) <span class="sc">%&gt;%</span> </span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(summary) <span class="sc">%&gt;%</span> </span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map_dbl</span>(<span class="st">"r.squared"</span>) <span class="sc">%&gt;%</span> </span>
@@ -329,23 +329,23 @@ Esercizio
 <h2 data-number="1.3" class="anchored" data-anchor-id="varianti"><span class="header-section-number">1.3</span> Varianti</h2>
 <section id="mappe" class="level3" data-number="1.3.1">
 <h3 data-number="1.3.1" class="anchored" data-anchor-id="mappe"><span class="header-section-number">1.3.1</span> Mappe</h3>
-<p>La funzione base <code>map</code> opera su un’unico vettore o lista e <strong>restituisce sempre una lista</strong>. È cioè una mappa <span class="math inline">\(n\rightarrow n\)</span>, dove <span class="math inline">\(n\)</span> è la lunghezza dell’input, uguale a quella dell’output:</p>
+<p>La funzione base <code>map</code> opera su un unico vettore o lista e <strong>restituisce sempre una lista</strong>. È cioè una mappa <span class="math inline">\(n\rightarrow n\)</span>, dove <span class="math inline">\(n\)</span> è la lunghezza dell’input, uguale a quella dell’output:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">runif</span>(<span class="dv">10</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(<span class="sc">~</span> .<span class="sc">^</span><span class="dv">2</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>List of 10
- $ : num 0.228
- $ : num 0.301
- $ : num 0.0647
- $ : num 0.647
- $ : num 0.141
- $ : num 0.405
- $ : num 0.815
- $ : num 0.272
- $ : num 0.0083
- $ : num 0.269</code></pre>
+ $ : num 0.000296
+ $ : num 0.000599
+ $ : num 0.234
+ $ : num 0.499
+ $ : num 0.187
+ $ : num 0.478
+ $ : num 0.534
+ $ : num 0.0106
+ $ : num 0.816
+ $ : num 0.00452</code></pre>
 </div>
 </div>
 <p>Come si vede, il risultato di <code>map</code> è una <strong>lista</strong> di 10 elementi, ciascuno dei quali è il quadrato di un elemento del vettore in ingresso generato da <code>runif(10)</code>.</p>
@@ -385,16 +385,16 @@ Lettera J </code></pre>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>a <span class="sc">%&gt;%</span> </span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">modify_if</span>(<span class="sc">~</span> .<span class="sc">&gt;</span><span class="fl">0.5</span>, <span class="sc">~</span> .<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] 0.4644516 0.6669020 0.1627761 0.4462542 0.6025519 0.8241091 0.2858921
- [8] 0.3342384 0.2808999 0.3487215</code></pre>
+<pre><code> [1] 0.64818268 0.29773074 0.94141369 0.08057926 0.61415519 0.49281467
+ [7] 0.48321259 0.81007364 0.28847898 0.21036230</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>a</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] 0.4644516 0.8166407 0.1627761 0.6680226 0.7762422 0.9078046 0.2858921
- [8] 0.5781335 0.2808999 0.3487215</code></pre>
+<pre><code> [1] 0.80509793 0.29773074 0.97026475 0.08057926 0.78368054 0.49281467
+ [7] 0.48321259 0.90004091 0.28847898 0.21036230</code></pre>
 </div>
 </div>
-<p>Si noti che <code>modify_if</code> prende due funzioni come argomenti: la prima è il criterio di selezione, chiamato <em>predicato</em>, la seconda è la trasformazione da applicare agli elementi selezionati. Il predicato deve essere una funzione che restutuisce un valore logico (<code>TRUE</code> o <code>FALSE</code>).</p>
+<p>Si noti che <code>modify_if</code> prende due funzioni come argomenti: la prima è il criterio di selezione, chiamato <em>predicato</em>, la seconda è la trasformazione da applicare agli elementi selezionati. Il predicato deve essere una funzione che restituisce un valore logico (<code>TRUE</code> o <code>FALSE</code>).</p>
 <div class="callout callout-style-default callout-warning callout-titled" title="Attenzione">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -411,7 +411,7 @@ Attenzione
 </section>
 <section id="riduzioneaccumulo" class="level3" data-number="1.3.4">
 <h3 data-number="1.3.4" class="anchored" data-anchor-id="riduzioneaccumulo"><span class="header-section-number">1.3.4</span> Riduzione/Accumulo</h3>
-<p>Infine, <code>purrr</code> offre anche funzioni di riduzione, come <code>reduce</code>, <code>accumulate</code>, <code>reduce2</code>, <code>accumulate2</code>. Queste funzioni permettono di ridurre una lista di elementi a un singolo valore, secondo un criterio specificato. Ad esempio, applico la funzione addizione per accumulare tutti i numeri da 1 a 10:</p>
+<p>Infine, <code>purrr</code> offre anche funzioni di riduzione, come <code>reduce</code>, <code>accumulate</code>, <code>reduce2</code>, <code>accumulate2</code>. Queste funzioni permettono di ridurre una lista di elementi a un singolo valore (quindi sono una mappa <span class="math inline">\(n\rightarrow 1\)</span>), secondo un criterio specificato. Ad esempio, applico la funzione addizione per accumulare tutti i numeri da 1 a 10:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="sc">:</span><span class="dv">10</span> <span class="sc">%&gt;%</span> </span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reduce</span>(<span class="st">`</span><span class="at">+</span><span class="st">`</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -480,8 +480,7 @@ Attenzione
 <span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(t, <span class="at">x=</span>valore) <span class="sc">%&gt;%</span></span>
 <span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">lm</span>(.x, <span class="at">data=</span>.) <span class="sc">%&gt;%</span> </span>
 <span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">summary</span>()</span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  }) </span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
 
@@ -561,7 +560,7 @@ Attenzione
 <div class="callout-body-container callout-body">
 <p>L’abbreviazione <code>~.</code> per le funzioni anonime consente di usare il punto <code>.</code> come riferimento all’oggetto in ingresso. In certi casi, però (come in quello qui sopra), il punto è necessario anche per riferirsi all’oggetto passato dalla pipe <code>data %&gt;% ...</code>, quindi ci sarebbe un’ambiguità. In questi casi si può utilizzare <code>.x</code> per riferirsi all’argomento della funzione anonima, e <code>.</code> per riferirsi all’oggetto passato dalla pipe, come sopra fatto.</p>
 <p>In alternativa, e per maggior chiarezza, si può usare la forma <code>\(x) ...</code> per la funzione anonima, e <code>.</code> per riferirsi all’oggetto passato dalla pipe.</p>
-<p><strong>Si lascia per esercizio modificare il codeice di conseguenza</strong></p>
+<p><strong>Si lascia per esercizio modificare il codice di conseguenza</strong></p>
 </div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled" title="Esercizio">
@@ -660,7 +659,7 @@ $sd
 [1] 1.205336</code></pre>
 </div>
 </div>
-<p>Ora facciamo la stessa cosa con <code>purrr</code>, usando <code>reduce()</code>. In questo caso la funzione anonima, come specificato dall’help in linea, prende due argomenti: il primo, <code>.x</code>, è il valore accumulato, il secondo, <code>.y</code>, è il valore corrente.</p>
+<p>Ora facciamo la stessa cosa con <code>purrr</code>, usando <code>reduce()</code>. In questo caso la funzione anonima, come specificato dall’help in linea, prende due argomenti: il primo, <code>.x</code>, è il valore accumulato, il secondo, <code>.y</code>, è il valore corrente. Il risultato della funzione anonima viene passato all’iterazione successiva come <code>.x</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">reduce</span>(v, <span class="sc">~</span> .x <span class="sc">+</span> .y) <span class="sc">/</span> <span class="fu">length</span>(v) </span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>sd <span class="ot">&lt;-</span> <span class="fu">sqrt</span>( <span class="fu">reduce</span>(v, <span class="sc">~</span> .x <span class="sc">+</span> (.y <span class="sc">-</span> m)<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> (<span class="fu">length</span>(v)<span class="sc">-</span><span class="dv">1</span>) )</span>
@@ -687,18 +686,78 @@ Attenzione
 <p>Consultando l’help di <code>reduce()</code>, provare a comprendere il motivo dell’errore nel calcolo della deviazione standard. Usare anche la funzione <code>accumulate()</code> sotto illustrata come versione di debug di <code>reduce()</code>.</p>
 </div>
 </div>
+<p>È necessario prestare attenzione all’<strong>inizializzazione dell’accumulatore</strong>. Come visto sopra:</p>
+<ul>
+<li>la funzione anonima a due parametri (<code>.x</code> e <code>.y</code>) è chiamata per ogni elemento della lista</li>
+<li>il primo valore della lista originale è usato come <code>.x</code> <strong>iniziale</strong> (cioè alla prima iterazione)</li>
+<li>ad ogni iterazione successiva, <code>.x</code> contiene il risultato della precedente</li>
+</ul>
+<p>A volte è necessario inizializzare l’accumulatore con un valore diverso da quello del primo elemento della lista, ad esempio perché il risultato finale di <code>reduce</code> deve essere di tipo diverso dall’elemento della lista, o con un valore diverso da quello del primo elemento. In questi casi si può usare il parametro <code>.init</code> di <code>reduce()</code>, passandogli il valore iniziale della variabile di accumulo. Ad esempio, confrontare quanto segue:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">reduce</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="sc">~</span> .x <span class="sc">+</span> .y)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 55</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">reduce</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="sc">~</span> .x <span class="sc">+</span> .y, <span class="at">.init=</span><span class="dv">10</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 65</code></pre>
+</div>
+</div>
+<p>La prima corrisponde a <span class="math inline">\(\sum_{i=1}^{10} i\)</span>, la seconda a <span class="math inline">\(\sum_{i=11}^{20} i\)</span>.</p>
+<p>È forse più utile quando il tipo desiderato in uscita è diverso. Ad esempio, supponiamo di voler accodare ad una lista, inizialmente vuota, una serie di coppie nome-valore in cui i nomi sono le prime 10 lettere, e i valori sono i primi 10 numeri interi. Usiamo <code>reduce2()</code> in modo da poter lavorare sui due vettori (numeri e lettere) in parallelo:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="sc">:</span><span class="dv">10</span> <span class="sc">%&gt;%</span> </span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reduce2</span>(LETTERS[.], \(acc, n, letter) {</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    acc[[letter]] <span class="ot">&lt;-</span> n; </span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(acc)</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  }, <span class="at">.init=</span><span class="fu">list</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>List of 10
+ $ A: int 1
+ $ B: int 2
+ $ C: int 3
+ $ D: int 4
+ $ E: int 5
+ $ F: int 6
+ $ G: int 7
+ $ H: int 8
+ $ I: int 9
+ $ J: int 10</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="Nota">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Nota
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Nell’ultimo esempio:</p>
+<ul>
+<li><code>LETTERS[.]</code> è una scorciatoia per <code>LETTERS[1:10]</code>, dove <code>1:10</code> arriva come argomento dalla pipe. In questo modo possiamo cambiare <code>1:10</code> con <code>1:20</code> senza dover cambiare anche il vettore di lettere (i due vettori devono avere <strong>la stessa lunghezza</strong>!).</li>
+<li><code>\(acc, n, letter) { ... }</code> è una funzione anonima che prende tre argomenti: l’accumulatore, il valore corrente di del primo argomento di <code>reduce2</code> (cioè <code>1:10</code>) e il valore corrente del secondo argomento di <code>reduce2</code> (cioè <code>LETTERS[.]</code>).</li>
+<li>La funzione aggiunge un elemento alla lista <code>acc</code> con chiave <code>letter</code> e valore <code>n</code>.</li>
+<li><code>return(acc)</code> è necessaria, perché l’assegnazione <code>acc[[letter]] &lt;- n</code> non restituisce <code>acc</code>. La funzione anonima <strong>deve ritornare il valore accumulato</strong>.</li>
+<li>È necessario usare la sintassi <code>\(...)</code> per la funzione anonima, perché non c’è la versione <code>~</code> con 3 argomenti.</li>
+</ul>
+</div>
+</div>
 </section>
 <section id="esempio-accumulate" class="level3" data-number="1.4.4">
 <h3 data-number="1.4.4" class="anchored" data-anchor-id="esempio-accumulate"><span class="header-section-number">1.4.4</span> Esempio: <code>accumulate</code></h3>
 <p>Accumulate si comporta come <code>reduce()</code>, ma restituisce una lista di valori intermedi. Ad esempio, calcoliamo il prodotto cumulativo di una serie di dati, osservando la differenza con reduce</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">3</span>, <span class="dv">9</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reduce</span>(<span class="sc">~</span> .x <span class="sc">*</span> .y)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">3</span>, <span class="dv">9</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reduce</span>(<span class="sc">~</span> .x <span class="sc">*</span> .y)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 135</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">3</span>, <span class="dv">9</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">accumulate</span>(<span class="sc">~</span> .x <span class="sc">*</span> .y)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">3</span>, <span class="dv">9</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">accumulate</span>(<span class="sc">~</span> .x <span class="sc">*</span> .y)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1]   1   5  15 135</code></pre>
 </div>
@@ -716,7 +775,7 @@ Nota
 <div class="callout-body-container callout-body">
 <p>Invece che una funzione anonima avremmo potuto usare direttamente la funzione <code>*</code> che accetta due argomenti:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">3</span>, <span class="dv">9</span>) <span class="sc">%&gt;%</span> <span class="fu">accumulate</span>(<span class="st">`</span><span class="at">*</span><span class="st">`</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">3</span>, <span class="dv">9</span>) <span class="sc">%&gt;%</span> <span class="fu">accumulate</span>(<span class="st">`</span><span class="at">*</span><span class="st">`</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1]   1   5  15 135</code></pre>
 </div>
@@ -727,20 +786,20 @@ Nota
 </section>
 <section id="uso-con-dplyrmutate" class="level2" data-number="1.5">
 <h2 data-number="1.5" class="anchored" data-anchor-id="uso-con-dplyrmutate"><span class="header-section-number">1.5</span> Uso con <code>dplyr::mutate</code></h2>
-<p><code>purrr</code> è particolarmente utile in combinazione con <code>mutate()</code>, per eseguire operazioni complesse su colonne di un dataframe. Ad esempio, consideriamo il dataframe <code>data</code> definito sopra. Vogliamo aggiungere alla colonna <code>valore</code> una valore in funzione della colonna <code>serie</code>. Dato che <code>if</code> non accetta vettori, dobbiamo usare <code>map()</code>:</p>
+<p><code>purrr</code> è particolarmente utile in combinazione con <code>mutate()</code>, per eseguire operazioni complesse su colonne di un data frame. Ad esempio, consideriamo il data frame <code>data</code> definito sopra. Vogliamo aggiungere alla colonna <code>valore</code> una valore in funzione della colonna <code>serie</code>. Dato che <code>if</code> non accetta vettori, dobbiamo usare <code>map()</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">valore =</span> <span class="fu">map2_dbl</span>(serie, valore, <span class="sc">~</span> {</span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (.x <span class="sc">==</span> <span class="st">"x1"</span>) {</span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>        .y <span class="sc">+</span> <span class="fl">0.5</span></span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>      } <span class="cf">else</span> {</span>
-<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>        .y <span class="sc">-</span> <span class="fl">0.5</span></span>
-<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>      }</span>
-<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>    })</span>
-<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">6</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">valore =</span> <span class="fu">map2_dbl</span>(serie, valore, <span class="sc">~</span> {</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (.x <span class="sc">==</span> <span class="st">"x1"</span>) {</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>        .y <span class="sc">+</span> <span class="fl">0.5</span></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>      } <span class="cf">else</span> {</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>        .y <span class="sc">-</span> <span class="fl">0.5</span></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">6</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <thead>
@@ -792,14 +851,14 @@ Nota
 </table>
 </div>
 </div>
-<p>Possiam essere più sintetici e scrivere:</p>
+<p>Possiamo essere più sintetici e scrivere:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">valore =</span> <span class="fu">map2_dbl</span>(serie, valore, <span class="sc">~</span> <span class="fu">ifelse</span>(.x <span class="sc">==</span> <span class="st">"x1"</span>, .y <span class="sc">+</span> <span class="fl">0.5</span>, .y <span class="sc">-</span> <span class="fl">0.5</span>))</span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">6</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">valore =</span> <span class="fu">map2_dbl</span>(serie, valore, <span class="sc">~</span> <span class="fu">ifelse</span>(.x <span class="sc">==</span> <span class="st">"x1"</span>, .y <span class="sc">+</span> <span class="fl">0.5</span>, .y <span class="sc">-</span> <span class="fl">0.5</span>))</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">6</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <thead>
@@ -853,12 +912,12 @@ Nota
 </div>
 <p>Però <code>ifelse()</code> <strong>è vettorializzata</strong>, quindi in realtà non c’è bisogno di <code>map()</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">valore =</span> <span class="fu">ifelse</span>(valore <span class="sc">==</span> <span class="st">"x1"</span>, valore <span class="sc">+</span> <span class="fl">0.5</span>, valore <span class="sc">-</span> <span class="fl">0.5</span>)</span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">6</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">valore =</span> <span class="fu">ifelse</span>(valore <span class="sc">==</span> <span class="st">"x1"</span>, valore <span class="sc">+</span> <span class="fl">0.5</span>, valore <span class="sc">-</span> <span class="fl">0.5</span>)</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">6</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <thead>
@@ -912,22 +971,22 @@ Nota
 </div>
 <p>Se invece avessimo più casi, allora dovremmo usare <code>map()</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">n</span>(),</span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">r =</span> i <span class="sc">%%</span> <span class="dv">3</span>,</span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">valore =</span> <span class="fu">map2_dbl</span>(r, valore, <span class="sc">~</span> {</span>
-<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (.x <span class="sc">==</span> <span class="dv">0</span>) {</span>
-<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>        .y <span class="sc">+</span> <span class="fl">0.5</span></span>
-<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>      } <span class="cf">else</span> <span class="cf">if</span> (.x <span class="sc">==</span> <span class="dv">1</span>) {</span>
-<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>        .y <span class="sc">-</span> <span class="fl">0.5</span></span>
-<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>      } <span class="cf">else</span> {</span>
-<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>        .y <span class="sc">-</span> <span class="dv">1</span></span>
-<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>      }</span>
-<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>    })</span>
-<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">6</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">n</span>(),</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">r =</span> i <span class="sc">%%</span> <span class="dv">3</span>,</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">valore =</span> <span class="fu">map2_dbl</span>(r, valore, <span class="sc">~</span> {</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (.x <span class="sc">==</span> <span class="dv">0</span>) {</span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>        .y <span class="sc">+</span> <span class="fl">0.5</span></span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>      } <span class="cf">else</span> <span class="cf">if</span> (.x <span class="sc">==</span> <span class="dv">1</span>) {</span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>        .y <span class="sc">-</span> <span class="fl">0.5</span></span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>      } <span class="cf">else</span> {</span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>        .y <span class="sc">-</span> <span class="dv">1</span></span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">6</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <thead>
@@ -1013,11 +1072,11 @@ Conclusione
 <p><code>dplyr</code> è una libreria del Tidyverse che fornisce un insieme di funzioni per manipolare dati in modo efficiente. È possibile caricare <code>dplyr</code> da solo (<code>library(dplyr)</code>) oppure assieme alle altre librerie del Tidyverse (<code>library(tidyverse)</code>).</p>
 
 <div class="no-row-height column-margin column-container"><div class="">
-<p><img src="https://dplyr.tidyverse.org/logo.png" class="img-fluid"></p>
-</div></div><p>L’obiettivo di <code>dplyr</code> è semplificare le operazioni su data frame e tibble, operando per riga o per colonna e permettendo il ragruppamento e la sommarizzazione dei dati.</p>
+<p><a href="https://rstudio.github.io/cheatsheets/data-transformation.pdf" target="_blank"><img src="https://dplyr.tidyverse.org/logo.png" class="img-fluid"></a></p>
+</div></div><p>L’obiettivo di <code>dplyr</code> è semplificare le operazioni su data frame e tibble, operando per riga o per colonna e permettendo il raggruppamento e la sommarizzazione dei dati.</p>
 <section id="funzioni-principali" class="level2 page-columns page-full" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="funzioni-principali"><span class="header-section-number">2.1</span> Funzioni principali</h2>
-<p>Le funzioni principali di <code>dplyr</code> sono presentate efficacemente nel <a href="https://rstudio.github.io/cheatsheets/data-transformation.pdf" target="_blank">cheat sheet</a>.</p>
+<p>Le funzioni principali di <code>dplyr</code> sono presentate efficacemente nel cheat sheet <a href="https://rstudio.github.io/cheatsheets/data-transformation.pdf" target="_blank">https://rstudio.github.io/cheatsheets/data-transformation.pdf</a> (o cliccando sull’icona qui a fianco).</p>
 <p>Qui riprendiamo le più comuni, cioè:</p>
 <ul>
 <li>per righe:
@@ -1047,11 +1106,11 @@ Conclusione
 <h3 data-number="2.1.1" class="anchored" data-anchor-id="operazioni-per-righe"><span class="header-section-number">2.1.1</span> Operazioni per righe</h3>
 <p>Le operazioni più comuni sono il filtraggio e il riordino delle righe, anche chiamate <em>casi</em> o <em>osservazioni</em>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(serie <span class="sc">==</span> <span class="st">"x1"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(t) <span class="sc">%&gt;%</span> </span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">6</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(serie <span class="sc">==</span> <span class="st">"x1"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(t) <span class="sc">%&gt;%</span> </span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">6</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <thead>
@@ -1125,13 +1184,13 @@ Esercizio
 <h3 data-number="2.1.2" class="anchored" data-anchor-id="operazioni-per-colonne"><span class="header-section-number">2.1.2</span> Operazioni per colonne</h3>
 <p>Le colonne di una tabella sono anche chiamate <em>variabili</em> o <em>campi</em>. Le operazioni più comuni sono la selezione, la creazione e la modifica di variabili:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(t, serie, valore) <span class="sc">%&gt;%</span> </span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">`</span><span class="at">tempo (s)</span><span class="st">`</span> <span class="ot">=</span> t) <span class="sc">%&gt;%</span></span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">`</span><span class="at">valore (mV)</span><span class="st">`</span> <span class="ot">=</span> valore <span class="sc">+</span> <span class="fl">0.5</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>valore) <span class="sc">%&gt;%</span> </span>
-<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">6</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(t, serie, valore) <span class="sc">%&gt;%</span> </span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">`</span><span class="at">tempo (s)</span><span class="st">`</span> <span class="ot">=</span> t) <span class="sc">%&gt;%</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">`</span><span class="at">valore (mV)</span><span class="st">`</span> <span class="ot">=</span> valore <span class="sc">+</span> <span class="fl">0.5</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>valore) <span class="sc">%&gt;%</span> </span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">6</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <thead>
@@ -1185,10 +1244,10 @@ Esercizio
 </ul>
 <p>La funzione <code>relocate()</code> serve infine per spostare una colonna, con l’opzione di rinominarla:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(<span class="at">condizione=</span>cond, <span class="at">.before=</span>t) <span class="sc">%&gt;%</span> </span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">6</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(<span class="at">condizione=</span>cond, <span class="at">.before=</span>t) <span class="sc">%&gt;%</span> </span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">6</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <thead>
@@ -1242,10 +1301,10 @@ Esercizio
 </div>
 <p>Anche con più colonne contemporaneamente:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(<span class="fu">c</span>(serie, <span class="at">condizione=</span>cond), <span class="at">.before=</span>t) <span class="sc">%&gt;%</span> </span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">6</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(<span class="fu">c</span>(serie, <span class="at">condizione=</span>cond), <span class="at">.before=</span>t) <span class="sc">%&gt;%</span> </span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">6</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <thead>
@@ -1302,13 +1361,13 @@ Esercizio
 <h3 data-number="2.1.3" class="anchored" data-anchor-id="raggruppamento-e-sommarizzazione"><span class="header-section-number">2.1.3</span> Raggruppamento e sommarizzazione</h3>
 <p>Il raggruppamento e la sommarizzazione sono operazioni molto comuni in statistica. Ad esempio, vogliamo calcolare la media e la deviazione standard di <code>valore</code> per ciascuna <code>serie</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(serie) <span class="sc">%&gt;%</span> </span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">media =</span> <span class="fu">mean</span>(valore),</span>
-<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd =</span> <span class="fu">sd</span>(valore)</span>
-<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(serie) <span class="sc">%&gt;%</span> </span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">media =</span> <span class="fu">mean</span>(valore),</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd =</span> <span class="fu">sd</span>(valore)</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <thead>
@@ -1351,17 +1410,17 @@ Esercizio
 <h3 data-number="2.1.4" class="anchored" data-anchor-id="unione-di-tabelle"><span class="header-section-number">2.1.4</span> Unione di tabelle</h3>
 <p>L’operazione più semplice tra due tabelle è unirle <strong>una sopra l’altra</strong>, cioè per righe. È il caso in cui si vogliano aggiungere delle osservazioni ad una tabella già esistente. Questa operazione si fa con <code>bind_rows()</code>. Per fare un esempio, cominciamo col separare la tabella <code>data</code> in due parti:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>data1 <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> </span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(t <span class="sc">&lt;</span> <span class="dv">5</span>)</span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>data2 <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> </span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(t <span class="sc">&gt;=</span> <span class="dv">5</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>data1 <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> </span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(t <span class="sc">&lt;</span> <span class="dv">5</span>)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>data2 <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> </span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(t <span class="sc">&gt;=</span> <span class="dv">5</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Se ora volgiamo riunire le due tabelle, possiamo fare:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>data1 <span class="sc">%&gt;%</span> </span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(data2) <span class="sc">%&gt;%</span> </span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_tail</span>(<span class="at">n=</span><span class="dv">6</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>data1 <span class="sc">%&gt;%</span> </span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(data2) <span class="sc">%&gt;%</span> </span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_tail</span>(<span class="at">n=</span><span class="dv">6</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <thead>
@@ -1415,10 +1474,10 @@ Esercizio
 </div>
 <p>Se in una delle due tabelle mancano una o più colonne, i valori mancanti sono inseriti come <code>NA</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>data1 <span class="sc">%&gt;%</span> </span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(data2 <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>serie)) <span class="sc">%&gt;%</span></span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_tail</span>(<span class="at">n=</span><span class="dv">6</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>data1 <span class="sc">%&gt;%</span> </span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(data2 <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>serie)) <span class="sc">%&gt;%</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_tail</span>(<span class="at">n=</span><span class="dv">6</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <thead>
@@ -1502,17 +1561,17 @@ Esercizio
 </div></div><p>In <code>dplyr</code> il <em>left join</em> si fa con <code>left_join()</code>, il <em>right join</em> con <code>right_join()</code>, l’<em>inner join</em> con <code>inner_join()</code>, e il <em>full join</em> con <code>full_join()</code>.</p>
 <p>Il caso più comune è il <em>left join</em>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>condizione <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">ID =</span> LETTERS[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>],</span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">desc =</span> <span class="fu">c</span>(<span class="st">"freddo"</span>, <span class="st">"caldo"</span>, <span class="st">"tiepido"</span>)</span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
-<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(condizione, <span class="at">by=</span><span class="fu">c</span>(<span class="st">"cond"</span><span class="ot">=</span><span class="st">"ID"</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(<span class="at">condizione=</span>desc, <span class="at">.after=</span>t) <span class="sc">%&gt;%</span> </span>
-<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>cond) <span class="sc">%&gt;%</span></span>
-<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_sample</span>(<span class="at">n=</span><span class="dv">6</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>condizione <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">ID =</span> LETTERS[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>],</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">desc =</span> <span class="fu">c</span>(<span class="st">"freddo"</span>, <span class="st">"caldo"</span>, <span class="st">"tiepido"</span>)</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(condizione, <span class="at">by=</span><span class="fu">c</span>(<span class="st">"cond"</span><span class="ot">=</span><span class="st">"ID"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(<span class="at">condizione=</span>desc, <span class="at">.after=</span>t) <span class="sc">%&gt;%</span> </span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>cond) <span class="sc">%&gt;%</span></span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_sample</span>(<span class="at">n=</span><span class="dv">6</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <thead>
@@ -1585,21 +1644,21 @@ Nota
 <p>L’ultima libreria del Tidyverse che presentiamo è <code>tidyr</code>, che fornisce funzioni per manipolare la struttura dei dati, cioè per trasformare i dati da <em>wide</em> a <em>long</em> e viceversa.</p>
 
 <div class="no-row-height column-margin column-container"><div class="">
-<p><img src="https://tidyr.tidyverse.org/logo.png" class="img-fluid"></p>
-</div></div><p>Il <a href="https://rstudio.github.io/cheatsheets/tidyr.pdf" target="_blank">cheat sheet</a> di <code>tidyr</code> è molto utile per capire le differenze tra le funzioni principali. Sebbene la libreria fornisca numerose funzioni, le più comuni sono <code>pivot_longer()</code> e <code>pivot_wider()</code>. Le altre funzioni illustrate nel cheat sheet sono utili per operazioni più specifiche, le useremo meno spesso (o mai), ma vale comunque la pena sapere che esistono.</p>
+<p><a href="https://rstudio.github.io/cheatsheets/tidyr.pdf" target="_blank"><img src="https://tidyr.tidyverse.org/logo.png" class="img-fluid"></a></p>
+</div></div><p>Il cheat sheet <a href="https://rstudio.github.io/cheatsheets/tidyr.pdf)" target="_blank">https://rstudio.github.io/cheatsheets/tidyr.pdf)</a> di <code>tidyr</code> è molto utile per capire le differenze tra le funzioni principali. Sebbene la libreria fornisca numerose funzioni, le più comuni sono <code>pivot_longer()</code> e <code>pivot_wider()</code>. Le altre funzioni illustrate nel cheat sheet sono utili per operazioni più specifiche, le useremo meno spesso (o mai), ma vale comunque la pena sapere che esistono.</p>
 <section id="formati-wide-e-long" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="formati-wide-e-long"><span class="header-section-number">3.1</span> Formati <em>wide</em> e <em>long</em></h2>
-<p>Raccogliere dati provenientio da diverse <em>sorgenti</em> in una tabella in formato <em>wide</em> è piuttosto comune e intuitivo, ed ha il vantaggio di <strong>raggruppare visivamente</strong> dati coerenti. Per questo motivo è un modo molto comune di presentare i dati.</p>
+<p>Raccogliere dati provenienti da diverse <em>sorgenti</em> in una tabella in formato <em>wide</em> è piuttosto comune e intuitivo, ed ha il vantaggio di <strong>raggruppare visivamente</strong> dati coerenti. Per questo motivo è un modo molto comune di presentare i dati.</p>
 <p>Se ad esempio stiamo raccogliendo ogni 0.1&nbsp;s le misure di accelerazione da un sensore triassiale (assi <span class="math inline">\(X, Y, Z\)</span>), è naturale avere una tabella con una riga per ciascun campionamento e una colonna per ciascun asse. Questo formato è detto <em>wide</em>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>accel <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>ID, <span class="sc">~</span>t, <span class="sc">~</span>X, <span class="sc">~</span>Y, <span class="sc">~</span>Z,</span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="dv">1</span>, <span class="fl">1.0</span>, <span class="dv">128</span>, <span class="dv">120</span>, <span class="dv">135</span>,</span>
-<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2</span>, <span class="fl">1.1</span>, <span class="dv">131</span>, <span class="dv">210</span>, <span class="dv">178</span>,</span>
-<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>  <span class="dv">3</span>, <span class="fl">1.2</span>, <span class="dv">112</span>, <span class="dv">195</span>, <span class="dv">112</span></span>
-<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>accel</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>accel <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>ID, <span class="sc">~</span>t, <span class="sc">~</span>X, <span class="sc">~</span>Y, <span class="sc">~</span>Z,</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="dv">1</span>, <span class="fl">1.0</span>, <span class="dv">128</span>, <span class="dv">120</span>, <span class="dv">135</span>,</span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2</span>, <span class="fl">1.1</span>, <span class="dv">131</span>, <span class="dv">210</span>, <span class="dv">178</span>,</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>  <span class="dv">3</span>, <span class="fl">1.2</span>, <span class="dv">112</span>, <span class="dv">195</span>, <span class="dv">112</span></span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>accel</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 5
      ID     t     X     Y     Z
@@ -1611,15 +1670,15 @@ Nota
 </div>
 <p>Per mettere in grafico i dati con <code>ggplot2</code> dobbiamo trattare ogni asse (colonna) come una serie differente:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>accel <span class="sc">%&gt;%</span> </span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>t)) <span class="sc">+</span></span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>X, <span class="at">color=</span><span class="st">"X"</span>)) <span class="sc">+</span></span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>Y, <span class="at">color=</span><span class="st">"Y"</span>)) <span class="sc">+</span></span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>Z, <span class="at">color=</span><span class="st">"Z"</span>))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>accel <span class="sc">%&gt;%</span> </span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>t)) <span class="sc">+</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>X, <span class="at">color=</span><span class="st">"X"</span>)) <span class="sc">+</span></span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>Y, <span class="at">color=</span><span class="st">"Y"</span>)) <span class="sc">+</span></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>Z, <span class="at">color=</span><span class="st">"Z"</span>))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="r-recap_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="r-recap_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1627,13 +1686,13 @@ Nota
 <p>Tuttavia, per analizzare i dati è spesso più comodo avere i dati in formato <em>long</em>, cioè con una riga per ogni osservazione e una colonna per ogni variabile. Questo formato è più flessibile e permette di usare le funzioni di <code>dplyr</code> e <code>purrr</code>, oltre a <code>ggplot2</code>, in modo più efficiente.</p>
 <p>Per convertire i dati da <em>wide</em> a <em>long</em> si usa <code>pivot_longer()</code>. Questa funzione accetta come argomenti la tabella da trasformare, le colonne da mantenere invariate, e le colonne da trasformare in righe. Ad esempio, per trasformare la tabella <code>accel</code> in formato <em>long</em>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>accel <span class="sc">%&gt;%</span> </span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols=</span><span class="sc">-</span><span class="fu">c</span>(ID, t),</span>
-<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to=</span><span class="st">"asse"</span>, </span>
-<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to=</span><span class="st">"accelerazione"</span></span>
-<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>accel <span class="sc">%&gt;%</span> </span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols=</span><span class="sc">-</span><span class="fu">c</span>(ID, t),</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to=</span><span class="st">"asse"</span>, </span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to=</span><span class="st">"accelerazione"</span></span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <thead>
@@ -1705,40 +1764,40 @@ Nota
 </div>
 <p>Realizzare il grafico con i dati in formato <em>long</em> è più semplice (si noti il riuso dell’estetica e che sono necessarie solo due geometrie al posto delle sei necessarie con i dati in formato <em>wide</em> per ottenere lo stesso grafico):</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>accel <span class="sc">%&gt;%</span> </span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols=</span><span class="sc">-</span><span class="fu">c</span>(ID, t),</span>
-<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to=</span><span class="st">"asse"</span>, </span>
-<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to=</span><span class="st">"accelerazione"</span></span>
-<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>t, <span class="at">y=</span>accelerazione, <span class="at">color=</span>asse)) <span class="sc">+</span></span>
-<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">shape=</span>asse), <span class="at">size=</span><span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>accel <span class="sc">%&gt;%</span> </span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols=</span><span class="sc">-</span><span class="fu">c</span>(ID, t),</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to=</span><span class="st">"asse"</span>, </span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to=</span><span class="st">"accelerazione"</span></span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>t, <span class="at">y=</span>accelerazione, <span class="at">color=</span>asse)) <span class="sc">+</span></span>
+<span id="cb56-8"><a href="#cb56-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb56-9"><a href="#cb56-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">shape=</span>asse), <span class="at">size=</span><span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="r-recap_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="r-recap_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Lo stesso vantaggio si ha ad esempio per le sommarizzazioni:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>accel <span class="sc">%&gt;%</span> </span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
-<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols=</span><span class="sc">-</span><span class="fu">c</span>(ID, t),</span>
-<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to=</span><span class="st">"asse"</span>, </span>
-<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to=</span><span class="st">"accelerazione"</span></span>
-<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(asse) <span class="sc">%&gt;%</span> </span>
-<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>(),</span>
-<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">media =</span> <span class="fu">mean</span>(accelerazione),</span>
-<span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd =</span> <span class="fu">sd</span>(accelerazione),</span>
-<span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">min =</span> <span class="fu">min</span>(accelerazione),</span>
-<span id="cb51-13"><a href="#cb51-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">max =</span> <span class="fu">max</span>(accelerazione)</span>
-<span id="cb51-14"><a href="#cb51-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb51-15"><a href="#cb51-15" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>accel <span class="sc">%&gt;%</span> </span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols=</span><span class="sc">-</span><span class="fu">c</span>(ID, t),</span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to=</span><span class="st">"asse"</span>, </span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to=</span><span class="st">"accelerazione"</span></span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(asse) <span class="sc">%&gt;%</span> </span>
+<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb57-9"><a href="#cb57-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>(),</span>
+<span id="cb57-10"><a href="#cb57-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">media =</span> <span class="fu">mean</span>(accelerazione),</span>
+<span id="cb57-11"><a href="#cb57-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd =</span> <span class="fu">sd</span>(accelerazione),</span>
+<span id="cb57-12"><a href="#cb57-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">min =</span> <span class="fu">min</span>(accelerazione),</span>
+<span id="cb57-13"><a href="#cb57-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">max =</span> <span class="fu">max</span>(accelerazione)</span>
+<span id="cb57-14"><a href="#cb57-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb57-15"><a href="#cb57-15" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <thead>
@@ -1790,7 +1849,7 @@ Conclusioni
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Iin generale, il formato <em>wide</em> è più compatto, più adatto alla visualizzazione in tabella e alla presentazione dei dati, ma il formato <em>long</em> è più flessibile e permette di usare le funzioni di manipolazione dei dati in modo più efficiente.</p>
+<p>In generale, il formato <em>wide</em> è più compatto, più adatto alla visualizzazione in tabella e alla presentazione dei dati, ma il formato <em>long</em> è più flessibile e permette di usare le funzioni di manipolazione dei dati in modo più efficiente.</p>
 <p>È quindi consigliabile generare e memorizzare le tabelle in formato <em>long</em>, e convertirle in <em>wide</em> solo quando necessario per la visualizzazione.</p>
 </div>
 </div>
