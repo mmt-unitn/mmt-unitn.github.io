@@ -262,6 +262,12 @@ window.Quarto = {
     
   </div>
   
+<div>
+  <div class="abstract">
+    <div class="block-title">Sommario</div>
+    <p>Questo documento è una ricapitolazione delle librerie <code>purrr</code>, <code>dplyr</code> e <code>tidyr</code> del Tidyverse, con esempi pratici e suggerimenti per l’uso. Si tratta di una guida pratica, non esaustiva, che si concentra sugli aspetti più comuni e utili delle due librerie, che saranno utili durante il corso.</p>
+  </div>
+</div>
 
 
 </header>
@@ -336,16 +342,16 @@ Esercizio
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>List of 10
- $ : num 0.000296
- $ : num 0.000599
- $ : num 0.234
- $ : num 0.499
- $ : num 0.187
- $ : num 0.478
- $ : num 0.534
- $ : num 0.0106
- $ : num 0.816
- $ : num 0.00452</code></pre>
+ $ : num 0.125
+ $ : num 0.0213
+ $ : num 0.304
+ $ : num 0.151
+ $ : num 0.404
+ $ : num 0.0736
+ $ : num 0.0462
+ $ : num 0.00207
+ $ : num 0.252
+ $ : num 0.0187</code></pre>
 </div>
 </div>
 <p>Come si vede, il risultato di <code>map</code> è una <strong>lista</strong> di 10 elementi, ciascuno dei quali è il quadrato di un elemento del vettore in ingresso generato da <code>runif(10)</code>.</p>
@@ -385,13 +391,13 @@ Lettera J </code></pre>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>a <span class="sc">%&gt;%</span> </span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">modify_if</span>(<span class="sc">~</span> .<span class="sc">&gt;</span><span class="fl">0.5</span>, <span class="sc">~</span> .<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] 0.64818268 0.29773074 0.94141369 0.08057926 0.61415519 0.49281467
- [7] 0.48321259 0.81007364 0.28847898 0.21036230</code></pre>
+<pre><code> [1] 0.4966662 0.5824796 0.1544089 0.4052025 0.7466463 0.3269635 0.3806609
+ [8] 0.2232885 0.5466763 0.6389392</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>a</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] 0.80509793 0.29773074 0.97026475 0.08057926 0.78368054 0.49281467
- [7] 0.48321259 0.90004091 0.28847898 0.21036230</code></pre>
+<pre><code> [1] 0.7047455 0.7632035 0.1544089 0.6365552 0.8640870 0.5718072 0.3806609
+ [8] 0.2232885 0.7393756 0.7993367</code></pre>
 </div>
 </div>
 <p>Si noti che <code>modify_if</code> prende due funzioni come argomenti: la prima è il criterio di selezione, chiamato <em>predicato</em>, la seconda è la trasformazione da applicare agli elementi selezionati. Il predicato deve essere una funzione che restituisce un valore logico (<code>TRUE</code> o <code>FALSE</code>).</p>
