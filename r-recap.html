@@ -104,6 +104,1559 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-diagram/mermaid.min.js"></script>
 <script src="site_libs/quarto-diagram/mermaid-init.js"></script>
 <link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/monaco-editor@0.47.0/min/vs/editor/editor.main.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  
+<style type="text/css">
+.monaco-editor pre {
+  background-color: unset !important;
+}
+
+.qwebr-editor-toolbar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.qwebr-editor-toolbar-left-buttons, .qwebr-editor-toolbar-right-buttons {
+  display: flex;
+}
+
+.qwebr-non-interactive-loading-container.qwebr-cell-needs-evaluation, .qwebr-non-interactive-loading-container.qwebr-cell-evaluated {
+  justify-content: center;
+  display: flex;
+  background-color: rgba(250, 250, 250, 0.65);
+  border: 1px solid rgba(233, 236, 239, 0.65);
+  border-radius: 0.5rem;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.qwebr-r-project-logo {
+  color: #2767B0; /* R Project's blue color */
+}
+
+.qwebr-icon-status-spinner {
+  color: #7894c4;
+}
+
+.qwebr-icon-run-code {
+  color: #0d9c29
+}
+
+body.quarto-light .qwebr-output-code-stdout {
+  color: #111;
+}
+
+body.quarto-dark .qwebr-output-code-stdout {
+  color: #EEE;
+}
+
+.qwebr-output-code-stderr {
+  color: #db4133;
+}
+
+body.quarto-light .qwebr-editor {
+  border: 1px solid #EEEEEE;
+}
+
+body.quarto-light .qwebr-editor-toolbar {
+  background-color: #EEEEEE;
+  padding: 0.2rem 0.5rem;
+}
+
+body.quarto-dark .qwebr-editor {
+  border: 1px solid #111;
+}
+
+body.quarto-dark .qwebr-editor-toolbar {
+  background-color: #111;
+  padding: 0.2rem 0.5rem;
+}
+
+.qwebr-button {
+  display: inline-block;
+  font-weight: 400;
+  line-height: 1;
+  text-decoration: none;
+  text-align: center;
+  padding: 0.375rem 0.75rem;
+  font-size: .9rem;
+  border-radius: 0.25rem;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+body.quarto-light .qwebr-button {
+  background-color: #EEEEEE;
+  color: #000;
+  border-color: #dee2e6;
+  border: 1px solid rgba(0,0,0,0);
+}
+
+body.quarto-dark .qwebr-button {
+  background-color: #111;
+  color: #EEE;
+  border-color: #dee2e6;
+  border: 1px solid rgba(0,0,0,0);
+}
+
+body.quarto-light .qwebr-button:hover {
+  color: #000;
+  background-color: #d9dce0;
+  border-color: #c8ccd0;
+}
+
+body.quarto-dark .qwebr-button:hover {
+  color: #d9dce0;
+  background-color: #323232;
+  border-color: #d9dce0;
+}
+
+.qwebr-button:disabled,.qwebr-button.disabled,fieldset:disabled .qwebr-button {
+  pointer-events: none;
+  opacity: .65
+}
+
+.qwebr-button-reset {
+  color: #696969; /*#4682b4;*/
+}
+
+.qwebr-button-copy {
+  color: #696969;
+}
+
+/* Style the code highlight lines */
+body.quarto-light .qwebr-editor-highlight-line {
+  background-color: lightblue;
+}
+
+body.quarto-dark .qwebr-editor-highlight-line {
+  background-color: darkblue;
+}
+
+/* Style the modal pop-up */
+
+/* The Modal (background) */
+.qwebr-modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  padding-top: 60px;
+}
+
+/* Modal Content */
+.qwebr-modal-content {
+  background-color: #fefefe;
+  margin: 5% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+.qwebr-modal-content-code {
+  max-height: 50vh;
+  min-height: 5vh;
+  overflow: scroll;
+  border: 1px solid #888;
+}
+
+/* The Close Button */
+.qwebr-modal-close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.qwebr-modal-close:hover,
+.qwebr-modal-close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.qwebr-download-btn {
+  margin-top: 10px;
+  text-decoration: none !important;
+}
+
+/* Styling to download image that is created */
+
+.qwebr-canvas-image {
+  position: relative;
+  display: inline-block;
+  margin: 10px;
+}
+
+.qwebr-canvas-image-download-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 5px 10px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: none;
+}
+
+figure:hover .qwebr-canvas-image-download-btn {
+  display: block;
+}
+
+/* Custom styling for RevealJS Presentations*/
+
+/* Reset the style of the interactive area */
+.reveal div.qwebr-interactive-area {
+  display: block;
+  box-shadow: none;
+  max-width: 100%;
+  max-height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Provide space to entries */
+.reveal div.qwebr-output-code-area pre div {
+  margin: 1px 2px 1px 10px;
+}
+
+/* Collapse the inside code tags to avoid extra space between line outputs */
+.reveal pre div code.qwebr-output-code-stdout, .reveal pre div code.qwebr-output-code-stderr {
+  padding: 0;
+  display: contents;
+}
+
+body.reveal.quarto-light pre div code.qwebr-output-code-stdout {
+  color: #111;
+}
+
+body.reveal.quarto-dark pre div code.qwebr-output-code-stdout {
+  color: #EEEEEE;
+}
+
+.reveal pre div code.qwebr-output-code-stderr {
+  color: #db4133;
+}
+
+
+/* Create a border around console and output (does not effect graphs) */
+body.reveal.quarto-light div.qwebr-console-area {
+  border: 1px solid #EEEEEE;
+  box-shadow: 2px 2px 10px #EEEEEE;
+}
+
+body.reveal.quarto-dark div.qwebr-console-area {
+  border: 1px solid #111;
+  box-shadow: 2px 2px 10px #111;
+}
+
+
+/* Cap output height and allow text to scroll */
+/* TODO: Is there a better way to fit contents/max it parallel to the monaco editor size? */
+.reveal div.qwebr-output-code-area pre {
+  max-height: 400px;
+  overflow: scroll;
+}
+
+iframe.qwebr-output-code-browse {
+  width: 100%;
+
+  /*
+    TODO: How to make the height automatic according to the widget size,
+    or respect the quarto code block options?
+  */
+  min-height: 500px;
+}
+
+</style>
+<script type="module">
+// Document level settings ----
+
+// Determine if we need to install R packages
+globalThis.qwebrInstallRPackagesList = ['tidyverse'];
+
+// Specify possible locations to search for the repository
+globalThis.qwebrPackageRepoURLS = ['https://repo.r-wasm.org/'];
+
+// Check to see if we have an empty array, if we do set to skip the installation.
+globalThis.qwebrSetupRPackages = !(qwebrInstallRPackagesList.indexOf("") !== -1);
+globalThis.qwebrAutoloadRPackages = true;
+
+// Display a startup message?
+globalThis.qwebrShowStartupMessage = true;
+globalThis.qwebrShowHeaderMessage = false;
+
+// Describe the webR settings that should be used
+globalThis.qwebrCustomizedWebROptions = {
+  "baseURL": "https://webr.r-wasm.org/v0.4.0/",
+  "serviceWorkerUrl": "",
+  "homedir": "/home/web_user", 
+  "channelType": "ChannelType.Automatic"
+};
+
+// Store cell data
+globalThis.qwebrCellDetails = [{"code":"mtcars %>%  \n  split(mtcars$cyl) %>%   # divide un data frame in una lista di data frame\n  map(~ lm(mpg ~ wt, data = .)) %>% \n  map(summary) %>% \n  map_dbl(\"r.squared\") %>% \n  round(3)","id":1,"options":{"autorun":"true","classes":"","comment":"","context":"interactive","dpi":"72","editor-font-scale":"0.8","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":"3","fig-width":"6","label":"unnamed-chunk-1","message":"true","out-height":"","out-width":"75%","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"sample(10) %>% \n  map(~ .^2) %>% \n  str()","id":2,"options":{"autorun":"true","classes":"","comment":"","context":"interactive","dpi":"72","editor-font-scale":"0.8","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":"3","fig-width":"6","label":"unnamed-chunk-2","message":"true","out-height":"","out-width":"75%","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"LETTERS[1:10] %>% \n  walk(~ cat(paste(\"Lettera\", ., \"\\n\")))","id":3,"options":{"autorun":"true","classes":"","comment":"","context":"interactive","dpi":"72","editor-font-scale":"0.8","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":"3","fig-width":"6","label":"unnamed-chunk-3","message":"true","out-height":"","out-width":"75%","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"a <- runif(10)\na %>% \n  modify_if(~ .>0.5, ~ .^2)\na","id":4,"options":{"autorun":"true","classes":"","comment":"","context":"interactive","dpi":"72","editor-font-scale":"0.8","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":"3","fig-width":"6","label":"unnamed-chunk-4","message":"true","out-height":"","out-width":"75%","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"1:10 %>% \n  reduce(`+`)","id":5,"options":{"autorun":"true","classes":"","comment":"","context":"interactive","dpi":"72","editor-font-scale":"0.8","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":"3","fig-width":"6","label":"unnamed-chunk-5","message":"true","out-height":"","out-width":"75%","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"set.seed(0)\nn <- 100\ndata <- tibble(\n  t = seq(0, 10, length.out = n),\n  cond = ifelse(t < 5, \"A\", \"B\"),\n  x1 = 0.5 + 0.3*t + 0.08*t^2 + rnorm(n, 0, ifelse(cond == \"A\", 0.5, 0.2)),\n  x2 = 3.5 - 0.4*t + 0.02*t^2 + rnorm(n, 0, ifelse(cond == \"A\", 0.2, 0.1)),\n) %>% \n  pivot_longer(-(t:cond), names_to = \"serie\", values_to = \"valore\")\n\ndata %>% \n  ggplot(aes(x=t, y=valore, color=serie)) + \n  geom_line()","id":6,"options":{"autorun":"true","classes":"","comment":"","context":"interactive","dpi":"72","editor-font-scale":"0.8","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":"3","fig-width":"6","label":"unnamed-chunk-6","message":"true","out-height":"","out-width":"75%","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"list(x~t, x~poly(t, 2, raw=T), x~poly(t, 3, raw=T)) %>% \n  map(~ {\n    data %>% \n      filter(serie==\"x1\") %>% \n      select(t, x=valore) %>%\n      lm(.x, data=.) %>% \n      summary()\n  }) ","id":7,"options":{"autorun":"true","classes":"","comment":"","context":"interactive","dpi":"72","editor-font-scale":"0.8","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":"3","fig-width":"6","label":"unnamed-chunk-7","message":"true","out-height":"","out-width":"75%","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"list(x~t, x~poly(t, 2, raw=T), x~poly(t, 3, raw=T)) %>% \n  map(~ {\n    data %>% \n      filter(serie==\"x1\") %>% \n      select(t, x=valore) %>%\n      lm(.x, data=.) %>% \n      summary()\n  }\n) %>% \n  map_dbl(~ .$r.squared)","id":8,"options":{"autorun":"true","classes":"","comment":"","context":"interactive","dpi":"72","editor-font-scale":"0.8","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":"3","fig-width":"6","label":"unnamed-chunk-8","message":"true","out-height":"","out-width":"75%","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"set.seed(0)\nm <- 0\nsd <- 0\nv <- rnorm(10)\n\nfor (e in v) {\n  m <- m + e\n}\nm <- m / length(v)\nfor (e in v) {\n  sd <- sd + (e - m)^2\n}\nsd <- sqrt(sd / (length(v)-1))\n           \nlist(mean=m, sd=sd)","id":9,"options":{"autorun":"true","classes":"","comment":"","context":"interactive","dpi":"72","editor-font-scale":"0.8","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":"3","fig-width":"6","label":"unnamed-chunk-9","message":"true","out-height":"","out-width":"75%","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"m <- reduce(v, ~ .x + .y) / length(v) \nsd <- sqrt( reduce(v, ~ .x + (.y - m)^2) / (length(v)-1) )\nlist(mean=m, sd=sd)","id":10,"options":{"autorun":"true","classes":"","comment":"","context":"interactive","dpi":"72","editor-font-scale":"0.8","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":"3","fig-width":"6","label":"unnamed-chunk-10","message":"true","out-height":"","out-width":"75%","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"reduce(1:10, ~ .x + .y)\nreduce(1:10, ~ .x + .y, .init=10)","id":11,"options":{"autorun":"true","classes":"","comment":"","context":"interactive","dpi":"72","editor-font-scale":"0.8","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":"3","fig-width":"6","label":"unnamed-chunk-11","message":"true","out-height":"","out-width":"75%","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"1:10 %>% \n  reduce2(LETTERS[.], \\(acc, n, letter) {\n    acc[[letter]] <- n; \n    return(acc)\n  }, .init=list()) %>% \n  str()","id":12,"options":{"autorun":"true","classes":"","comment":"","context":"interactive","dpi":"72","editor-font-scale":"0.8","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":"3","fig-width":"6","label":"unnamed-chunk-12","message":"true","out-height":"","out-width":"75%","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"c(1, 5, 3, 9) %>% \n  reduce(~ .x * .y)\n\nc(1, 5, 3, 9) %>% \n  accumulate(~ .x * .y)","id":13,"options":{"autorun":"true","classes":"","comment":"","context":"interactive","dpi":"72","editor-font-scale":"0.8","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":"3","fig-width":"6","label":"unnamed-chunk-13","message":"true","out-height":"","out-width":"75%","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"c(1, 5, 3, 9) %>% accumulate(`*`)","id":14,"options":{"autorun":"true","classes":"","comment":"","context":"interactive","dpi":"72","editor-font-scale":"0.8","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":"3","fig-width":"6","label":"unnamed-chunk-14","message":"true","out-height":"","out-width":"75%","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"data %>% \n  mutate(\n    valore = map2_dbl(serie, valore, ~ {\n      if (.x == \"x1\") {\n        .y + 0.5\n      } else {\n        .y - 0.5\n      }\n    })\n  ) %>% \n  slice_head(n=6)","id":15,"options":{"autorun":"true","classes":"","comment":"","context":"interactive","dpi":"72","editor-font-scale":"0.8","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":"3","fig-width":"6","label":"unnamed-chunk-15","message":"true","out-height":"","out-width":"75%","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"data %>% \n  mutate(\n    valore = map2_dbl(serie, valore, ~ ifelse(.x == \"x1\", .y + 0.5, .y - 0.5))\n  ) %>% \n  slice_head(n=6)","id":16,"options":{"autorun":"true","classes":"","comment":"","context":"interactive","dpi":"72","editor-font-scale":"0.8","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":"3","fig-width":"6","label":"unnamed-chunk-16","message":"true","out-height":"","out-width":"75%","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"data %>% \n  mutate(\n    valore = ifelse(valore == \"x1\", valore + 0.5, valore - 0.5)\n  ) %>% \n  slice_head(n=6)","id":17,"options":{"autorun":"true","classes":"","comment":"","context":"interactive","dpi":"72","editor-font-scale":"0.8","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":"3","fig-width":"6","label":"unnamed-chunk-17","message":"true","out-height":"","out-width":"75%","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"data %>% \n  mutate(\n    i = 1:n(),\n    r = i %% 3,\n    valore = map2_dbl(r, valore, ~ {\n      if (.x == 0) {\n        .y + 0.5\n      } else if (.x == 1) {\n        .y - 0.5\n      } else {\n        .y - 1\n      }\n    })\n  ) %>% \n  slice_head(n=6)","id":18,"options":{"autorun":"true","classes":"","comment":"","context":"interactive","dpi":"72","editor-font-scale":"0.8","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":"3","fig-width":"6","label":"unnamed-chunk-18","message":"true","out-height":"","out-width":"75%","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"data %>% \n  filter(serie == \"x1\") %>% \n  arrange(t) %>% \n  slice_head(n=6) ","id":19,"options":{"autorun":"true","classes":"","comment":"","context":"interactive","dpi":"72","editor-font-scale":"0.8","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":"3","fig-width":"6","label":"unnamed-chunk-19","message":"true","out-height":"","out-width":"75%","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"data %>% \n  select(t, serie, valore) %>% \n  rename(`tempo (s)` = t) %>%\n  mutate(`valore (mV)` = valore + 0.5) %>% \n  select(-valore) %>% \n  slice_head(n=6)","id":20,"options":{"autorun":"true","classes":"","comment":"","context":"interactive","dpi":"72","editor-font-scale":"0.8","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":"3","fig-width":"6","label":"unnamed-chunk-20","message":"true","out-height":"","out-width":"75%","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"data %>% \n  relocate(condizione=cond, .before=t) %>% \n  slice_head(n=6)","id":21,"options":{"autorun":"true","classes":"","comment":"","context":"interactive","dpi":"72","editor-font-scale":"0.8","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":"3","fig-width":"6","label":"unnamed-chunk-21","message":"true","out-height":"","out-width":"75%","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"data %>% \n  relocate(c(serie, condizione=cond), .before=t) %>% \n  slice_head(n=6)","id":22,"options":{"autorun":"true","classes":"","comment":"","context":"interactive","dpi":"72","editor-font-scale":"0.8","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":"3","fig-width":"6","label":"unnamed-chunk-22","message":"true","out-height":"","out-width":"75%","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"data %>% \n  group_by(serie) %>% \n  summarise(\n    media = mean(valore),\n    sd = sd(valore)\n  )","id":23,"options":{"autorun":"true","classes":"","comment":"","context":"interactive","dpi":"72","editor-font-scale":"0.8","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":"3","fig-width":"6","label":"unnamed-chunk-23","message":"true","out-height":"","out-width":"75%","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"data1 <- data %>% \n  filter(t < 5)\ndata2 <- data %>% \n  filter(t >= 5)","id":24,"options":{"autorun":"true","classes":"","comment":"","context":"interactive","dpi":"72","editor-font-scale":"0.8","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":"3","fig-width":"6","label":"unnamed-chunk-24","message":"true","out-height":"","out-width":"75%","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"data1 %>% \n  bind_rows(data2) %>% \n  slice_tail(n=6)","id":25,"options":{"autorun":"true","classes":"","comment":"","context":"interactive","dpi":"72","editor-font-scale":"0.8","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":"3","fig-width":"6","label":"unnamed-chunk-25","message":"true","out-height":"","out-width":"75%","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"data1 %>% \n  bind_rows(data2 %>% select(-serie)) %>%\n  slice_tail(n=6)","id":26,"options":{"autorun":"true","classes":"","comment":"","context":"interactive","dpi":"72","editor-font-scale":"0.8","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":"3","fig-width":"6","label":"unnamed-chunk-26","message":"true","out-height":"","out-width":"75%","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"condizione <- tibble(\n  ID = LETTERS[1:3],\n  desc = c(\"freddo\", \"caldo\", \"tiepido\")\n)\n\ndata %>% \n  left_join(condizione, by=c(\"cond\"=\"ID\")) %>% \n  relocate(condizione=desc, .after=t) %>% \n  select(-cond) %>%\n  slice_sample(n=6)","id":27,"options":{"autorun":"true","classes":"","comment":"","context":"interactive","dpi":"72","editor-font-scale":"0.8","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":"3","fig-width":"6","label":"unnamed-chunk-27","message":"true","out-height":"","out-width":"75%","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"accel <- tribble(\n  ~ID, ~t, ~X, ~Y, ~Z,\n  1, 1.0, 128, 120, 135,\n  2, 1.1, 131, 210, 178,\n  3, 1.2, 112, 195, 112\n)\n\naccel","id":28,"options":{"autorun":"true","classes":"","comment":"","context":"interactive","dpi":"72","editor-font-scale":"0.8","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":"3","fig-width":"6","label":"unnamed-chunk-28","message":"true","out-height":"","out-width":"75%","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"accel %>% \n  ggplot(aes(x=t)) +\n  geom_line(aes(y=X, color=\"X\")) +\n  geom_line(aes(y=Y, color=\"Y\")) +\n  geom_line(aes(y=Z, color=\"Z\"))","id":29,"options":{"autorun":"true","classes":"","comment":"","context":"interactive","dpi":"72","editor-font-scale":"0.8","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":"3","fig-width":"6","label":"unnamed-chunk-29","message":"true","out-height":"","out-width":"75%","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"accel %>% \n  pivot_longer(\n    cols=-c(ID, t),\n    names_to=\"asse\", \n    values_to=\"accelerazione\"\n  )","id":30,"options":{"autorun":"true","classes":"","comment":"","context":"interactive","dpi":"72","editor-font-scale":"0.8","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":"3","fig-width":"6","label":"unnamed-chunk-30","message":"true","out-height":"","out-width":"75%","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"accel %>% \n  pivot_longer(\n    cols=-c(ID, t),\n    names_to=\"asse\", \n    values_to=\"accelerazione\"\n  ) %>% \n  ggplot(aes(x=t, y=accelerazione, color=asse)) +\n  geom_line() +\n  geom_point(aes(shape=asse), size=2)","id":31,"options":{"autorun":"true","classes":"","comment":"","context":"interactive","dpi":"72","editor-font-scale":"0.8","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":"3","fig-width":"6","label":"unnamed-chunk-31","message":"true","out-height":"","out-width":"75%","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"accel %>% \n  pivot_longer(\n    cols=-c(ID, t),\n    names_to=\"asse\", \n    values_to=\"accelerazione\"\n  ) %>% \n  group_by(asse) %>% \n  summarise(\n    n = n(),\n    media = mean(accelerazione),\n    sd = sd(accelerazione),\n    min = min(accelerazione),\n    max = max(accelerazione)\n  )","id":32,"options":{"autorun":"true","classes":"","comment":"","context":"interactive","dpi":"72","editor-font-scale":"0.8","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":"3","fig-width":"6","label":"unnamed-chunk-32","message":"true","out-height":"","out-width":"75%","output":"true","read-only":"false","results":"markup","warning":"true"}}];
+
+</script>
+<script type="module">
+// Declare startupMessageQWebR globally
+globalThis.qwebrStartupMessage = document.createElement("p");
+
+// Verify if OffScreenCanvas is supported
+globalThis.qwebrOffScreenCanvasSupport = function() {
+  return typeof OffscreenCanvas !== 'undefined'
+}
+
+// Function to set the button text
+globalThis.qwebrSetInteractiveButtonState = function(buttonText, enableCodeButton = true) {
+  document.querySelectorAll(".qwebr-button-run").forEach((btn) => {
+    btn.innerHTML = buttonText;
+    btn.disabled = !enableCodeButton;
+  });
+}
+
+// Function to update the status message in non-interactive cells
+globalThis.qwebrUpdateStatusMessage = function(message) {
+  document.querySelectorAll(".qwebr-status-text.qwebr-cell-needs-evaluation").forEach((elem) => {
+    elem.innerText = message;
+  });
+}
+
+// Function to update the status message
+globalThis.qwebrUpdateStatusHeader = function(message) {
+  qwebrStartupMessage.innerHTML = `
+    <i class="fa-solid fa-spinner fa-spin qwebr-icon-status-spinner"></i>
+    <span>${message}</span>`;
+}
+
+// Function to return true if element is found, false if not
+globalThis.qwebrCheckHTMLElementExists = function(selector) {
+  const element = document.querySelector(selector);
+  return !!element;
+}
+
+// Function that detects whether reveal.js slides are present
+globalThis.qwebrIsRevealJS = function() {
+  // If the '.reveal .slides' selector exists, RevealJS is likely present
+  return qwebrCheckHTMLElementExists('.reveal .slides');
+}
+
+// Initialize the Quarto sidebar element
+function qwebrSetupQuartoSidebar() {
+  var newSideBarDiv = document.createElement('div');
+  newSideBarDiv.id = 'quarto-margin-sidebar';
+  newSideBarDiv.className = 'sidebar margin-sidebar';
+  newSideBarDiv.style.top = '0px';
+  newSideBarDiv.style.maxHeight = 'calc(0px + 100vh)';
+
+  return newSideBarDiv;
+}
+
+// Position the sidebar in the document
+function qwebrPlaceQuartoSidebar() {
+  // Get the reference to the element with id 'quarto-document-content'
+  var referenceNode = document.getElementById('quarto-document-content');
+
+  // Create the new div element
+  var newSideBarDiv = qwebrSetupQuartoSidebar();
+
+  // Insert the new div before the 'quarto-document-content' element
+  referenceNode.parentNode.insertBefore(newSideBarDiv, referenceNode);
+}
+
+function qwebrPlaceMessageContents(content, html_location = "title-block-header", revealjs_location = "title-slide") {
+
+  // Get references to header elements
+  const headerHTML = document.getElementById(html_location);
+  const headerRevealJS = document.getElementById(revealjs_location);
+
+  // Determine where to insert the quartoTitleMeta element
+  if (headerHTML || headerRevealJS) {
+    // Append to the existing "title-block-header" element or "title-slide" div
+    (headerHTML || headerRevealJS).appendChild(content);
+  } else {
+    // If neither headerHTML nor headerRevealJS is found, insert after "webr-monaco-editor-init" script
+    const monacoScript = document.getElementById("qwebr-monaco-editor-init");
+    const header = document.createElement("header");
+    header.setAttribute("id", "title-block-header");
+    header.appendChild(content);
+    monacoScript.after(header);
+  }
+}
+
+
+
+function qwebrOffScreenCanvasSupportWarningMessage() {
+  
+  // Verify canvas is supported.
+  if(qwebrOffScreenCanvasSupport()) return;
+
+  // Create the main container div
+  var calloutContainer = document.createElement('div');
+  calloutContainer.classList.add('callout', 'callout-style-default', 'callout-warning', 'callout-titled');
+
+  // Create the header div
+  var headerDiv = document.createElement('div');
+  headerDiv.classList.add('callout-header', 'd-flex', 'align-content-center');
+
+  // Create the icon container div
+  var iconContainer = document.createElement('div');
+  iconContainer.classList.add('callout-icon-container');
+
+  // Create the icon element
+  var iconElement = document.createElement('i');
+  iconElement.classList.add('callout-icon');
+
+  // Append the icon element to the icon container
+  iconContainer.appendChild(iconElement);
+
+  // Create the title container div
+  var titleContainer = document.createElement('div');
+  titleContainer.classList.add('callout-title-container', 'flex-fill');
+  titleContainer.innerText = 'Warning: Web Browser Does Not Support Graphing!';
+
+  // Append the icon container and title container to the header div
+  headerDiv.appendChild(iconContainer);
+  headerDiv.appendChild(titleContainer);
+
+  // Create the body container div
+  var bodyContainer = document.createElement('div');
+  bodyContainer.classList.add('callout-body-container', 'callout-body');
+
+  // Create the paragraph element for the body content
+  var paragraphElement = document.createElement('p');
+  paragraphElement.innerHTML = 'This web browser does not have support for displaying graphs through the <code>quarto-webr</code> extension since it lacks an <code>OffScreenCanvas</code>. Please upgrade your web browser to one that supports <code>OffScreenCanvas</code>.';
+
+  // Append the paragraph element to the body container
+  bodyContainer.appendChild(paragraphElement);
+
+  // Append the header div and body container to the main container div
+  calloutContainer.appendChild(headerDiv);
+  calloutContainer.appendChild(bodyContainer);
+
+  // Append the main container div to the document depending on format
+  qwebrPlaceMessageContents(calloutContainer, "title-block-header"); 
+
+}
+
+
+// Function that attaches the document status message and diagnostics
+function displayStartupMessage(showStartupMessage, showHeaderMessage) {
+  if (!showStartupMessage) {
+    return;
+  }
+
+  // Create the outermost div element for metadata
+  const quartoTitleMeta = document.createElement("div");
+  quartoTitleMeta.classList.add("quarto-title-meta");
+
+  // Create the first inner div element
+  const firstInnerDiv = document.createElement("div");
+  firstInnerDiv.setAttribute("id", "qwebr-status-message-area");
+
+  // Create the second inner div element for "WebR Status" heading and contents
+  const secondInnerDiv = document.createElement("div");
+  secondInnerDiv.setAttribute("id", "qwebr-status-message-title");
+  secondInnerDiv.classList.add("quarto-title-meta-heading");
+  secondInnerDiv.innerText = "WebR Status";
+
+  // Create another inner div for contents
+  const secondInnerDivContents = document.createElement("div");
+  secondInnerDivContents.setAttribute("id", "qwebr-status-message-body");
+  secondInnerDivContents.classList.add("quarto-title-meta-contents");
+
+  // Describe the WebR state
+  qwebrStartupMessage.innerText = "🟡 Loading...";
+  qwebrStartupMessage.setAttribute("id", "qwebr-status-message-text");
+  // Add `aria-live` to auto-announce the startup status to screen readers
+  qwebrStartupMessage.setAttribute("aria-live", "assertive");
+
+  // Append the startup message to the contents
+  secondInnerDivContents.appendChild(qwebrStartupMessage);
+
+  // Add a status indicator for COOP and COEP Headers if needed
+  if (showHeaderMessage) {
+    const crossOriginMessage = document.createElement("p");
+    crossOriginMessage.innerText = `${crossOriginIsolated ? '🟢' : '🟡'} COOP & COEP Headers`;
+    crossOriginMessage.setAttribute("id", "qwebr-coop-coep-header");
+    secondInnerDivContents.appendChild(crossOriginMessage);
+  }
+
+  // Combine the inner divs and contents
+  firstInnerDiv.appendChild(secondInnerDiv);
+  firstInnerDiv.appendChild(secondInnerDivContents);
+  quartoTitleMeta.appendChild(firstInnerDiv);
+
+  // Place message on webpage
+  qwebrPlaceMessageContents(quartoTitleMeta); 
+}
+
+function qwebrAddCommandHistoryModal() {
+  // Create the modal div
+  var modalDiv = document.createElement('div');
+  modalDiv.id = 'qwebr-history-modal';
+  modalDiv.className = 'qwebr-modal';
+
+  // Create the modal content div
+  var modalContentDiv = document.createElement('div');
+  modalContentDiv.className = 'qwebr-modal-content';
+
+  // Create the span for closing the modal
+  var closeSpan = document.createElement('span');
+  closeSpan.id = 'qwebr-command-history-close-btn';
+  closeSpan.className = 'qwebr-modal-close';
+  closeSpan.innerHTML = '&times;';
+
+  // Create the h1 element for the modal
+  var modalH1 = document.createElement('h1');
+  modalH1.textContent = 'R History Command Contents';
+
+  // Create an anchor element for downloading the Rhistory file 
+  var downloadLink = document.createElement('a');
+  downloadLink.href = '#';
+  downloadLink.id = 'qwebr-download-history-btn';
+  downloadLink.className = 'qwebr-download-btn';
+
+  // Create an 'i' element for the icon
+  var icon = document.createElement('i');
+  icon.className = 'bi bi-file-code';
+
+  // Append the icon to the anchor element
+  downloadLink.appendChild(icon);
+
+  // Add the text 'Download R History' to the anchor element
+  downloadLink.appendChild(document.createTextNode(' Download R History File'));
+
+  // Create the pre for command history contents
+  var commandContentsPre = document.createElement('pre');
+  commandContentsPre.id = 'qwebr-command-history-contents';
+  commandContentsPre.className = 'qwebr-modal-content-code';
+
+  // Append the close span, h1, and history contents pre to the modal content div
+  modalContentDiv.appendChild(closeSpan);
+  modalContentDiv.appendChild(modalH1);
+  modalContentDiv.appendChild(downloadLink);
+  modalContentDiv.appendChild(commandContentsPre);
+
+  // Append the modal content div to the modal div
+  modalDiv.appendChild(modalContentDiv);
+
+  // Append the modal div to the body
+  document.body.appendChild(modalDiv);
+}
+
+function qwebrRegisterRevealJSCommandHistoryModal() {
+  // Select the <ul> element inside the <div> with data-panel="Custom0"
+  let ulElement = document.querySelector('div[data-panel="Custom0"] > ul.slide-menu-items');
+
+  // Find the last <li> element with class slide-tool-item
+  let lastItem = ulElement.querySelector('li.slide-tool-item:last-child');
+
+  // Calculate the next data-item value
+  let nextItemValue = 0;
+  if (lastItem) {
+      nextItemValue = parseInt(lastItem.dataset.item) + 1;
+  }
+
+  // Create a new <li> element
+  let newListItem = document.createElement('li');
+  newListItem.className = 'slide-tool-item';
+  newListItem.dataset.item = nextItemValue.toString(); // Set the next available data-item value
+
+  // Create the <a> element inside the <li>
+  let newLink = document.createElement('a');
+  newLink.href = '#';
+  newLink.id = 'qwebrRHistoryButton'; // Set the ID for the new link
+  
+  // Create the <kbd> element inside the <a>
+  let newKbd = document.createElement('kbd');
+  newKbd.textContent = ' '; // Set to empty as we are not registering a keyboard shortcut
+
+  // Create text node for the link text
+  let newText = document.createTextNode(' View R History');
+
+  // Append <kbd> and text node to <a>
+  newLink.appendChild(newKbd);
+  newLink.appendChild(newText);
+
+  // Append <a> to <li>
+  newListItem.appendChild(newLink);
+
+  // Append <li> to <ul>
+  ulElement.appendChild(newListItem);
+}
+
+// Handle setting up the R history modal
+function qwebrCodeLinks() {
+
+  if (qwebrIsRevealJS()) {
+    qwebrRegisterRevealJSCommandHistoryModal();
+    return;
+  }
+
+  // Create the container div
+  var containerDiv = document.createElement('div');
+  containerDiv.className = 'quarto-code-links';
+
+  // Create the h2 element
+  var h2 = document.createElement('h2');
+  h2.textContent = 'webR Code Links';
+
+  // Create the ul element
+  var ul = document.createElement('ul');
+
+  // Create the li element
+  var li = document.createElement('li');
+
+  // Create the a_history_btn element
+  var a_history_btn = document.createElement('a');
+  a_history_btn.href = 'javascript:void(0)';
+  a_history_btn.setAttribute('id', 'qwebrRHistoryButton');
+
+  // Create the i_history_btn element
+  var i_history_btn = document.createElement('i');
+  i_history_btn.className = 'bi bi-file-code';
+
+  // Create the text node for the link text
+  var text_history_btn = document.createTextNode('View R History');
+
+  // Append the icon element and link text to the a element
+  a_history_btn.appendChild(i_history_btn);
+  a_history_btn.appendChild(text_history_btn);
+
+  // Append the a element to the li element
+  li.appendChild(a_history_btn);
+
+  // Append the li element to the ul element
+  ul.appendChild(li);
+
+  // Append the h2 and ul elements to the container div
+  containerDiv.appendChild(h2);
+  containerDiv.appendChild(ul);
+
+  // Append the container div to the element with the ID 'quarto-margin-sidebar'
+  var sidebar = document.getElementById('quarto-margin-sidebar');
+    
+  // If the sidebar element is not found, create it
+  if(!sidebar) {
+    qwebrPlaceQuartoSidebar();
+  }
+  
+  // Re-select the sidebar element (if it was just created)
+  sidebar = document.getElementById('quarto-margin-sidebar');   
+
+
+  // If the sidebar element exists, append the container div to it
+  if(sidebar) {
+    // Append the container div to the sidebar
+    sidebar.appendChild(containerDiv);
+    // Force the sidebar to be clickable by removing the 'zindex-bottom' class
+    // added in pre-release: https://github.com/quarto-dev/quarto-cli/commit/f0c53a1ffcaa1de4eccbf07803b096898248adcc
+    sidebar.className = 'sidebar margin-sidebar';
+  } else {
+    // Get a debugger ...
+    console.warn('Element with ID "quarto-margin-sidebar" not found.');
+  }
+}
+
+// Call the function to append the code links for qwebR into the right sidebar
+qwebrCodeLinks();
+
+// Add the command history modal
+qwebrAddCommandHistoryModal();
+
+displayStartupMessage(qwebrShowStartupMessage, qwebrShowHeaderMessage);
+qwebrOffScreenCanvasSupportWarningMessage();
+</script>
+<script type="module">
+// Define a global storage and retrieval solution ----
+
+// Store commands executed in R
+globalThis.qwebrRCommandHistory = [];
+
+// Function to retrieve the command history
+globalThis.qwebrFormatRHistory = function() {
+   return qwebrRCommandHistory.join("\n\n");
+}
+
+// Retrieve HTML Elements ----
+
+// Get the command modal
+const command_history_modal = document.getElementById("qwebr-history-modal");
+
+// Get the button that opens the command modal
+const command_history_btn = document.getElementById("qwebrRHistoryButton");
+
+// Get the <span> element that closes the command modal
+const command_history_close_span = document.getElementById("qwebr-command-history-close-btn");
+
+// Get the download button for r history information
+const command_history_download_btn = document.getElementById("qwebr-download-history-btn");
+
+// Plug in command history into modal/download button ----
+
+// Function to populate the modal with command history
+function populateCommandHistoryModal() {
+    document.getElementById("qwebr-command-history-contents").innerHTML = qwebrFormatRHistory() || "No commands have been executed yet.";
+}
+
+// Function to format the current date and time to
+// a string with the format YYYY-MM-DD-HH-MM-SS
+function formatDateTime() {
+    const now = new Date();
+
+    const year = now.getFullYear();
+    const day = String(now.getDate()).padStart(2, '0');
+    const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+
+    return `${year}-${month}-${day}-${hours}-${minutes}-${seconds}`;
+}
+
+
+// Function to convert document title with datetime to a safe filename
+function safeFileName() {
+    // Get the current page title
+    let pageTitle = document.title;
+
+    // Combine the current page title with the current date and time
+    let pageNameWithDateTime = `Rhistory-${pageTitle}-${formatDateTime()}`;
+
+    // Replace unsafe characters with safe alternatives
+    let safeFilename = pageNameWithDateTime.replace(/[\\/:\*\?! "<>\|]/g, '-');
+
+    return safeFilename;
+}
+
+
+// Function to download list contents as text file
+function downloadRHistory() {
+    // Get the current page title + datetime and use it as the filename
+    const filename = `${safeFileName()}.R`;
+
+    // Get the text contents of the R History list
+    const text = qwebrFormatRHistory();
+
+    // Create a new Blob object with the text contents
+    const blob = new Blob([text], { type: 'text/plain' });
+  
+    // Create a new anchor element for the download
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+
+    // Append the anchor to the body, click it, and remove it
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
+
+// Register event handlers ----
+
+// When the user clicks the View R History button, open the command modal
+command_history_btn.onclick = function() {
+    populateCommandHistoryModal();
+    command_history_modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the command modal
+command_history_close_span.onclick = function() {
+    command_history_modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the command modal, close it
+window.onclick = function(event) {
+    if (event.target == command_history_modal) {
+        command_history_modal.style.display = "none";
+    }
+}
+
+// Add an onclick event listener to the download button so that
+// the user can download the R history as a text file
+command_history_download_btn.onclick = function() {
+    downloadRHistory();
+};
+</script>
+<script type="module">
+// Supported Evaluation Types for Context
+globalThis.EvalTypes = Object.freeze({
+  Interactive: 'interactive',
+  Setup: 'setup',
+  Output: 'output',
+});
+
+// Function that obtains the font size for a given element 
+globalThis.qwebrCurrentFontSizeOnElement = function(element, cssProperty = 'font-size') {
+
+  const currentFontSize = parseFloat(
+    window
+    .getComputedStyle(element)
+    .getPropertyValue(cssProperty)
+  );
+  
+  return currentFontSize;
+}
+
+// Function to determine font scaling
+globalThis.qwebrScaledFontSize = function(div, qwebrOptions) {
+  // Determine if we should compute font-size using RevealJS's `--r-main-font-size` 
+  // or if we can directly use the document's `font-size`.
+  const cssProperty = document.body.classList.contains('reveal') ? 
+    "--r-main-font-size" : "font-size";
+  
+  // Get the current font size on the div element
+  const elementFontSize = qwebrCurrentFontSizeOnElement(div, cssProperty);
+
+  // Determine the scaled font size value
+  const scaledFontSize = ((qwebrOptions['editor-font-scale'] ?? 1) * elementFontSize) ?? 17.5;
+
+  return scaledFontSize;
+}
+
+
+// Function that dispatches the creation request
+globalThis.qwebrCreateHTMLElement = function (
+  cellData
+) {
+
+  // Extract key components
+  const evalType = cellData.options.context;
+  const qwebrCounter = cellData.id;
+
+  // We make an assumption that insertion points are defined by the Lua filter as:
+  // qwebr-insertion-location-{qwebrCounter} 
+  const elementLocator = document.getElementById(`qwebr-insertion-location-${qwebrCounter}`);
+
+  // Figure out the routine to use to insert the element.
+  let qwebrElement;
+  switch ( evalType ) {
+    case EvalTypes.Interactive:
+      qwebrElement = qwebrCreateInteractiveElement(qwebrCounter, cellData.options);
+      break;
+    case EvalTypes.Output: 
+      qwebrElement = qwebrCreateNonInteractiveOutputElement(qwebrCounter, cellData.options);
+      break;
+    case EvalTypes.Setup: 
+      qwebrElement = qwebrCreateNonInteractiveSetupElement(qwebrCounter, cellData.options);
+      break;
+    default: 
+      qwebrElement = document.createElement('div');
+      qwebrElement.textContent = 'Error creating `quarto-webr` element';
+  }
+
+  // Insert the dynamically generated object at the document location.
+  elementLocator.appendChild(qwebrElement);
+};
+
+// Function that setups the interactive element creation
+globalThis.qwebrCreateInteractiveElement = function (qwebrCounter, qwebrOptions) {
+
+  // Create main div element
+  var mainDiv = document.createElement('div');
+  mainDiv.id = 'qwebr-interactive-area-' + qwebrCounter;
+  mainDiv.className = `qwebr-interactive-area`;
+  if (qwebrOptions.classes) {
+    mainDiv.className += " " + qwebrOptions.classes
+  }
+
+  // Add a unique cell identifier that users can customize
+  if (qwebrOptions.label) {
+    mainDiv.setAttribute('data-id', qwebrOptions.label);
+  }
+
+  // Create toolbar div
+  var toolbarDiv = document.createElement('div');
+  toolbarDiv.className = 'qwebr-editor-toolbar';
+  toolbarDiv.id = 'qwebr-editor-toolbar-' + qwebrCounter;
+
+  // Create a div to hold the left buttons
+  var leftButtonsDiv = document.createElement('div');
+  leftButtonsDiv.className = 'qwebr-editor-toolbar-left-buttons';
+
+  // Create a div to hold the right buttons
+  var rightButtonsDiv = document.createElement('div');
+  rightButtonsDiv.className = 'qwebr-editor-toolbar-right-buttons';
+
+  // Create Run Code button
+  var runCodeButton = document.createElement('button');
+  runCodeButton.className = 'btn btn-default qwebr-button qwebr-button-run';
+  runCodeButton.disabled = true;
+  runCodeButton.type = 'button';
+  runCodeButton.id = 'qwebr-button-run-' + qwebrCounter;
+  runCodeButton.textContent = '🟡 Loading webR...';
+  runCodeButton.title = `Run code (Shift + Enter)`;
+
+  // Append buttons to the leftButtonsDiv
+  leftButtonsDiv.appendChild(runCodeButton);
+
+  // Create Reset button
+  var resetButton = document.createElement('button');
+  resetButton.className = 'btn btn-light btn-xs qwebr-button qwebr-button-reset';
+  resetButton.type = 'button';
+  resetButton.id = 'qwebr-button-reset-' + qwebrCounter;
+  resetButton.title = 'Start over';
+  resetButton.innerHTML = '<i class="fa-solid fa-arrows-rotate"></i>';
+
+  // Create Copy button
+  var copyButton = document.createElement('button');
+  copyButton.className = 'btn btn-light btn-xs qwebr-button qwebr-button-copy';
+  copyButton.type = 'button';
+  copyButton.id = 'qwebr-button-copy-' + qwebrCounter;
+  copyButton.title = 'Copy code';
+  copyButton.innerHTML = '<i class="fa-regular fa-copy"></i>';
+
+  // Append buttons to the rightButtonsDiv
+  rightButtonsDiv.appendChild(resetButton);
+  rightButtonsDiv.appendChild(copyButton);
+
+  // Create console area div
+  var consoleAreaDiv = document.createElement('div');
+  consoleAreaDiv.id = 'qwebr-console-area-' + qwebrCounter;
+  consoleAreaDiv.className = 'qwebr-console-area';
+
+  // Create editor div
+  var editorDiv = document.createElement('div');
+  editorDiv.id = 'qwebr-editor-' + qwebrCounter;
+  editorDiv.className = 'qwebr-editor';
+
+  // Create output code area div
+  var outputCodeAreaDiv = document.createElement('div');
+  outputCodeAreaDiv.id = 'qwebr-output-code-area-' + qwebrCounter;
+  outputCodeAreaDiv.className = 'qwebr-output-code-area';
+  outputCodeAreaDiv.setAttribute('aria-live', 'assertive');
+
+  // Create pre element inside output code area
+  var preElement = document.createElement('pre');
+  preElement.style.visibility = 'hidden';
+  outputCodeAreaDiv.appendChild(preElement);
+
+  // Create output graph area div
+  var outputGraphAreaDiv = document.createElement('div');
+  outputGraphAreaDiv.id = 'qwebr-output-graph-area-' + qwebrCounter;
+  outputGraphAreaDiv.className = 'qwebr-output-graph-area';
+
+  // Append buttons to the toolbar
+  toolbarDiv.appendChild(leftButtonsDiv);
+  toolbarDiv.appendChild(rightButtonsDiv);
+
+  // Append all elements to the main div
+  mainDiv.appendChild(toolbarDiv);
+  consoleAreaDiv.appendChild(editorDiv);
+  consoleAreaDiv.appendChild(outputCodeAreaDiv);
+  mainDiv.appendChild(consoleAreaDiv);
+  mainDiv.appendChild(outputGraphAreaDiv);
+
+  return mainDiv;
+}
+
+// Function that adds output structure for non-interactive output
+globalThis.qwebrCreateNonInteractiveOutputElement = function(qwebrCounter, qwebrOptions) {
+  // Create main div element
+  var mainDiv = document.createElement('div');
+  mainDiv.id = 'qwebr-noninteractive-area-' + qwebrCounter;
+  mainDiv.className = `qwebr-noninteractive-area`;
+  if (qwebrOptions.classes) {
+    mainDiv.className += " " + qwebrOptions.classes
+  }
+  
+  // Add a unique cell identifier that users can customize
+  if (qwebrOptions.label) {
+    mainDiv.setAttribute('data-id', qwebrOptions.label);
+  }
+  
+  // Create a status container div
+  var statusContainer = createLoadingContainer(qwebrCounter);
+
+  // Create output code area div
+  var outputCodeAreaDiv = document.createElement('div');
+  outputCodeAreaDiv.id = 'qwebr-output-code-area-' + qwebrCounter;
+  outputCodeAreaDiv.className = 'qwebr-output-code-area';
+  outputCodeAreaDiv.setAttribute('aria-live', 'assertive');
+
+  // Create pre element inside output code area
+  var preElement = document.createElement('pre');
+  preElement.style.visibility = 'hidden';
+  outputCodeAreaDiv.appendChild(preElement);
+
+  // Create output graph area div
+  var outputGraphAreaDiv = document.createElement('div');
+  outputGraphAreaDiv.id = 'qwebr-output-graph-area-' + qwebrCounter;
+  outputGraphAreaDiv.className = 'qwebr-output-graph-area';
+
+  // Append all elements to the main div
+  mainDiv.appendChild(statusContainer);
+  mainDiv.appendChild(outputCodeAreaDiv);
+  mainDiv.appendChild(outputGraphAreaDiv);
+
+  return mainDiv;
+};
+
+// Function that adds a stub in the page to indicate a setup cell was used.
+globalThis.qwebrCreateNonInteractiveSetupElement = function(qwebrCounter, qwebrOptions) {
+  // Create main div element
+  var mainDiv = document.createElement('div');
+  mainDiv.id = `qwebr-noninteractive-setup-area-${qwebrCounter}`;
+  mainDiv.className = `qwebr-noninteractive-setup-area`;
+  if (qwebrOptions.classes) {
+    mainDiv.className += " " + qwebrOptions.classes
+  }
+
+
+  // Add a unique cell identifier that users can customize
+  if (qwebrOptions.label) {
+    mainDiv.setAttribute('data-id', qwebrOptions.label);
+  }
+
+  // Create a status container div
+  var statusContainer = createLoadingContainer(qwebrCounter);
+
+  // Append status onto the main div
+  mainDiv.appendChild(statusContainer);
+
+  return mainDiv;
+}
+
+
+// Function to create loading container with specified ID
+globalThis.createLoadingContainer = function(qwebrCounter) {
+
+  // Create a status container
+  const container = document.createElement('div');
+  container.id = `qwebr-non-interactive-loading-container-${qwebrCounter}`;
+  container.className = 'qwebr-non-interactive-loading-container qwebr-cell-needs-evaluation';
+
+  // Create an R project logo to indicate its a code space
+  const rProjectIcon = document.createElement('i');
+  rProjectIcon.className = 'fa-brands fa-r-project fa-3x qwebr-r-project-logo';
+
+  // Setup a loading icon from font awesome
+  const spinnerIcon = document.createElement('i');
+  spinnerIcon.className = 'fa-solid fa-spinner fa-spin fa-1x qwebr-icon-status-spinner';
+
+  // Add a section for status text
+  const statusText = document.createElement('p');
+  statusText.id = `qwebr-status-text-${qwebrCounter}`;
+  statusText.className = `qwebr-status-text qwebr-cell-needs-evaluation`;
+  statusText.innerText = 'Loading webR...';
+
+  // Incorporate an inner container
+  const innerContainer = document.createElement('div');
+
+  // Append elements to the inner container
+  innerContainer.appendChild(spinnerIcon);
+  innerContainer.appendChild(statusText);
+
+  // Append elements to the main container
+  container.appendChild(rProjectIcon);
+  container.appendChild(innerContainer);
+
+  return container;
+}
+</script>
+<script type="module">
+// Function to install a single package
+async function qwebrInstallRPackage(packageName) {
+  await mainWebR.evalRVoid(`webr::install('${packageName}');`);
+}
+
+// Function to load a single package
+async function qwebrLoadRPackage(packageName) {
+  await mainWebR.evalRVoid(`require('${packageName}', quietly = TRUE)`);
+}
+
+// Generic function to process R packages
+async function qwebrProcessRPackagesWithStatus(packages, processType, displayStatusMessageUpdate = true) {
+  // Switch between contexts
+  const messagePrefix = processType === 'install' ? 'Installing' : 'Loading';
+
+  // Modify button state
+  qwebrSetInteractiveButtonState(`🟡 ${messagePrefix} package ...`, false);
+
+  // Iterate over packages
+  for (let i = 0; i < packages.length; i++) {
+    const activePackage = packages[i];
+    const formattedMessage = `${messagePrefix} package ${i + 1} out of ${packages.length}: ${activePackage}`;
+
+    // Display the update in header
+    if (displayStatusMessageUpdate) {
+      qwebrUpdateStatusHeader(formattedMessage);
+    }
+
+    // Display the update in non-active areas
+    qwebrUpdateStatusMessage(formattedMessage);
+
+    // Run package installation
+    if (processType === 'install') {
+      await qwebrInstallRPackage(activePackage);
+    } else {
+      await qwebrLoadRPackage(activePackage);
+    }
+  }
+
+  // Clean slate
+  if (processType === 'load') {
+    await mainWebR.flush();
+  }
+}
+
+// Start a timer
+const initializeWebRTimerStart = performance.now();
+
+// Encase with a dynamic import statement
+globalThis.qwebrInstance = import(qwebrCustomizedWebROptions.baseURL + "webr.mjs").then(
+  async ({ WebR, ChannelType }) => {
+    // Populate WebR options with defaults or new values based on `webr` meta
+    globalThis.mainWebR = new WebR(qwebrCustomizedWebROptions);
+
+    // Initialization WebR
+    await mainWebR.init();
+
+    // Setup a shelter
+    globalThis.mainWebRCodeShelter = await new mainWebR.Shelter();
+
+    // Setup a pager to allow processing help documentation
+    await mainWebR.evalRVoid('webr::pager_install()');
+
+    // Setup a viewer to allow processing htmlwidgets.
+    // This might not be available in old webr version
+    await mainWebR.evalRVoid('try({ webr::viewer_install() })');
+
+    // Override the existing install.packages() to use webr::install()
+    await mainWebR.evalRVoid('webr::shim_install()');
+
+    // Specify the repositories to pull from
+    // Note: webR does not use the `repos` option, but instead uses `webr_pkg_repos`
+    // inside of `install()`. However, other R functions still pull from `repos`.
+    await mainWebR.evalRVoid(`
+      options(
+        webr_pkg_repos = c(${qwebrPackageRepoURLS.map(repoURL => `'${repoURL}'`).join(',')}),
+        repos = c(${qwebrPackageRepoURLS.map(repoURL => `'${repoURL}'`).join(',')})
+      )
+    `);
+
+    // Check to see if any packages need to be installed
+    if (qwebrSetupRPackages) {
+      // Obtain only a unique list of packages
+      const uniqueRPackageList = Array.from(new Set(qwebrInstallRPackagesList));
+
+      // Install R packages one at a time (either silently or with a status update)
+      await qwebrProcessRPackagesWithStatus(uniqueRPackageList, 'install', qwebrShowStartupMessage);
+
+      if (qwebrAutoloadRPackages) {
+        // Load R packages one at a time (either silently or with a status update)
+        await qwebrProcessRPackagesWithStatus(uniqueRPackageList, 'load', qwebrShowStartupMessage);
+      }
+    }
+  }
+);
+
+// Stop timer
+const initializeWebRTimerEnd = performance.now();
+
+</script>
+<script type="module">
+// Function to verify a given JavaScript Object is empty
+globalThis.qwebrIsObjectEmpty = function (arr) {
+    return Object.keys(arr).length === 0;
+}
+
+// Global version of the Escape HTML function that converts HTML
+// characters to their HTML entities.
+globalThis.qwebrEscapeHTMLCharacters = function(unsafe) {
+    return unsafe
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+};
+
+// Passthrough results
+globalThis.qwebrIdentity = function(x) {
+    return x;
+};
+
+// Append a comment
+globalThis.qwebrPrefixComment = function(x, comment) {
+    return `${comment}${x}`;
+};
+
+// Function to store the code in the history
+globalThis.qwebrLogCodeToHistory = function(codeToRun, options) {
+    qwebrRCommandHistory.push(
+        `# Ran code in ${options.label} at ${new Date().toLocaleString()} ----\n${codeToRun}`
+    );
+};
+
+// Function to attach a download button onto the canvas
+// allowing the user to download the image.
+function qwebrImageCanvasDownloadButton(canvas, canvasContainer) {
+
+    // Create the download button
+    const downloadButton = document.createElement('button');
+    downloadButton.className = 'qwebr-canvas-image-download-btn';
+    downloadButton.textContent = 'Download Image';
+    canvasContainer.appendChild(downloadButton);
+
+    // Trigger a download of the image when the button is clicked
+    downloadButton.addEventListener('click', function() {
+        const image = canvas.toDataURL('image/png');
+        const link = document.createElement('a');
+        link.href = image;
+        link.download = 'qwebr-canvas-image.png';
+        link.click();
+    });
+}
+
+
+// Function to parse the pager results
+globalThis.qwebrParseTypePager = async function (msg) {
+
+    // Split out the event data
+    const { path, title, deleteFile } = msg.data;
+
+    // Process the pager data by reading the information from disk
+    const paged_data = await mainWebR.FS.readFile(path).then((data) => {
+        // Obtain the file content
+        let content = new TextDecoder().decode(data);
+
+        // Remove excessive backspace characters until none remain
+        while(content.match(/.[\b]/)){
+            content = content.replace(/.[\b]/g, '');
+        }
+
+        // Returned cleaned data
+        return content;
+    });
+
+    // Unlink file if needed
+    if (deleteFile) {
+        await mainWebR.FS.unlink(path);
+    }
+
+    // Return extracted data with spaces
+    return paged_data;
+};
+
+
+// Function to parse the browse results
+globalThis.qwebrParseTypeBrowse = async function (msg) {
+
+    // msg.type === "browse"
+    const path = msg.data.url;
+
+    // Process the browse data by reading the information from disk
+    const browse_data = await mainWebR.FS.readFile(path).then((data) => {
+        // Obtain the file content
+        let content = new TextDecoder().decode(data);
+
+        return content;
+    });
+
+    // Return extracted data as-is
+    return browse_data;
+};
+
+// Function to run the code using webR and parse the output
+globalThis.qwebrComputeEngine = async function(
+    codeToRun,
+    elements,
+    options) {
+
+    // Call into the R compute engine that persists within the document scope.
+    // To be prepared for all scenarios, the following happens:
+    // 1. We setup a canvas device to write to by making a namespace call into the {webr} package
+    // 2. We use values inside of the options array to set the figure size.
+    // 3. We capture the output stream information (STDOUT and STERR)
+    // 4. We disable the current device's image creation.
+    // 5. Piece-wise parse the results into the different output areas
+
+    // Create a pager variable for help/file contents
+    let pager = [];
+
+    // Handle how output is processed
+    let showMarkup = options.results === "markup" && options.output !== "asis";
+    let processOutput;
+
+    if (showMarkup) {
+        processOutput = qwebrEscapeHTMLCharacters;
+    } else {
+        processOutput = qwebrIdentity;
+    }
+
+    // ----
+    // Convert from Inches to Pixels by using DPI (dots per inch)
+    // for bitmap devices (dpi * inches = pixels)
+    let fig_width = options["fig-width"] * options["dpi"];
+    let fig_height = options["fig-height"] * options["dpi"];
+
+    // Initialize webR
+    await mainWebR.init();
+
+    // Configure capture output
+    let captureOutputOptions = {
+        withAutoprint: true,
+        captureStreams: true,
+        captureConditions: false,
+        // env: webR.objs.emptyEnv, // maintain a global environment for webR v0.2.0
+    };
+
+    // Determine if the browser supports OffScreen
+    if (qwebrOffScreenCanvasSupport()) {
+        // Mirror default options of webr::canvas()
+        // with changes to figure height and width.
+        captureOutputOptions.captureGraphics = {
+            width: fig_width,
+            height: fig_height,
+            bg: "white", // default: transparent
+            pointsize: 12,
+            capture: true
+        };
+    }  else {
+        // Disable generating graphics
+        captureOutputOptions.captureGraphics = false;
+    }
+
+    // Store the code to run in history
+    qwebrLogCodeToHistory(codeToRun, options);
+
+    // Setup a webR canvas by making a namespace call into the {webr} package
+    // Evaluate the R code
+    // Remove the active canvas silently
+    const result = await mainWebRCodeShelter.captureR(
+        `${codeToRun}`,
+        captureOutputOptions
+    );
+
+    // -----
+
+    // Start attempting to parse the result data
+    processResultOutput:try {
+
+        // Avoid running through output processing
+        if (options.results === "hide" || options.output === "false") {
+            break processResultOutput;
+        }
+
+        // Merge output streams of STDOUT and STDErr (messages and errors are combined.)
+        // Require both `warning` and `message` to be true to display `STDErr`.
+        const out = result.output
+        .filter(
+            evt => evt.type === "stdout" ||
+            ( evt.type === "stderr" && (options.warning === "true" && options.message === "true"))
+        )
+        .map((evt, index) => {
+            const className = `qwebr-output-code-${evt.type}`;
+            const outputResult = qwebrPrefixComment(processOutput(evt.data), options.comment);
+            return `<code id="${className}-editor-${elements.id}-result-${index + 1}" class="${className}">${outputResult}</code>`;
+        })
+        .join("\n");
+
+
+        // Clean the state
+        // We're now able to process pager events.
+        // As a result, we cannot maintain a true 1-to-1 output order
+        // without individually feeding each line
+        const msgs = await mainWebR.flush();
+
+        // Use `map` to process the filtered "pager" events asynchronously
+        const pager = [];
+        const browse = [];
+
+        await Promise.all(
+            msgs.map(
+                async (msg) => {
+
+                    const msgType = msg.type || "unknown";
+
+                    switch(msgType) {
+                        case 'pager':
+                            const pager_data = await qwebrParseTypePager(msg);
+                            pager.push(pager_data);
+                            break;
+                        case 'browse':
+                            const browse_data = await qwebrParseTypeBrowse(msg);
+                            browse.push(browse_data);
+                            break;
+                    }
+                    return;
+                }
+            )
+        );
+
+        // Nullify the output area of content
+        elements.outputCodeDiv.innerHTML = "";
+        elements.outputGraphDiv.innerHTML = "";
+
+        // Design an output object for messages
+        const pre = document.createElement("pre");
+        if (/\S/.test(out)) {
+            // Display results as HTML elements to retain output styling
+            const div = document.createElement("div");
+            div.innerHTML = out;
+
+            // Calculate a scaled font-size value
+            const scaledFontSize = qwebrScaledFontSize(
+                elements.outputCodeDiv, options);
+
+            // Override output code cell size
+            pre.style.fontSize = `${scaledFontSize}px`;
+            pre.appendChild(div);
+        } else {
+            // If nothing is present, hide the element.
+            pre.style.visibility = "hidden";
+        }
+
+        elements.outputCodeDiv.appendChild(pre);
+
+        // Determine if we have graphs to display
+        if (result.images.length > 0) {
+
+            // Create figure element
+            const figureElement = document.createElement("figure");
+            figureElement.className = "qwebr-canvas-image";
+
+            // Place each rendered graphic onto a canvas element
+            result.images.forEach((img) => {
+
+                // Construct canvas for object
+                const canvas = document.createElement("canvas");
+
+                // Add an image download button
+                qwebrImageCanvasDownloadButton(canvas, figureElement);
+
+                // Set canvas size to image
+                canvas.width = img.width;
+                canvas.height = img.height;
+
+                // Apply output truncations
+                canvas.style.width = options["out-width"] ? options["out-width"] : `${fig_width}px`;
+                if (options["out-height"]) {
+                    canvas.style.height = options["out-height"];
+                }
+
+                // Apply styling
+                canvas.style.display = "block";
+                canvas.style.margin = "auto";
+
+                // Draw image onto Canvas
+                const ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0, img.width, img.height);
+
+                // Append canvas to figure output area
+                figureElement.appendChild(canvas);
+
+            });
+
+            if (options['fig-cap']) {
+                // Create figcaption element
+                const figcaptionElement = document.createElement('figcaption');
+                figcaptionElement.innerText = options['fig-cap'];
+                // Append figcaption to figure
+                figureElement.appendChild(figcaptionElement);
+            }
+
+            elements.outputGraphDiv.appendChild(figureElement);
+
+        }
+
+        // Display the pager data
+        if (pager.length > 0) {
+            // Use the `pre` element to preserve whitespace.
+            pager.forEach((paged_data, index) => {
+                const pre_pager = document.createElement("pre");
+                pre_pager.innerText = paged_data;
+                pre_pager.classList.add("qwebr-output-code-pager");
+                pre_pager.setAttribute("id", `qwebr-output-code-pager-editor-${elements.id}-result-${index + 1}`);
+                elements.outputCodeDiv.appendChild(pre_pager);
+            });
+        }
+
+        // Display the browse data
+        if (browse.length > 0) {
+            // Use the `pre` element to preserve whitespace.
+            browse.forEach((browse_data, index) => {
+                const iframe_browse = document.createElement('iframe');
+                iframe_browse.classList.add("qwebr-output-code-browse");
+                iframe_browse.setAttribute("id", `qwebr-output-code-browse-editor-${elements.id}-result-${index + 1}`);
+                iframe_browse.style.width = "100%";
+                iframe_browse.style.minHeight = "500px";
+                elements.outputCodeDiv.appendChild(iframe_browse);
+
+                iframe_browse.contentWindow.document.open();
+                iframe_browse.contentWindow.document.write(browse_data);
+                iframe_browse.contentWindow.document.close();
+            });
+        }
+    } finally {
+        // Clean up the remaining code
+        mainWebRCodeShelter.purge();
+    }
+};
+
+// Function to execute the code (accepts code as an argument)
+globalThis.qwebrExecuteCode = async function (
+    codeToRun,
+    id,
+    options = {}) {
+
+    // If options are not passed, we fall back on the bare minimum to handle the computation
+    if (qwebrIsObjectEmpty(options)) {
+        options = {
+            "context": "interactive",
+            "fig-width": 7, "fig-height": 5,
+            "out-width": "700px", "out-height": "",
+            "dpi": 72,
+            "results": "markup",
+            "warning": "true", "message": "true",
+        };
+    }
+
+    // Next, we access the compute areas values
+    const elements = {
+        runButton: document.getElementById(`qwebr-button-run-${id}`),
+        outputCodeDiv: document.getElementById(`qwebr-output-code-area-${id}`),
+        outputGraphDiv: document.getElementById(`qwebr-output-graph-area-${id}`),
+        id: id,
+    }
+
+    // Disallowing execution of other code cells
+    document.querySelectorAll(".qwebr-button-run").forEach((btn) => {
+        btn.disabled = true;
+    });
+
+    if (options.context == EvalTypes.Interactive) {
+        // Emphasize the active code cell
+        elements.runButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin qwebr-icon-status-spinner"></i> <span>Run Code</span>';
+    }
+
+    // Evaluate the code and parse the output into the document
+    await qwebrComputeEngine(codeToRun, elements, options);
+
+    // Switch to allowing execution of code
+    document.querySelectorAll(".qwebr-button-run").forEach((btn) => {
+        btn.disabled = false;
+    });
+
+    if (options.context == EvalTypes.Interactive) {
+        // Revert to the initial code cell state
+        elements.runButton.innerHTML = '<i class="fa-solid fa-play qwebr-icon-run-code"></i> <span>Run Code</span>';
+    }
+}
+
+</script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -234,6 +1787,290 @@ window.Quarto = {
     </div>
 <!-- main -->
 <main class="content page-columns page-full" id="quarto-document-content">
+<script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.47.0/min/vs/loader.js"></script>
+<script type="module" id="qwebr-monaco-editor-init">
+
+  // Configure the Monaco Editor's loader
+  require.config({
+    paths: {
+      'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.47.0/min/vs'
+    }
+  });
+</script>
+<script type="module">
+// Function to update Monaco Editors when body class changes
+function updateMonacoEditorsOnBodyClassChange() {
+    // Select the body element
+    const body = document.querySelector('body');
+
+    // Options for the observer (which mutations to observe)
+    const observerOptions = {
+        attributes: true,  // Observe changes to attributes
+        attributeFilter: ['class'] // Only observe changes to the 'class' attribute
+    };
+
+    // Callback function to execute when mutations are observed
+    const bodyClassChangeCallback = function(mutationsList, observer) {
+        for(let mutation of mutationsList) {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                // Class attribute has changed
+                // Update all Monaco Editors on the page
+                updateMonacoEditorTheme();
+            }
+        }
+    };
+
+    // Create an observer instance linked to the callback function
+    const observer = new MutationObserver(bodyClassChangeCallback);
+
+    // Start observing the target node for configured mutations
+    observer.observe(body, observerOptions);
+}
+
+// Function to update all instances of Monaco Editors on the page
+function updateMonacoEditorTheme() {
+    // Determine what VS Theme to use
+    const vsThemeToUse = document.body.classList.contains("quarto-dark") ? 'vs-dark' : 'vs' ;
+
+    // Iterate through all initialized Monaco Editors
+    qwebrEditorInstances.forEach( function(editorInstance) { 
+        editorInstance.updateOptions({ theme: vsThemeToUse }); 
+    });
+}
+
+// Call the function to start observing changes to body class
+updateMonacoEditorsOnBodyClassChange();
+</script>
+<script type="module">
+// Global array to store Monaco Editor instances
+globalThis.qwebrEditorInstances = [];
+
+function isValidCodeLineNumbers(stringCodeLineNumbers) {
+  // Regular expression to match valid input strings
+  const regex = /^(\d+(-\d+)?)(,\d+(-\d+)?)*$/;
+  return regex.test(stringCodeLineNumbers);
+}
+
+// Function that builds and registers a Monaco Editor instance    
+globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
+
+  const initialCode = cellData.code;
+  const qwebrCounter = cellData.id;
+  const qwebrOptions = cellData.options;
+
+  // Retrieve the previously created document elements
+  let runButton = document.getElementById(`qwebr-button-run-${qwebrCounter}`);
+  let resetButton = document.getElementById(`qwebr-button-reset-${qwebrCounter}`);
+  let copyButton = document.getElementById(`qwebr-button-copy-${qwebrCounter}`);
+  let editorDiv = document.getElementById(`qwebr-editor-${qwebrCounter}`);
+
+  // Load the Monaco Editor and create an instance
+  let editor;
+  require(['vs/editor/editor.main'], function () {
+    editor = monaco.editor.create(editorDiv, {
+      value: initialCode,
+      language: 'r',
+      theme: 'vs-light',
+      automaticLayout: true,           // Works wonderfully with RevealJS
+      scrollBeyondLastLine: false,
+      minimap: {
+        enabled: false
+      },
+      fontSize: qwebrScaledFontSize(editorDiv, qwebrOptions),         
+      renderLineHighlight: "none",      // Disable current line highlighting
+      hideCursorInOverviewRuler: true,  // Remove cursor indictor in right hand side scroll bar
+      readOnly: qwebrOptions['read-only'] ?? false,
+      quickSuggestions: qwebrOptions['editor-quick-suggestions'] ?? false,
+      wordWrap: (qwebrOptions['editor-word-wrap'] == 'true' ? "on" : "off")
+    });
+
+    // Store the official counter ID to be used in keyboard shortcuts
+    editor.__qwebrCounter = qwebrCounter;
+
+    // Store the official div container ID
+    editor.__qwebrEditorId = `qwebr-editor-${qwebrCounter}`;
+
+    // Store the initial code value and options
+    editor.__qwebrinitialCode = initialCode;
+    editor.__qwebrOptions = qwebrOptions;
+
+    // Set at the model level the preferred end of line (EOL) character to LF.
+    // This prevent `\r\n` from being given to the webR engine if the user is on Windows.
+    // See details in: https://github.com/coatless/quarto-webr/issues/94
+    // Associated error text: 
+    // Error: <text>:1:7 unexpected input
+
+    // Retrieve the underlying model
+    const model = editor.getModel();
+    // Set EOL for the model
+    model.setEOL(monaco.editor.EndOfLineSequence.LF);
+    
+    // Dynamically modify the height of the editor window if new lines are added.
+    let ignoreEvent = false;
+    const updateHeight = () => {
+      // Increment editor height by 2 to prevent vertical scroll bar from appearing
+      const contentHeight = editor.getContentHeight() + 2;
+
+      // Retrieve editor-max-height option
+      const maxEditorHeight = qwebrOptions['editor-max-height'];
+
+      // If editor-max-height is missing, allow infinite growth. Otherwise, threshold.
+      const editorHeight = !maxEditorHeight ?  contentHeight : Math.min(contentHeight, maxEditorHeight);
+
+      // We're avoiding a width change
+      //editorDiv.style.width = `${width}px`;
+      editorDiv.style.height = `${editorHeight}px`;
+      try {
+        ignoreEvent = true;
+
+        // The key to resizing is this call
+        editor.layout();
+      } finally {
+        ignoreEvent = false;
+      }
+    };
+
+    // Function to generate decorations to highlight lines
+    // in the editor based on input string.
+    function decoratorHighlightLines(codeLineNumbers) {
+      // Store the lines to be lighlight
+      let linesToHighlight = [];
+      
+      // Parse the codeLineNumbers string to get the line numbers to highlight
+      // First, split the string by commas
+      codeLineNumbers.split(',').forEach(part => {
+        // Check if we have a range of lines
+        if (part.includes('-')) {
+            // Handle range of lines (e.g., "6-8")
+            const [start, end] = part.split('-').map(Number);
+            for (let i = start; i <= end; i++) {
+                linesToHighlight.push(i);
+            }
+        } else {
+            // Handle single line (e.g., "7")
+            linesToHighlight.push(Number(part));
+        }
+      });
+  
+      // Create monaco decorations for the lines to highlight
+      const decorations = linesToHighlight.map(lineNumber => ({
+          range: new monaco.Range(lineNumber, 1, lineNumber, 1),
+          options: {
+              isWholeLine: true,
+              className: 'qwebr-editor-highlight-line'
+          }
+      }));
+  
+      // Return decorations to be applied to the editor
+      return decorations;
+    }
+
+    // Ensure that the editor-code-line-numbers option is set and valid
+    // then apply styling
+    if (qwebrOptions['editor-code-line-numbers']) {
+      // Remove all whitespace from the string
+      const codeLineNumbers = qwebrOptions['editor-code-line-numbers'].replace(/\s/g,'');
+      // Check if the string is valid for line numbers, e.g., "1,3-5,7"
+      if (isValidCodeLineNumbers(codeLineNumbers)) {
+        // Apply the decorations to the editor
+        editor.createDecorationsCollection(decoratorHighlightLines(codeLineNumbers));
+      } else {
+        // Warn the user that the input is invalid
+        console.warn(`Invalid "editor-code-line-numbers" value in code cell ${qwebrOptions['label']}: ${codeLineNumbers}`);
+      }
+    }
+
+    // Helper function to check if selected text is empty
+    function isEmptyCodeText(selectedCodeText) {
+      return (selectedCodeText === null || selectedCodeText === undefined || selectedCodeText === "");
+    }
+
+    // Registry of keyboard shortcuts that should be re-added to each editor window
+    // when focus changes.
+    const addWebRKeyboardShortCutCommands = () => {
+      // Add a keydown event listener for Shift+Enter to run all code in cell
+      editor.addCommand(monaco.KeyMod.Shift | monaco.KeyCode.Enter, () => {
+
+        // Retrieve all text inside the editor
+        qwebrExecuteCode(editor.getValue(), editor.__qwebrCounter, editor.__qwebrOptions);
+      });
+
+      // Add a keydown event listener for CMD/Ctrl+Enter to run selected code
+      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
+
+        // Get the selected text from the editor
+        const selectedText = editor.getModel().getValueInRange(editor.getSelection());
+        // Check if no code is selected
+        if (isEmptyCodeText(selectedText)) {
+          // Obtain the current cursor position
+          let currentPosition = editor.getPosition();
+          // Retrieve the current line content
+          let currentLine = editor.getModel().getLineContent(currentPosition.lineNumber);
+
+          // Propose a new position to move the cursor to
+          let newPosition = new monaco.Position(currentPosition.lineNumber + 1, 1);
+
+          // Check if the new position is beyond the last line of the editor
+          if (newPosition.lineNumber > editor.getModel().getLineCount()) {
+            // Add a new line at the end of the editor
+            editor.executeEdits("addNewLine", [{
+            range: new monaco.Range(newPosition.lineNumber, 1, newPosition.lineNumber, 1),
+            text: "\n", 
+            forceMoveMarkers: true,
+            }]);
+          }
+          
+          // Run the entire line of code.
+          qwebrExecuteCode(currentLine, editor.__qwebrCounter, editor.__qwebrOptions);
+
+          // Move cursor to new position
+          editor.setPosition(newPosition);
+        } else {
+          // Code to run when Ctrl+Enter is pressed with selected code
+          qwebrExecuteCode(selectedText, editor.__qwebrCounter, editor.__qwebrOptions);
+        }
+      });
+    }
+
+    // Register an on focus event handler for when a code cell is selected to update
+    // what keyboard shortcut commands should work.
+    // This is a workaround to fix a regression that happened with multiple
+    // editor windows since Monaco 0.32.0 
+    // https://github.com/microsoft/monaco-editor/issues/2947
+    editor.onDidFocusEditorText(addWebRKeyboardShortCutCommands);
+
+    // Register an on change event for when new code is added to the editor window
+    editor.onDidContentSizeChange(updateHeight);
+
+    // Manually re-update height to account for the content we inserted into the call
+    updateHeight();
+
+    // Store the editor instance in the global dictionary
+    qwebrEditorInstances[editor.__qwebrCounter] = editor;
+
+  });
+
+  // Add a click event listener to the run button
+  runButton.onclick = function () {
+    qwebrExecuteCode(editor.getValue(), editor.__qwebrCounter, editor.__qwebrOptions);
+  };
+
+  // Add a click event listener to the reset button
+  copyButton.onclick = function () {
+    // Retrieve current code data
+    const data = editor.getValue();
+    
+    // Write code data onto the clipboard.
+    navigator.clipboard.writeText(data || "");
+  };
+  
+  // Add a click event listener to the copy button
+  resetButton.onclick = function () {
+    editor.setValue(editor.__qwebrinitialCode);
+  };
+  
+}
+</script>
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -305,18 +2142,8 @@ window.Quarto = {
 <h2 data-number="1.2" class="anchored" data-anchor-id="vantaggi"><span class="header-section-number">1.2</span> Vantaggi</h2>
 <p>In generale: velocità, flessibilità e leggibilità del codice.</p>
 <p>Ad esempio, consideriamo la tabella <code>mtcars</code>: vogliamo regredire il modello <code>mpg ~ wt</code> (correlazione tra consumo e massa) per ciascuna classe di numero di cilindri. Con <code>purrr</code> possiamo scrivere:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>mtcars <span class="sc">%&gt;%</span>  </span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">split</span>(mtcars<span class="sc">$</span>cyl) <span class="sc">%&gt;%</span>   <span class="co"># divide un data frame in una lista di data frame</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(<span class="sc">~</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt, <span class="at">data =</span> .)) <span class="sc">%&gt;%</span> </span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(summary) <span class="sc">%&gt;%</span> </span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map_dbl</span>(<span class="st">"r.squared"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="dv">3</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>    4     6     8 
-0.509 0.465 0.423 </code></pre>
-</div>
-</div>
+<div id="qwebr-insertion-location-1"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled" title="Esercizi">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -339,24 +2166,8 @@ Esercizi
 <section id="mappe" class="level3" data-number="1.3.1">
 <h3 data-number="1.3.1" class="anchored" data-anchor-id="mappe"><span class="header-section-number">1.3.1</span> Mappe</h3>
 <p>La funzione base <code>map</code> opera su un unico vettore o lista e <strong>restituisce sempre una lista</strong>. È cioè una mappa <span class="math inline">\(n\rightarrow n\)</span>, dove <span class="math inline">\(n\)</span> è la lunghezza dell’input, uguale a quella dell’output:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(<span class="dv">10</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(<span class="sc">~</span> .<span class="sc">^</span><span class="dv">2</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>List of 10
- $ : num 9
- $ : num 36
- $ : num 100
- $ : num 1
- $ : num 4
- $ : num 64
- $ : num 16
- $ : num 25
- $ : num 49
- $ : num 81</code></pre>
-</div>
-</div>
+<div id="qwebr-insertion-location-2"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>Come si vede, il risultato di <code>map</code> è una <strong>lista</strong> di 10 elementi, ciascuno dei quali è il quadrato di un elemento del vettore in ingresso generato da <code>sample(10)</code>.</p>
 <p>Nei casi pratici spesso è necessario operare su due o più vettori in ingresso, e si desidera ottenere, anziché una lista, un vettore di uno specifico tipo. Per queste operazioni ci sono varianti di <code>map</code> che hanno il nome così costituito:</p>
 <ul>
@@ -369,22 +2180,8 @@ Esercizi
 <section id="cicli-muti" class="level3" data-number="1.3.2">
 <h3 data-number="1.3.2" class="anchored" data-anchor-id="cicli-muti"><span class="header-section-number">1.3.2</span> Cicli <em>muti</em></h3>
 <p>A volte è necessario iterare su una lista di elementi, ma non si desidera ottenere un output. In questi casi si può usare <code>walk</code> e le sue varianti <code>walk2</code>, <code>pwalk</code>. Ad esempio:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>LETTERS[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>] <span class="sc">%&gt;%</span> </span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">walk</span>(<span class="sc">~</span> <span class="fu">cat</span>(<span class="fu">paste</span>(<span class="st">"Lettera"</span>, ., <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Lettera A 
-Lettera B 
-Lettera C 
-Lettera D 
-Lettera E 
-Lettera F 
-Lettera G 
-Lettera H 
-Lettera I 
-Lettera J </code></pre>
-</div>
-</div>
+<div id="qwebr-insertion-location-3"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled" title="Esercizio">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -406,20 +2203,8 @@ Lettera 3: C
 <section id="modifica" class="level3" data-number="1.3.3">
 <h3 data-number="1.3.3" class="anchored" data-anchor-id="modifica"><span class="header-section-number">1.3.3</span> Modifica</h3>
 <p>Per modificare gli elementi di un insieme (lista o vettore), eventualmente secondo un criterio, si possono usare le funzioni <code>modify</code>, <code>modify_if</code>, <code>modify_at</code>. Ad esempio:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">10</span>)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>a <span class="sc">%&gt;%</span> </span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">modify_if</span>(<span class="sc">~</span> .<span class="sc">&gt;</span><span class="fl">0.5</span>, <span class="sc">~</span> .<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> [1] 0.36232395 0.29318137 0.82503538 0.70000654 0.09151385 0.29942973
- [7] 0.24842333 0.33457390 0.09671921 0.41333323</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>a</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> [1] 0.60193351 0.54146225 0.90831458 0.83666394 0.09151385 0.54720173
- [7] 0.24842333 0.57842363 0.09671921 0.64290997</code></pre>
-</div>
-</div>
+<div id="qwebr-insertion-location-4"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>Si noti che <code>modify_if</code> prende due funzioni come argomenti: la prima è il criterio di selezione, chiamato <em>predicato</em>, la seconda è la trasformazione da applicare agli elementi selezionati. Il predicato deve essere una funzione che restituisce un valore logico (<code>TRUE</code> o <code>FALSE</code>).</p>
 <div class="callout callout-style-default callout-warning callout-titled" title="Attenzione">
 <div class="callout-header d-flex align-content-center">
@@ -438,13 +2223,8 @@ Attenzione
 <section id="riduzioneaccumulo" class="level3" data-number="1.3.4">
 <h3 data-number="1.3.4" class="anchored" data-anchor-id="riduzioneaccumulo"><span class="header-section-number">1.3.4</span> Riduzione/Accumulo</h3>
 <p>Infine, <code>purrr</code> offre anche funzioni di riduzione, come <code>reduce</code>, <code>accumulate</code>, <code>reduce2</code>, <code>accumulate2</code>. Queste funzioni permettono di ridurre una lista di elementi a un singolo valore (quindi sono una mappa <span class="math inline">\(n\rightarrow 1\)</span>), secondo un criterio specificato. Ad esempio, applico la funzione addizione per accumulare tutti i numeri da 1 a 10:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="sc">:</span><span class="dv">10</span> <span class="sc">%&gt;%</span> </span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reduce</span>(<span class="st">`</span><span class="at">+</span><span class="st">`</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 55</code></pre>
-</div>
-</div>
+<div id="qwebr-insertion-location-5"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </section>
 <section id="nota-sulle-funzioni-vettorializzate" class="level3" data-number="1.3.5">
 <h3 data-number="1.3.5" class="anchored" data-anchor-id="nota-sulle-funzioni-vettorializzate"><span class="header-section-number">1.3.5</span> Nota sulle funzioni vettorializzate</h3>
@@ -473,107 +2253,13 @@ Attenzione
 <section id="esempi" class="level2" data-number="1.4">
 <h2 data-number="1.4" class="anchored" data-anchor-id="esempi"><span class="header-section-number">1.4</span> Esempi</h2>
 <p>Definiamo anzitutto una tabella dati di esempio:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">0</span>)</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">t =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">10</span>, <span class="at">length.out =</span> n),</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">cond =</span> <span class="fu">ifelse</span>(t <span class="sc">&lt;</span> <span class="dv">5</span>, <span class="st">"A"</span>, <span class="st">"B"</span>),</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">x1 =</span> <span class="fl">0.5</span> <span class="sc">+</span> <span class="fl">0.3</span><span class="sc">*</span>t <span class="sc">+</span> <span class="fl">0.08</span><span class="sc">*</span>t<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, <span class="fu">ifelse</span>(cond <span class="sc">==</span> <span class="st">"A"</span>, <span class="fl">0.5</span>, <span class="fl">0.2</span>)),</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">x2 =</span> <span class="fl">3.5</span> <span class="sc">-</span> <span class="fl">0.4</span><span class="sc">*</span>t <span class="sc">+</span> <span class="fl">0.02</span><span class="sc">*</span>t<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, <span class="fu">ifelse</span>(cond <span class="sc">==</span> <span class="st">"A"</span>, <span class="fl">0.2</span>, <span class="fl">0.1</span>)),</span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>(t<span class="sc">:</span>cond), <span class="at">names_to =</span> <span class="st">"serie"</span>, <span class="at">values_to =</span> <span class="st">"valore"</span>)</span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>t, <span class="at">y=</span>valore, <span class="at">color=</span>serie)) <span class="sc">+</span> </span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="r-recap_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
+<div id="qwebr-insertion-location-6"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <section id="esempio-map" class="level3" data-number="1.4.1">
 <h3 data-number="1.4.1" class="anchored" data-anchor-id="esempio-map"><span class="header-section-number">1.4.1</span> Esempio <code>map</code></h3>
 <p>Applichiamo una lista di modelli di regressione ad un set di dati. Questo esempio non è vettorializzabile, perché la funzione <code>lm</code> non è vettorializzata sull’argomento formula, cioè non accetta un vettore di formule in ingresso. Quindi passiamo la lista delle formule da regredire alla funzione <code>map</code>:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(x<span class="sc">~</span>t, x<span class="sc">~</span><span class="fu">poly</span>(t, <span class="dv">2</span>, <span class="at">raw=</span>T), x<span class="sc">~</span><span class="fu">poly</span>(t, <span class="dv">3</span>, <span class="at">raw=</span>T)) <span class="sc">%&gt;%</span> </span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(<span class="sc">~</span> {</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    data <span class="sc">%&gt;%</span> </span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(serie<span class="sc">==</span><span class="st">"x1"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(t, <span class="at">x=</span>valore) <span class="sc">%&gt;%</span></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">lm</span>(.x, <span class="at">data=</span>.) <span class="sc">%&gt;%</span> </span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">summary</span>()</span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  }) </span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[[1]]
-
-Call:
-lm(formula = .x, data = .)
-
-Residuals:
-     Min       1Q   Median       3Q      Max 
--1.46059 -0.56600 -0.09242  0.35637  1.93703 
-
-Coefficients:
-            Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept) -0.80555    0.14690  -5.484 3.25e-07 ***
-t            1.09876    0.02538  43.294  &lt; 2e-16 ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 0.74 on 98 degrees of freedom
-Multiple R-squared:  0.9503,    Adjusted R-squared:  0.9498 
-F-statistic:  1874 on 1 and 98 DF,  p-value: &lt; 2.2e-16
-
-
-[[2]]
-
-Call:
-lm(formula = .x, data = .)
-
-Residuals:
-     Min       1Q   Median       3Q      Max 
--0.84623 -0.18891 -0.01886  0.16177  1.14512 
-
-Coefficients:
-                     Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)           0.60251    0.10153   5.935 4.56e-08 ***
-poly(t, 2, raw = T)1  0.24530    0.04692   5.228 9.85e-07 ***
-poly(t, 2, raw = T)2  0.08535    0.00454  18.797  &lt; 2e-16 ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 0.3452 on 97 degrees of freedom
-Multiple R-squared:  0.9893,    Adjusted R-squared:  0.9891 
-F-statistic:  4483 on 2 and 97 DF,  p-value: &lt; 2.2e-16
-
-
-[[3]]
-
-Call:
-lm(formula = .x, data = .)
-
-Residuals:
-    Min      1Q  Median      3Q     Max 
--0.8575 -0.1873 -0.0179  0.1572  1.1421 
-
-Coefficients:
-                      Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)           0.627291   0.133698   4.692 8.97e-06 ***
-poly(t, 3, raw = T)1  0.214799   0.116369   1.846 0.067997 .  
-poly(t, 3, raw = T)2  0.093010   0.027118   3.430 0.000892 ***
-poly(t, 3, raw = T)3 -0.000511   0.001782  -0.287 0.774950    
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 0.3469 on 96 degrees of freedom
-Multiple R-squared:  0.9893,    Adjusted R-squared:  0.989 
-F-statistic:  2960 on 3 and 96 DF,  p-value: &lt; 2.2e-16</code></pre>
-</div>
-</div>
+<div id="qwebr-insertion-location-7"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-warning callout-titled" title="Attenzione">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -602,8 +2288,8 @@ Esercizio
 <p>Vogliamo rendere più generale il codice precedente, consentendo di costruire automaticamente la lista delle formule a partire da un vettore di gradi polinomiali. Modificare il codice di conseguenza, ad es. per verificare i polinomi di grado 2, 5, e 3 (in quest’ordine).</p>
 <p><em>Suggerimento: ricordare la funzione <code>as.formula()</code></em>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">3</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  ... <span class="co"># completare</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">3</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  ... <span class="co"># completare</span></span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
@@ -625,21 +2311,8 @@ Esercizio
 <section id="esempio-map_dbl" class="level3" data-number="1.4.2">
 <h3 data-number="1.4.2" class="anchored" data-anchor-id="esempio-map_dbl"><span class="header-section-number">1.4.2</span> Esempio <code>map_dbl</code></h3>
 <p>La funzione <code>map</code> restituisce sempre una lista. Se si desidera un vettore di un tipo specifico, si può usare <code>map_dbl</code>, <code>map_chr</code>, <code>map_int</code>, <code>map_lgl</code>, ecc. Ad esempio, dalle regressioni estraiamo il valore di <span class="math inline">\(R^2\)</span>:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(x<span class="sc">~</span>t, x<span class="sc">~</span><span class="fu">poly</span>(t, <span class="dv">2</span>, <span class="at">raw=</span>T), x<span class="sc">~</span><span class="fu">poly</span>(t, <span class="dv">3</span>, <span class="at">raw=</span>T)) <span class="sc">%&gt;%</span> </span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(<span class="sc">~</span> {</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    data <span class="sc">%&gt;%</span> </span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(serie<span class="sc">==</span><span class="st">"x1"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(t, <span class="at">x=</span>valore) <span class="sc">%&gt;%</span></span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">lm</span>(.x, <span class="at">data=</span>.) <span class="sc">%&gt;%</span> </span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">summary</span>()</span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map_dbl</span>(<span class="sc">~</span> .<span class="sc">$</span>r.squared)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.9503130 0.9892973 0.9893064</code></pre>
-</div>
-</div>
+<div id="qwebr-insertion-location-8"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled" title="Esercizio">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -657,43 +2330,11 @@ Esercizio
 <section id="esempio-reduce" class="level3" data-number="1.4.3">
 <h3 data-number="1.4.3" class="anchored" data-anchor-id="esempio-reduce"><span class="header-section-number">1.4.3</span> Esempio: <code>reduce</code></h3>
 <p>Le operazioni di riduzione sono abbastanza comuni. Di fatto ogni <em>statistica</em> (cioè indicatore comune) è una riduzione di un insieme di valori. Ad esempio, calcoliamo la media e la deviazione standard di una serie di dati mediante un loop (e senza ricorrere alle funzioni native <code>mean()</code> e <code>sd()</code>):</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">0</span>)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>sd <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>v <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">10</span>)</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (e <span class="cf">in</span> v) {</span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  m <span class="ot">&lt;-</span> m <span class="sc">+</span> e</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> m <span class="sc">/</span> <span class="fu">length</span>(v)</span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (e <span class="cf">in</span> v) {</span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  sd <span class="ot">&lt;-</span> sd <span class="sc">+</span> (e <span class="sc">-</span> m)<span class="sc">^</span><span class="dv">2</span></span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>sd <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(sd <span class="sc">/</span> (<span class="fu">length</span>(v)<span class="sc">-</span><span class="dv">1</span>))</span>
-<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>           </span>
-<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(<span class="at">mean=</span>m, <span class="at">sd=</span>sd)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>$mean
-[1] 0.358924
-
-$sd
-[1] 1.205336</code></pre>
-</div>
-</div>
+<div id="qwebr-insertion-location-9"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>Ora facciamo la stessa cosa con <code>purrr</code>, usando <code>reduce()</code>. In questo caso la funzione anonima, come specificato dall’help in linea, prende due argomenti: il primo, <code>.x</code>, è il valore accumulato, il secondo, <code>.y</code>, è il valore corrente. Il risultato della funzione anonima viene passato all’iterazione successiva come <code>.x</code>.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">reduce</span>(v, <span class="sc">~</span> .x <span class="sc">+</span> .y) <span class="sc">/</span> <span class="fu">length</span>(v) </span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>sd <span class="ot">&lt;-</span> <span class="fu">sqrt</span>( <span class="fu">reduce</span>(v, <span class="sc">~</span> .x <span class="sc">+</span> (.y <span class="sc">-</span> m)<span class="sc">^</span><span class="dv">2</span>) <span class="sc">/</span> (<span class="fu">length</span>(v)<span class="sc">-</span><span class="dv">1</span>) )</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">list</span>(<span class="at">mean=</span>m, <span class="at">sd=</span>sd)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>$mean
-[1] 0.358924
-
-$sd
-[1] 1.225706</code></pre>
-</div>
-</div>
+<div id="qwebr-insertion-location-10"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>Il codice è decisamente più semplice, tuttavia il valore della deviazione standard è errato. Come mai?</p>
 <div class="callout callout-style-default callout-warning callout-titled" title="Attenzione">
 <div class="callout-header d-flex align-content-center">
@@ -715,39 +2356,12 @@ Attenzione
 <li>ad ogni iterazione successiva, <code>.x</code> contiene il risultato della precedente</li>
 </ul>
 <p>A volte è necessario inizializzare l’accumulatore con un valore diverso da quello del primo elemento della lista, ad esempio perché il risultato finale di <code>reduce</code> deve essere di tipo diverso dall’elemento della lista, o con un valore diverso da quello del primo elemento. In questi casi si può usare il parametro <code>.init</code> di <code>reduce()</code>, passandogli il valore iniziale della variabile di accumulo. Ad esempio, confrontare quanto segue:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">reduce</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="sc">~</span> .x <span class="sc">+</span> .y)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 55</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">reduce</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="sc">~</span> .x <span class="sc">+</span> .y, <span class="at">.init=</span><span class="dv">10</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 65</code></pre>
-</div>
-</div>
+<div id="qwebr-insertion-location-11"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>La prima corrisponde a <span class="math inline">\(\sum_{i=1}^{10} i\)</span>, la seconda a <span class="math inline">\(\sum_{i=11}^{20} i\)</span>.</p>
 <p>È forse più utile quando il tipo desiderato in uscita è diverso. Ad esempio, supponiamo di voler accodare ad una lista, inizialmente vuota, una serie di coppie nome-valore in cui i nomi sono le prime 10 lettere, e i valori sono i primi 10 numeri interi. Usiamo <code>reduce2()</code> in modo da poter lavorare sui due vettori (numeri e lettere) in parallelo:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="sc">:</span><span class="dv">10</span> <span class="sc">%&gt;%</span> </span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reduce2</span>(LETTERS[.], \(acc, n, letter) {</span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    acc[[letter]] <span class="ot">&lt;-</span> n; </span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(acc)</span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  }, <span class="at">.init=</span><span class="fu">list</span>()) <span class="sc">%&gt;%</span> </span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>List of 10
- $ A: int 1
- $ B: int 2
- $ C: int 3
- $ D: int 4
- $ E: int 5
- $ F: int 6
- $ G: int 7
- $ H: int 8
- $ I: int 9
- $ J: int 10</code></pre>
-</div>
-</div>
+<div id="qwebr-insertion-location-12"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled" title="Nota">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -772,18 +2386,8 @@ Nota
 <section id="esempio-accumulate" class="level3" data-number="1.4.4">
 <h3 data-number="1.4.4" class="anchored" data-anchor-id="esempio-accumulate"><span class="header-section-number">1.4.4</span> Esempio: <code>accumulate</code></h3>
 <p>Accumulate si comporta come <code>reduce()</code>, ma restituisce una lista di valori intermedi. Ad esempio, calcoliamo il prodotto cumulativo di una serie di dati, osservando la differenza con <code>reduce()</code>:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">3</span>, <span class="dv">9</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reduce</span>(<span class="sc">~</span> .x <span class="sc">*</span> .y)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 135</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">3</span>, <span class="dv">9</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">accumulate</span>(<span class="sc">~</span> .x <span class="sc">*</span> .y)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1]   1   5  15 135</code></pre>
-</div>
-</div>
+<div id="qwebr-insertion-location-13"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>Questa funzione è spesso utile come debug per <code>reduce()</code>, dato che consente di osservare i valori intermedi.</p>
 <div class="callout callout-style-default callout-note callout-titled" title="Nota">
 <div class="callout-header d-flex align-content-center">
@@ -796,12 +2400,8 @@ Nota
 </div>
 <div class="callout-body-container callout-body">
 <p>Invece che una funzione anonima avremmo potuto usare direttamente la funzione <code>*</code> che accetta due argomenti:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">3</span>, <span class="dv">9</span>) <span class="sc">%&gt;%</span> <span class="fu">accumulate</span>(<span class="st">`</span><span class="at">*</span><span class="st">`</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1]   1   5  15 135</code></pre>
-</div>
-</div>
+<div id="qwebr-insertion-location-14"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </div>
 </div>
 </section>
@@ -809,271 +2409,17 @@ Nota
 <section id="uso-con-dplyrmutate" class="level2" data-number="1.5">
 <h2 data-number="1.5" class="anchored" data-anchor-id="uso-con-dplyrmutate"><span class="header-section-number">1.5</span> Uso con <code>dplyr::mutate</code></h2>
 <p><code>purrr</code> è particolarmente utile in combinazione con <code>mutate()</code>, per eseguire operazioni complesse su colonne di un data frame. Ad esempio, consideriamo il data frame <code>data</code> definito sopra. Vogliamo aggiungere alla colonna <code>valore</code> una valore in funzione della colonna <code>serie</code>. Dato che <code>if</code> non accetta vettori, dobbiamo usare <code>map()</code>:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">valore =</span> <span class="fu">map2_dbl</span>(serie, valore, <span class="sc">~</span> {</span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (.x <span class="sc">==</span> <span class="st">"x1"</span>) {</span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>        .y <span class="sc">+</span> <span class="fl">0.5</span></span>
-<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>      } <span class="cf">else</span> {</span>
-<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>        .y <span class="sc">-</span> <span class="fl">0.5</span></span>
-<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>      }</span>
-<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>    })</span>
-<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">6</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<table class="caption-top table table-sm table-striped small">
-<thead>
-<tr class="header">
-<th style="text-align: right;">t</th>
-<th style="text-align: left;">cond</th>
-<th style="text-align: left;">serie</th>
-<th style="text-align: right;">valore</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">0.0000000</td>
-<td style="text-align: left;">A</td>
-<td style="text-align: left;">x1</td>
-<td style="text-align: right;">1.6314771</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">0.0000000</td>
-<td style="text-align: left;">A</td>
-<td style="text-align: left;">x2</td>
-<td style="text-align: right;">3.1563718</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">0.1010101</td>
-<td style="text-align: left;">A</td>
-<td style="text-align: left;">x1</td>
-<td style="text-align: right;">0.8680026</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">0.1010101</td>
-<td style="text-align: left;">A</td>
-<td style="text-align: left;">x2</td>
-<td style="text-align: right;">2.8044447</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">0.2020202</td>
-<td style="text-align: left;">A</td>
-<td style="text-align: left;">x1</td>
-<td style="text-align: right;">1.7287707</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">0.2020202</td>
-<td style="text-align: left;">A</td>
-<td style="text-align: left;">x2</td>
-<td style="text-align: right;">2.7968102</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<div id="qwebr-insertion-location-15"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>Possiamo essere più sintetici e scrivere:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">valore =</span> <span class="fu">map2_dbl</span>(serie, valore, <span class="sc">~</span> <span class="fu">ifelse</span>(.x <span class="sc">==</span> <span class="st">"x1"</span>, .y <span class="sc">+</span> <span class="fl">0.5</span>, .y <span class="sc">-</span> <span class="fl">0.5</span>))</span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">6</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<table class="caption-top table table-sm table-striped small">
-<thead>
-<tr class="header">
-<th style="text-align: right;">t</th>
-<th style="text-align: left;">cond</th>
-<th style="text-align: left;">serie</th>
-<th style="text-align: right;">valore</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">0.0000000</td>
-<td style="text-align: left;">A</td>
-<td style="text-align: left;">x1</td>
-<td style="text-align: right;">1.6314771</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">0.0000000</td>
-<td style="text-align: left;">A</td>
-<td style="text-align: left;">x2</td>
-<td style="text-align: right;">3.1563718</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">0.1010101</td>
-<td style="text-align: left;">A</td>
-<td style="text-align: left;">x1</td>
-<td style="text-align: right;">0.8680026</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">0.1010101</td>
-<td style="text-align: left;">A</td>
-<td style="text-align: left;">x2</td>
-<td style="text-align: right;">2.8044447</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">0.2020202</td>
-<td style="text-align: left;">A</td>
-<td style="text-align: left;">x1</td>
-<td style="text-align: right;">1.7287707</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">0.2020202</td>
-<td style="text-align: left;">A</td>
-<td style="text-align: left;">x2</td>
-<td style="text-align: right;">2.7968102</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<div id="qwebr-insertion-location-16"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>Però <code>ifelse()</code> <strong>è vettorializzata</strong>, quindi in realtà non c’è bisogno di <code>map()</code>:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">valore =</span> <span class="fu">ifelse</span>(valore <span class="sc">==</span> <span class="st">"x1"</span>, valore <span class="sc">+</span> <span class="fl">0.5</span>, valore <span class="sc">-</span> <span class="fl">0.5</span>)</span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">6</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<table class="caption-top table table-sm table-striped small">
-<thead>
-<tr class="header">
-<th style="text-align: right;">t</th>
-<th style="text-align: left;">cond</th>
-<th style="text-align: left;">serie</th>
-<th style="text-align: right;">valore</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">0.0000000</td>
-<td style="text-align: left;">A</td>
-<td style="text-align: left;">x1</td>
-<td style="text-align: right;">0.6314771</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">0.0000000</td>
-<td style="text-align: left;">A</td>
-<td style="text-align: left;">x2</td>
-<td style="text-align: right;">3.1563718</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">0.1010101</td>
-<td style="text-align: left;">A</td>
-<td style="text-align: left;">x1</td>
-<td style="text-align: right;">-0.1319974</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">0.1010101</td>
-<td style="text-align: left;">A</td>
-<td style="text-align: left;">x2</td>
-<td style="text-align: right;">2.8044447</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">0.2020202</td>
-<td style="text-align: left;">A</td>
-<td style="text-align: left;">x1</td>
-<td style="text-align: right;">0.7287707</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">0.2020202</td>
-<td style="text-align: left;">A</td>
-<td style="text-align: left;">x2</td>
-<td style="text-align: right;">2.7968102</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<div id="qwebr-insertion-location-17"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>Se invece avessimo più casi, allora dovremmo usare <code>map()</code>:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">n</span>(),</span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">r =</span> i <span class="sc">%%</span> <span class="dv">3</span>,</span>
-<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">valore =</span> <span class="fu">map2_dbl</span>(r, valore, <span class="sc">~</span> {</span>
-<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (.x <span class="sc">==</span> <span class="dv">0</span>) {</span>
-<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>        .y <span class="sc">+</span> <span class="fl">0.5</span></span>
-<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>      } <span class="cf">else</span> <span class="cf">if</span> (.x <span class="sc">==</span> <span class="dv">1</span>) {</span>
-<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>        .y <span class="sc">-</span> <span class="fl">0.5</span></span>
-<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>      } <span class="cf">else</span> {</span>
-<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>        .y <span class="sc">-</span> <span class="dv">1</span></span>
-<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>      }</span>
-<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>    })</span>
-<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">6</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<table class="caption-top table table-sm table-striped small">
-<thead>
-<tr class="header">
-<th style="text-align: right;">t</th>
-<th style="text-align: left;">cond</th>
-<th style="text-align: left;">serie</th>
-<th style="text-align: right;">valore</th>
-<th style="text-align: right;">i</th>
-<th style="text-align: right;">r</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">0.0000000</td>
-<td style="text-align: left;">A</td>
-<td style="text-align: left;">x1</td>
-<td style="text-align: right;">0.6314771</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">1</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">0.0000000</td>
-<td style="text-align: left;">A</td>
-<td style="text-align: left;">x2</td>
-<td style="text-align: right;">2.6563718</td>
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">2</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">0.1010101</td>
-<td style="text-align: left;">A</td>
-<td style="text-align: left;">x1</td>
-<td style="text-align: right;">0.8680026</td>
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">0</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">0.1010101</td>
-<td style="text-align: left;">A</td>
-<td style="text-align: left;">x2</td>
-<td style="text-align: right;">2.8044447</td>
-<td style="text-align: right;">4</td>
-<td style="text-align: right;">1</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">0.2020202</td>
-<td style="text-align: left;">A</td>
-<td style="text-align: left;">x1</td>
-<td style="text-align: right;">0.2287707</td>
-<td style="text-align: right;">5</td>
-<td style="text-align: right;">2</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">0.2020202</td>
-<td style="text-align: left;">A</td>
-<td style="text-align: left;">x2</td>
-<td style="text-align: right;">3.7968102</td>
-<td style="text-align: right;">6</td>
-<td style="text-align: right;">0</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<div id="qwebr-insertion-location-18"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled" title="Conclusione">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1127,63 +2473,8 @@ Conclusione
 <section id="operazioni-per-righe" class="level3" data-number="2.1.1">
 <h3 data-number="2.1.1" class="anchored" data-anchor-id="operazioni-per-righe"><span class="header-section-number">2.1.1</span> Operazioni per righe</h3>
 <p>Le operazioni più comuni sono il filtraggio e il riordino delle righe, anche chiamate <em>casi</em> o <em>osservazioni</em>:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(serie <span class="sc">==</span> <span class="st">"x1"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(t) <span class="sc">%&gt;%</span> </span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">6</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<table class="caption-top table table-sm table-striped small">
-<thead>
-<tr class="header">
-<th style="text-align: right;">t</th>
-<th style="text-align: left;">cond</th>
-<th style="text-align: left;">serie</th>
-<th style="text-align: right;">valore</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">0.0000000</td>
-<td style="text-align: left;">A</td>
-<td style="text-align: left;">x1</td>
-<td style="text-align: right;">1.1314771</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">0.1010101</td>
-<td style="text-align: left;">A</td>
-<td style="text-align: left;">x1</td>
-<td style="text-align: right;">0.3680026</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">0.2020202</td>
-<td style="text-align: left;">A</td>
-<td style="text-align: left;">x1</td>
-<td style="text-align: right;">1.2287707</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">0.3030303</td>
-<td style="text-align: left;">A</td>
-<td style="text-align: left;">x1</td>
-<td style="text-align: right;">1.2344699</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">0.4040404</td>
-<td style="text-align: left;">A</td>
-<td style="text-align: left;">x1</td>
-<td style="text-align: right;">0.8415927</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">0.5050505</td>
-<td style="text-align: left;">A</td>
-<td style="text-align: left;">x1</td>
-<td style="text-align: right;">-0.0980538</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<div id="qwebr-insertion-location-19"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>Si noti anche la funzione <code>slice_head()</code> che restituisce le prime <code>n</code> righe di una tabella. Sono utili anche <code>slice_tail()</code> (ultime righe) e <code>slice_sample()</code> (un campione di righe estratte casualmente).</p>
 <div class="callout callout-style-default callout-note callout-titled" title="Esercizio">
 <div class="callout-header d-flex align-content-center">
@@ -1205,58 +2496,8 @@ Esercizio
 <section id="operazioni-per-colonne" class="level3" data-number="2.1.2">
 <h3 data-number="2.1.2" class="anchored" data-anchor-id="operazioni-per-colonne"><span class="header-section-number">2.1.2</span> Operazioni per colonne</h3>
 <p>Le colonne di una tabella sono anche chiamate <em>variabili</em> o <em>campi</em>. Le operazioni più comuni sono la selezione, la creazione e la modifica di variabili:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(t, serie, valore) <span class="sc">%&gt;%</span> </span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">`</span><span class="at">tempo (s)</span><span class="st">`</span> <span class="ot">=</span> t) <span class="sc">%&gt;%</span></span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">`</span><span class="at">valore (mV)</span><span class="st">`</span> <span class="ot">=</span> valore <span class="sc">+</span> <span class="fl">0.5</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>valore) <span class="sc">%&gt;%</span> </span>
-<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">6</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<table class="caption-top table table-sm table-striped small">
-<thead>
-<tr class="header">
-<th style="text-align: right;">tempo (s)</th>
-<th style="text-align: left;">serie</th>
-<th style="text-align: right;">valore (mV)</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">0.0000000</td>
-<td style="text-align: left;">x1</td>
-<td style="text-align: right;">1.6314771</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">0.0000000</td>
-<td style="text-align: left;">x2</td>
-<td style="text-align: right;">4.1563718</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">0.1010101</td>
-<td style="text-align: left;">x1</td>
-<td style="text-align: right;">0.8680026</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">0.1010101</td>
-<td style="text-align: left;">x2</td>
-<td style="text-align: right;">3.8044447</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">0.2020202</td>
-<td style="text-align: left;">x1</td>
-<td style="text-align: right;">1.7287707</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">0.2020202</td>
-<td style="text-align: left;">x2</td>
-<td style="text-align: right;">3.7968102</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<div id="qwebr-insertion-location-20"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>Tutte queste operazioni accettano come argomento il nome o i nomi delle colonne su cui operare. La sintassi <code>rename(`tempo (s)` = t)</code> ad esempio crea una nuova colonna chiamata <code>tempo (s)</code> a partire dalla colonna <code>t</code>, usando i backtick perché il nuovo nome contiene uno spazio e delle parentesi.</p>
 <p>In particolare, <code>select()</code> accetta una sintassi molto flessibile per specificare le colonne, ben illustrata sull’help in linea di <code>select()</code>. Ad esempio, è possibile indicare</p>
 <ul>
@@ -1265,155 +2506,17 @@ Esercizio
 <li><strong>in base al nome</strong>: <code>select(starts_with("x"))</code> seleziona le colonne che iniziano con <code>x</code>, <code>select(ends_with("e"))</code> quelle che finiscono con <code>e</code>, <code>select(contains("1"))</code> quelle che contengono <code>1</code>, <code>select(contains("t"))</code>, quelle che contengono <code>t</code>, ecc.</li>
 </ul>
 <p>La funzione <code>relocate()</code> serve infine per spostare una colonna, con l’opzione di rinominarla:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(<span class="at">condizione=</span>cond, <span class="at">.before=</span>t) <span class="sc">%&gt;%</span> </span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">6</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<table class="caption-top table table-sm table-striped small">
-<thead>
-<tr class="header">
-<th style="text-align: left;">condizione</th>
-<th style="text-align: right;">t</th>
-<th style="text-align: left;">serie</th>
-<th style="text-align: right;">valore</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">A</td>
-<td style="text-align: right;">0.0000000</td>
-<td style="text-align: left;">x1</td>
-<td style="text-align: right;">1.1314771</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">A</td>
-<td style="text-align: right;">0.0000000</td>
-<td style="text-align: left;">x2</td>
-<td style="text-align: right;">3.6563718</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">A</td>
-<td style="text-align: right;">0.1010101</td>
-<td style="text-align: left;">x1</td>
-<td style="text-align: right;">0.3680026</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">A</td>
-<td style="text-align: right;">0.1010101</td>
-<td style="text-align: left;">x2</td>
-<td style="text-align: right;">3.3044447</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">A</td>
-<td style="text-align: right;">0.2020202</td>
-<td style="text-align: left;">x1</td>
-<td style="text-align: right;">1.2287707</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">A</td>
-<td style="text-align: right;">0.2020202</td>
-<td style="text-align: left;">x2</td>
-<td style="text-align: right;">3.2968102</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<div id="qwebr-insertion-location-21"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>Anche con più colonne contemporaneamente:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(<span class="fu">c</span>(serie, <span class="at">condizione=</span>cond), <span class="at">.before=</span>t) <span class="sc">%&gt;%</span> </span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">6</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<table class="caption-top table table-sm table-striped small">
-<thead>
-<tr class="header">
-<th style="text-align: left;">serie</th>
-<th style="text-align: left;">condizione</th>
-<th style="text-align: right;">t</th>
-<th style="text-align: right;">valore</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">x1</td>
-<td style="text-align: left;">A</td>
-<td style="text-align: right;">0.0000000</td>
-<td style="text-align: right;">1.1314771</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">x2</td>
-<td style="text-align: left;">A</td>
-<td style="text-align: right;">0.0000000</td>
-<td style="text-align: right;">3.6563718</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">x1</td>
-<td style="text-align: left;">A</td>
-<td style="text-align: right;">0.1010101</td>
-<td style="text-align: right;">0.3680026</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">x2</td>
-<td style="text-align: left;">A</td>
-<td style="text-align: right;">0.1010101</td>
-<td style="text-align: right;">3.3044447</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">x1</td>
-<td style="text-align: left;">A</td>
-<td style="text-align: right;">0.2020202</td>
-<td style="text-align: right;">1.2287707</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">x2</td>
-<td style="text-align: left;">A</td>
-<td style="text-align: right;">0.2020202</td>
-<td style="text-align: right;">3.2968102</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<div id="qwebr-insertion-location-22"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </section>
 <section id="raggruppamento-e-sommarizzazione" class="level3" data-number="2.1.3">
 <h3 data-number="2.1.3" class="anchored" data-anchor-id="raggruppamento-e-sommarizzazione"><span class="header-section-number">2.1.3</span> Raggruppamento e sommarizzazione</h3>
 <p>Il raggruppamento e la sommarizzazione sono operazioni molto comuni in statistica. Ad esempio, vogliamo calcolare la media e la deviazione standard di <code>valore</code> per ciascuna <code>serie</code>:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(serie) <span class="sc">%&gt;%</span> </span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">media =</span> <span class="fu">mean</span>(valore),</span>
-<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd =</span> <span class="fu">sd</span>(valore)</span>
-<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<table class="caption-top table table-sm table-striped small">
-<thead>
-<tr class="header">
-<th style="text-align: left;">serie</th>
-<th style="text-align: right;">media</th>
-<th style="text-align: right;">sd</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">x1</td>
-<td style="text-align: right;">4.688258</td>
-<td style="text-align: right;">3.3029733</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">x2</td>
-<td style="text-align: right;">2.154934</td>
-<td style="text-align: right;">0.6140001</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<div id="qwebr-insertion-location-23"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled" title="Esercizio">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1431,126 +2534,14 @@ Esercizio
 <section id="unione-di-tabelle" class="level3 page-columns page-full" data-number="2.1.4">
 <h3 data-number="2.1.4" class="anchored" data-anchor-id="unione-di-tabelle"><span class="header-section-number">2.1.4</span> Unione di tabelle</h3>
 <p>L’operazione più semplice tra due tabelle è unirle <strong>una sopra l’altra</strong>, cioè per righe. È il caso in cui si vogliano aggiungere delle osservazioni ad una tabella già esistente. Questa operazione si fa con <code>bind_rows()</code>. Per fare un esempio, cominciamo col separare la tabella <code>data</code> in due parti:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>data1 <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> </span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(t <span class="sc">&lt;</span> <span class="dv">5</span>)</span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>data2 <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> </span>
-<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(t <span class="sc">&gt;=</span> <span class="dv">5</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<div id="qwebr-insertion-location-24"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>Se ora volgiamo riunire le due tabelle, possiamo fare:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>data1 <span class="sc">%&gt;%</span> </span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(data2) <span class="sc">%&gt;%</span> </span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_tail</span>(<span class="at">n=</span><span class="dv">6</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<table class="caption-top table table-sm table-striped small">
-<thead>
-<tr class="header">
-<th style="text-align: right;">t</th>
-<th style="text-align: left;">cond</th>
-<th style="text-align: left;">serie</th>
-<th style="text-align: right;">valore</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">9.79798</td>
-<td style="text-align: left;">B</td>
-<td style="text-align: left;">x1</td>
-<td style="text-align: right;">11.410624</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">9.79798</td>
-<td style="text-align: left;">B</td>
-<td style="text-align: left;">x2</td>
-<td style="text-align: right;">1.502580</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">9.89899</td>
-<td style="text-align: left;">B</td>
-<td style="text-align: left;">x1</td>
-<td style="text-align: right;">11.354701</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">9.89899</td>
-<td style="text-align: left;">B</td>
-<td style="text-align: left;">x2</td>
-<td style="text-align: right;">1.461213</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">10.00000</td>
-<td style="text-align: left;">B</td>
-<td style="text-align: left;">x1</td>
-<td style="text-align: right;">11.699309</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">10.00000</td>
-<td style="text-align: left;">B</td>
-<td style="text-align: left;">x2</td>
-<td style="text-align: right;">1.450917</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<div id="qwebr-insertion-location-25"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>Se in una delle due tabelle mancano una o più colonne, i valori mancanti sono inseriti come <code>NA</code>:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>data1 <span class="sc">%&gt;%</span> </span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(data2 <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>serie)) <span class="sc">%&gt;%</span></span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_tail</span>(<span class="at">n=</span><span class="dv">6</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<table class="caption-top table table-sm table-striped small">
-<thead>
-<tr class="header">
-<th style="text-align: right;">t</th>
-<th style="text-align: left;">cond</th>
-<th style="text-align: left;">serie</th>
-<th style="text-align: right;">valore</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">9.79798</td>
-<td style="text-align: left;">B</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">11.410624</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">9.79798</td>
-<td style="text-align: left;">B</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">1.502580</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">9.89899</td>
-<td style="text-align: left;">B</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">11.354701</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">9.89899</td>
-<td style="text-align: left;">B</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">1.461213</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">10.00000</td>
-<td style="text-align: left;">B</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">11.699309</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">10.00000</td>
-<td style="text-align: left;">B</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: right;">1.450917</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<div id="qwebr-insertion-location-26"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>L’operazione ortogonale a <code>bind_rows()</code> è <code>bind_cols()</code>, che unisce due tabelle per colonne. Questa operazione è ovviamente possibile solo se le due tabelle hanno lo stesso numero di righe, ma presenta possibili problemi logici: cosa succede se le due tabelle, pur avendo lo stesso numero di righe, hanno righe in ordine diverso? In questo caso, <code>bind_cols()</code> unisce le colonne in base all’ordine delle righe, non in base al contenuto, con <strong>risultato inatteso e errato</strong>.</p>
 <p>Per questo motivo è sempre da preferire <code>left_join()</code>, che unisce due tabelle per colonne in base al contenuto di una o più colonne comuni. Questa operazione è molto comune in analisi dati, ad esempio per unire dati provenienti da fonti diverse. La funzione <code>left_join()</code> accetta come argomenti la tabella di sinistra, la tabella di destra, e le colonne su cui fare il join.</p>
 <p>Il <em>join</em> è un’operazione molto comune nell’analisi dei dati, e presente in molti linguaggi e database (SQL). Lo schema a lato presenta un caso esemplare: si hanno due tabelle, una con i clienti e una con gli ordini. Si vuole unire le due tabelle in modo da avere una tabella con tutti gli ordini, e per ciascun ordine il nome del cliente che l’ha effettuato. Questo è un <em>left join</em>, cioè si vogliono tutti gli ordini, anche quelli per cui non c’è un cliente associato. Esistono ovviamente anche <em>right join</em> (tieni tutte le righe della tabella di destra), <em>inner join</em> (tieni solo le righe presenti in entrambe le tabelle), e <em>full join</em> (tieni tutte le righe di entrambe le tabelle).</p>
@@ -1582,69 +2573,8 @@ Esercizio
 </div>
 </div></div><p>In <code>dplyr</code> il <em>left join</em> si fa con <code>left_join()</code>, il <em>right join</em> con <code>right_join()</code>, l’<em>inner join</em> con <code>inner_join()</code>, e il <em>full join</em> con <code>full_join()</code>.</p>
 <p>Il caso più comune è il <em>left join</em>:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>condizione <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">ID =</span> LETTERS[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>],</span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">desc =</span> <span class="fu">c</span>(<span class="st">"freddo"</span>, <span class="st">"caldo"</span>, <span class="st">"tiepido"</span>)</span>
-<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
-<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(condizione, <span class="at">by=</span><span class="fu">c</span>(<span class="st">"cond"</span><span class="ot">=</span><span class="st">"ID"</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(<span class="at">condizione=</span>desc, <span class="at">.after=</span>t) <span class="sc">%&gt;%</span> </span>
-<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>cond) <span class="sc">%&gt;%</span></span>
-<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_sample</span>(<span class="at">n=</span><span class="dv">6</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<table class="caption-top table table-sm table-striped small">
-<thead>
-<tr class="header">
-<th style="text-align: right;">t</th>
-<th style="text-align: left;">condizione</th>
-<th style="text-align: left;">serie</th>
-<th style="text-align: right;">valore</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">0.3030303</td>
-<td style="text-align: left;">freddo</td>
-<td style="text-align: left;">x1</td>
-<td style="text-align: right;">1.234470</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">3.6363636</td>
-<td style="text-align: left;">freddo</td>
-<td style="text-align: left;">x1</td>
-<td style="text-align: right;">3.144840</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">3.9393939</td>
-<td style="text-align: left;">freddo</td>
-<td style="text-align: left;">x1</td>
-<td style="text-align: right;">2.783651</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">1.8181818</td>
-<td style="text-align: left;">freddo</td>
-<td style="text-align: left;">x1</td>
-<td style="text-align: right;">1.527759</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">5.2525253</td>
-<td style="text-align: left;">caldo</td>
-<td style="text-align: left;">x1</td>
-<td style="text-align: right;">4.771152</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">5.4545455</td>
-<td style="text-align: left;">caldo</td>
-<td style="text-align: left;">x2</td>
-<td style="text-align: right;">2.002286</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<div id="qwebr-insertion-location-27"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled" title="Nota">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1672,195 +2602,21 @@ Nota
 <h2 data-number="3.1" class="anchored" data-anchor-id="formati-wide-e-long"><span class="header-section-number">3.1</span> Formati <em>wide</em> e <em>long</em></h2>
 <p>Raccogliere dati provenienti da diverse <em>sorgenti</em> in una tabella in formato <em>wide</em> è piuttosto comune e intuitivo, ed ha il vantaggio di <strong>raggruppare visivamente</strong> dati coerenti. Per questo motivo è un modo molto comune di presentare i dati.</p>
 <p>Se ad esempio stiamo raccogliendo ogni 0.1&nbsp;s le misure di accelerazione da un sensore triassiale (assi <span class="math inline">\(X, Y, Z\)</span>), è naturale avere una tabella con una riga per ciascun campionamento e una colonna per ciascun asse. Questo formato è detto <em>wide</em>:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>accel <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>ID, <span class="sc">~</span>t, <span class="sc">~</span>X, <span class="sc">~</span>Y, <span class="sc">~</span>Z,</span>
-<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="dv">1</span>, <span class="fl">1.0</span>, <span class="dv">128</span>, <span class="dv">120</span>, <span class="dv">135</span>,</span>
-<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2</span>, <span class="fl">1.1</span>, <span class="dv">131</span>, <span class="dv">210</span>, <span class="dv">178</span>,</span>
-<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>  <span class="dv">3</span>, <span class="fl">1.2</span>, <span class="dv">112</span>, <span class="dv">195</span>, <span class="dv">112</span></span>
-<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>accel</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 3 × 5
-     ID     t     X     Y     Z
-  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-1     1   1     128   120   135
-2     2   1.1   131   210   178
-3     3   1.2   112   195   112</code></pre>
-</div>
-</div>
+<div id="qwebr-insertion-location-28"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>Per mettere in grafico i dati con <code>ggplot2</code> dobbiamo trattare ogni asse (colonna) come una serie differente:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>accel <span class="sc">%&gt;%</span> </span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>t)) <span class="sc">+</span></span>
-<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>X, <span class="at">color=</span><span class="st">"X"</span>)) <span class="sc">+</span></span>
-<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>Y, <span class="at">color=</span><span class="st">"Y"</span>)) <span class="sc">+</span></span>
-<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>Z, <span class="at">color=</span><span class="st">"Z"</span>))</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="r-recap_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
+<div id="qwebr-insertion-location-29"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>Tuttavia, per analizzare i dati è spesso più comodo avere i dati in formato <em>long</em>, cioè con una riga per ogni osservazione e una colonna per ogni variabile. Questo formato è più flessibile e permette di usare le funzioni di <code>dplyr</code> e <code>purrr</code>, oltre a <code>ggplot2</code>, in modo più efficiente.</p>
 <p>Per convertire i dati da <em>wide</em> a <em>long</em> si usa <code>pivot_longer()</code>. Questa funzione accetta come argomenti la tabella da trasformare, le colonne da mantenere invariate, e le colonne da trasformare in righe. Ad esempio, per trasformare la tabella <code>accel</code> in formato <em>long</em>:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>accel <span class="sc">%&gt;%</span> </span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
-<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols=</span><span class="sc">-</span><span class="fu">c</span>(ID, t),</span>
-<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to=</span><span class="st">"asse"</span>, </span>
-<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to=</span><span class="st">"accelerazione"</span></span>
-<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<table class="caption-top table table-sm table-striped small">
-<thead>
-<tr class="header">
-<th style="text-align: right;">ID</th>
-<th style="text-align: right;">t</th>
-<th style="text-align: left;">asse</th>
-<th style="text-align: right;">accelerazione</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">1.0</td>
-<td style="text-align: left;">X</td>
-<td style="text-align: right;">128</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">1.0</td>
-<td style="text-align: left;">Y</td>
-<td style="text-align: right;">120</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">1.0</td>
-<td style="text-align: left;">Z</td>
-<td style="text-align: right;">135</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">1.1</td>
-<td style="text-align: left;">X</td>
-<td style="text-align: right;">131</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">1.1</td>
-<td style="text-align: left;">Y</td>
-<td style="text-align: right;">210</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">1.1</td>
-<td style="text-align: left;">Z</td>
-<td style="text-align: right;">178</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">1.2</td>
-<td style="text-align: left;">X</td>
-<td style="text-align: right;">112</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">1.2</td>
-<td style="text-align: left;">Y</td>
-<td style="text-align: right;">195</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">1.2</td>
-<td style="text-align: left;">Z</td>
-<td style="text-align: right;">112</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<div id="qwebr-insertion-location-30"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>Realizzare il grafico con i dati in formato <em>long</em> è più semplice (si noti il riuso dell’estetica e che sono necessarie solo due geometrie al posto delle sei necessarie con i dati in formato <em>wide</em> per ottenere lo stesso grafico):</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>accel <span class="sc">%&gt;%</span> </span>
-<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
-<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols=</span><span class="sc">-</span><span class="fu">c</span>(ID, t),</span>
-<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to=</span><span class="st">"asse"</span>, </span>
-<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to=</span><span class="st">"accelerazione"</span></span>
-<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>t, <span class="at">y=</span>accelerazione, <span class="at">color=</span>asse)) <span class="sc">+</span></span>
-<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">shape=</span>asse), <span class="at">size=</span><span class="dv">2</span>)</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="r-recap_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
+<div id="qwebr-insertion-location-31"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <p>Lo stesso vantaggio si ha ad esempio per le sommarizzazioni:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>accel <span class="sc">%&gt;%</span> </span>
-<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
-<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols=</span><span class="sc">-</span><span class="fu">c</span>(ID, t),</span>
-<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to=</span><span class="st">"asse"</span>, </span>
-<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to=</span><span class="st">"accelerazione"</span></span>
-<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(asse) <span class="sc">%&gt;%</span> </span>
-<span id="cb56-8"><a href="#cb56-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb56-9"><a href="#cb56-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>(),</span>
-<span id="cb56-10"><a href="#cb56-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">media =</span> <span class="fu">mean</span>(accelerazione),</span>
-<span id="cb56-11"><a href="#cb56-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd =</span> <span class="fu">sd</span>(accelerazione),</span>
-<span id="cb56-12"><a href="#cb56-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">min =</span> <span class="fu">min</span>(accelerazione),</span>
-<span id="cb56-13"><a href="#cb56-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">max =</span> <span class="fu">max</span>(accelerazione)</span>
-<span id="cb56-14"><a href="#cb56-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb56-15"><a href="#cb56-15" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copia negli appunti" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<table class="caption-top table table-sm table-striped small">
-<thead>
-<tr class="header">
-<th style="text-align: left;">asse</th>
-<th style="text-align: right;">n</th>
-<th style="text-align: right;">media</th>
-<th style="text-align: right;">sd</th>
-<th style="text-align: right;">min</th>
-<th style="text-align: right;">max</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">X</td>
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">123.6667</td>
-<td style="text-align: right;">10.21437</td>
-<td style="text-align: right;">112</td>
-<td style="text-align: right;">131</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Y</td>
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">175.0000</td>
-<td style="text-align: right;">48.21825</td>
-<td style="text-align: right;">120</td>
-<td style="text-align: right;">210</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Z</td>
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">141.6667</td>
-<td style="text-align: right;">33.50124</td>
-<td style="text-align: right;">112</td>
-<td style="text-align: right;">178</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<div id="qwebr-insertion-location-32"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 <div class="callout callout-style-default callout-note callout-titled" title="Conclusioni">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -2299,6 +3055,122 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
+<script type="module">
+// Handle cell initialization initialization
+qwebrCellDetails.map(
+  (entry) => {
+    // Handle the creation of the element
+    qwebrCreateHTMLElement(entry);
+    // In the event of interactive, initialize the monaco editor
+    if (entry.options.context == EvalTypes.Interactive) {
+      qwebrCreateMonacoEditorInstance(entry);
+    }
+  }
+);
+
+// Identify non-interactive cells (in order)
+const filteredEntries = qwebrCellDetails.filter(entry => {
+  const contextOption = entry.options && entry.options.context;
+  return ['output', 'setup'].includes(contextOption) || (contextOption == "interactive" && entry.options && entry.options.autorun === 'true');
+});
+
+// Condition non-interactive cells to only be run after webR finishes its initialization.
+qwebrInstance.then(
+  async () => {
+    const nHiddenCells = filteredEntries.length;
+    var currentHiddenCell = 0;
+
+
+    // Modify button state
+    qwebrSetInteractiveButtonState(`🟡 Running hidden code cells ...`, false);
+
+    // Begin processing non-interactive sections
+    // Due to the iteration policy, we must use a for() loop.
+    // Otherwise, we would need to switch to using reduce with an empty
+    // starting promise
+    for (const entry of filteredEntries) {
+
+      // Determine cell being examined
+      currentHiddenCell = currentHiddenCell + 1;
+      const formattedMessage = `Evaluating hidden cell ${currentHiddenCell} out of ${nHiddenCells}`;
+
+      // Update the document status header
+      if (qwebrShowStartupMessage) {
+        qwebrUpdateStatusHeader(formattedMessage);
+      }
+
+      // Display the update in non-active areas
+      qwebrUpdateStatusMessage(formattedMessage);
+
+      // Extract details on the active cell
+      const evalType = entry.options.context;
+      const cellCode = entry.code;
+      const qwebrCounter = entry.id;
+
+      if (['output', 'setup'].includes(evalType)) {
+        // Disable further global status updates
+        const activeContainer = document.getElementById(`qwebr-non-interactive-loading-container-${qwebrCounter}`);
+        activeContainer.classList.remove('qwebr-cell-needs-evaluation');
+        activeContainer.classList.add('qwebr-cell-evaluated');
+
+        // Update status on the code cell
+        const activeStatus = document.getElementById(`qwebr-status-text-${qwebrCounter}`);
+        activeStatus.innerText = " Evaluating hidden code cell...";
+        activeStatus.classList.remove('qwebr-cell-needs-evaluation');
+        activeStatus.classList.add('qwebr-cell-evaluated');
+      }
+
+      switch (evalType) {
+        case 'interactive':
+          // TODO: Make this more standardized.
+          // At the moment, we're overriding the interactive status update by pretending its
+          // output-like. 
+          const tempOptions = entry.options;
+          tempOptions["context"] = "output"
+          // Run the code in a non-interactive state that is geared to displaying output
+          await qwebrExecuteCode(`${cellCode}`, qwebrCounter, tempOptions);
+          break;
+        case 'output':
+          // Run the code in a non-interactive state that is geared to displaying output
+          await qwebrExecuteCode(`${cellCode}`, qwebrCounter, entry.options);
+          break;
+        case 'setup':
+          const activeDiv = document.getElementById(`qwebr-noninteractive-setup-area-${qwebrCounter}`);
+
+          // Store code in history
+          qwebrLogCodeToHistory(cellCode, entry.options);
+
+          // Run the code in a non-interactive state with all output thrown away
+          await mainWebR.evalRVoid(`${cellCode}`);
+          break;
+        default: 
+          break; 
+      }
+
+      if (['output', 'setup'].includes(evalType)) {
+        // Disable further global status updates
+        const activeContainer = document.getElementById(`qwebr-non-interactive-loading-container-${qwebrCounter}`);
+        // Disable visibility
+        activeContainer.style.visibility = 'hidden';
+        activeContainer.style.display = 'none';
+      }
+    }
+  }
+).then(
+  () => {
+    // Release document status as ready
+
+    if (qwebrShowStartupMessage) {
+      qwebrStartupMessage.innerText = "🟢 Ready!"
+    }
+  
+    qwebrSetInteractiveButtonState(
+      `<i class="fa-solid fa-play qwebr-icon-run-code"></i> <span>Run Code</span>`, 
+      true
+    );  
+  }
+);
+</script>
 
 
 
