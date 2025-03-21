@@ -13,11 +13,18 @@ format:
   html:
     toc: true
     number-sections: true
+webr:
+  cell-options:
+    autorun: true
+    editor-font-scale: 0.8
+    dpi: 72
+    fig-width: 6
+    fig-height: 3
+    out-width: 75%
+  packages: ['tidyverse', 'glue']
+filters:
+  - webr
 ---
-
-```{r setup, include=FALSE}
-library(tidyverse)
-```
 
 
 # La libreria `purrr`
@@ -61,26 +68,56 @@ In generale: velocità, flessibilità e leggibilità del codice.
 Ad esempio, consideriamo la tabella `mtcars`: vogliamo regredire il modello `mpg ~ wt` (correlazione tra consumo e massa) per ciascuna classe di numero di cilindri. Con `purrr` possiamo scrivere:
 
 
-```{r}
+```{webr-r}
 mtcars %>%  
-  split(mtcars$cyl) %>%   # divide un data frame in una lista di data frame
+  split(~cyl) %>%   # divide un data frame in una lista di data frame
   map(~ lm(mpg ~ wt, data = .)) %>% 
   map(summary) %>% 
   map_dbl("r.squared") %>% 
   round(3)
 ```
+
 :::{.callout-note title="Esercizi"}
 * Ottenere lo stesso risultato con una serie di cicli `for`: confrontare i due approcci.
 * È possibile usare un'unica chiamata a `map()`? se sì, che vantaggi ci sono?
 :::
 
+:::{.callout-tip collapse=true title="Soluzione"}
+Un ciclo `for`:
+
+```{webr-r}
+rsq <- c()
+for (d in split(mtcars, ~cyl)) {
+  r <- (lm(mpg ~ wt, data=d) %>% 
+    summary())$r.squared
+  names(r) <- d$cyl[1]
+  rsq <- append(rsq, r)
+}
+rsq %>% round(3)
+```
+
+Un'unica `map()`:
+
+```{webr-r}
+mtcars %>%  
+  split(~cyl) %>%   # divide un data frame in una lista di data frame
+  map_dbl(~ {
+    (lm(mpg ~ wt, data = .) %>% 
+       summary())$r.squared
+  }) %>% 
+  round(3)
+```
+
+:::
+
+
 ## Varianti
 
 ### Mappe
 
-La funzione base `map` opera su un unico vettore o lista e **restituisce sempre una lista**. È cioè una mappa $n\rightarrow n$, dove $n$ è la lunghezza dell'input, uguale a quella dell'output:
+La funzione base `map` opera su un unico vettore o lista e **restituisce sempre una lista**. È cioè una mappa $n\rightarrow n$ dove $n$ è la lunghezza dell'input, uguale a quella dell'output:
 
-```{r}
+```{webr-r}
 sample(10) %>% 
   map(~ .^2) %>% 
   str()
@@ -88,7 +125,7 @@ sample(10) %>%
 
 Come si vede, il risultato di `map` è una **lista**  di 10 elementi, ciascuno dei quali è il quadrato di un elemento del vettore in ingresso generato da `sample(10)`.
 
-Nei casi pratici spesso è necessario operare su due o più vettori in ingresso, e si desidera ottenere, anziché una lista, un vettore di uno specifico tipo. Per queste operazioni ci sono varianti di `map` che hanno il nome così costituito:
+Nei casi pratici spesso è necessario operare su due o più vettori in ingresso e si desidera ottenere, anziché una lista, un vettore di uno specifico tipo. Per queste operazioni ci sono varianti di `map` che hanno il nome così costituito:
 
 * `map_<tipo>` (ad es. `map_dbl`, `map_chr`, `map_int`, `map_lgl`), per restituire un vettore di numeri, caratteri, interi o logici, rispettivamente
 * `map2` e le varianti `map2_<tipo>` per operare su due vettori in ingresso (stessa lunghezza)
@@ -100,7 +137,7 @@ Il [cheat sheet](https://rstudio.github.io/cheatsheets/purrr.pdf){target="_blank
 ### Cicli *muti*
 
 A volte è necessario iterare su una lista di elementi, ma non si desidera ottenere un output. In questi casi si può usare `walk` e le sue varianti `walk2`, `pwalk`. Ad esempio:
-```{r}
+```{webr-r}
 LETTERS[1:10] %>% 
   walk(~ cat(paste("Lettera", ., "\n")))
 ```
@@ -116,10 +153,18 @@ Lettera 3: C
 :::
 
 
+:::{.callout-tip collapse=true title="Soluzione"}
+```{webr-r}
+LETTERS[1:10] %>% 
+  iwalk(\(l, i) glue("Lettera {i}: {l}") %>% print())
+```
+:::
+
+
 ### Modifica
 
 Per modificare gli elementi di un insieme (lista o vettore), eventualmente secondo un criterio, si possono usare le funzioni `modify`, `modify_if`, `modify_at`. Ad esempio:
-```{r}
+```{webr-r}
 a <- runif(10)
 a %>% 
   modify_if(~ .>0.5, ~ .^2)
@@ -136,7 +181,7 @@ A dispetto del nome, `modify` non modifica l'oggetto in ingresso, ma ne restitui
 ### Riduzione/Accumulo
 
 Infine, `purrr` offre anche funzioni di riduzione, come `reduce`, `accumulate`, `reduce2`, `accumulate2`. Queste funzioni permettono di ridurre una lista di elementi a un singolo valore (quindi sono una mappa $n\rightarrow 1$), secondo un criterio specificato. Ad esempio, applico la funzione addizione per accumulare tutti i numeri da 1 a 10:
-```{r}
+```{webr-r}
 1:10 %>% 
   reduce(`+`)
 ```
@@ -161,7 +206,7 @@ Una funzione vettorializzata è **sempre** più veloce di un ciclo `for` o di un
 
 Definiamo anzitutto una tabella dati di esempio:
 
-```{r}
+```{webr-r}
 set.seed(0)
 n <- 100
 data <- tibble(
@@ -182,7 +227,7 @@ data %>%
 
 Applichiamo una lista di modelli di regressione ad un set di dati. Questo esempio non è vettorializzabile, perché la funzione `lm` non è vettorializzata sull'argomento formula, cioè non accetta un vettore di formule in ingresso. Quindi passiamo la lista delle formule da regredire alla funzione `map`:
 
-```{r}
+```{webr-r}
 list(x~t, x~poly(t, 2, raw=T), x~poly(t, 3, raw=T)) %>% 
   map(~ {
     data %>% 
@@ -213,6 +258,21 @@ c(2, 5, 3) %>%
 ```
 :::
 
+:::{.callout-tip collapse=true title="Soluzione"}
+```{webr-r}
+c(2, 5, 3) %>% 
+  map(~ glue("x~poly(t, {.}, raw=T)") %>% as.formula()) %>% 
+  map(~ {
+    data %>% 
+      filter(serie=="x1") %>% 
+      select(t, x=valore) %>%
+      lm(.x, data=.) %>% 
+      summary()
+  }) 
+```
+
+:::
+
 :::{.callout-note title="Esercizio"}
 Usando lo stesso set di dati e un'ulteriore chiamata a `map()`, ripetere l'analisi su entrambe le serie `x1` e `x2`.
 
@@ -220,11 +280,27 @@ Usando lo stesso set di dati e un'ulteriore chiamata a `map()`, ripetere l'anali
 :::
 
 
+:::{.callout-tip collapse=true title="Soluzione"}
+```{webr-r}
+c(2, 5, 3) %>% 
+  map(~ glue("x~poly(t, {.}, raw=T)") %>% as.formula()) %>% 
+  map(\(formula) {
+    data %>%
+    split(~serie) %>%
+    map(~ { 
+      select(., t, x=valore) %>%
+      lm(formula, data=.) %>% 
+      summary()
+    })
+  }) 
+```
+:::
+
 ### Esempio `map_dbl`
 
 La funzione `map` restituisce sempre una lista. Se si desidera un vettore di un tipo specifico, si può usare `map_dbl`, `map_chr`, `map_int`, `map_lgl`, ecc. Ad esempio, dalle regressioni estraiamo il valore di $R^2$:
 
-```{r}
+```{webr-r}
 list(x~t, x~poly(t, 2, raw=T), x~poly(t, 3, raw=T)) %>% 
   map(~ {
     data %>% 
@@ -232,8 +308,7 @@ list(x~t, x~poly(t, 2, raw=T), x~poly(t, 3, raw=T)) %>%
       select(t, x=valore) %>%
       lm(.x, data=.) %>% 
       summary()
-  }
-) %>% 
+  }) %>% 
   map_dbl(~ .$r.squared)
 ```
 
@@ -241,12 +316,25 @@ list(x~t, x~poly(t, 2, raw=T), x~poly(t, 3, raw=T)) %>%
 Modificare il codice precedente in modo da eseguire una sola chiamata a una funzione `purrr`, ottenendo lo stesso risultato.
 :::
 
+:::{.callout-tip collapse=true title="Soluzione"}
+```{webr-r}
+list(x~t, x~poly(t, 2, raw=T), x~poly(t, 3, raw=T)) %>% 
+  map_dbl(~ {
+    (data %>% 
+      filter(serie=="x1") %>% 
+      select(t, x=valore) %>%
+      lm(.x, data=.) %>% 
+      summary())$r.squared
+  })  
+```
+
+:::
 
 ### Esempio: `reduce`
 
 Le operazioni di riduzione sono abbastanza comuni. Di fatto ogni *statistica* (cioè indicatore comune) è una riduzione di un insieme di valori. Ad esempio, calcoliamo la media e la deviazione standard di una serie di dati mediante un loop (e senza ricorrere alle funzioni native `mean()` e `sd()`):
 
-```{r}
+```{webr-r}
 set.seed(0)
 m <- 0
 sd <- 0
@@ -266,7 +354,7 @@ list(mean=m, sd=sd)
 
 Ora facciamo la stessa cosa con `purrr`, usando `reduce()`. In questo caso la funzione anonima, come specificato dall'help in linea, prende due argomenti: il primo, `.x`, è il valore accumulato, il secondo, `.y`, è il valore corrente. Il risultato della funzione anonima viene passato all'iterazione successiva come `.x`.
 
-```{r}
+```{webr-r}
 m <- reduce(v, ~ .x + .y) / length(v) 
 sd <- sqrt( reduce(v, ~ .x + (.y - m)^2) / (length(v)-1) )
 list(mean=m, sd=sd)
@@ -278,6 +366,15 @@ Il codice è decisamente più semplice, tuttavia il valore della deviazione stan
 Consultando l'help di `reduce()`, provare a comprendere il motivo dell'errore nel calcolo della deviazione standard. Usare anche la funzione `accumulate()` sotto illustrata come versione di debug di `reduce()`.
 :::
 
+:::{.callout-tip collapse=true title="Soluzione"}
+```{webr-r}
+m <- reduce(v, ~ .x + .y) / length(v) 
+sd <- sqrt( reduce(v, ~ .x + (.y - m)^2, .init = 0) / (length(v)-1) )
+list(mean=m, sd=sd)
+```
+
+:::
+
 È necessario prestare attenzione all'**inizializzazione dell'accumulatore**. Come visto sopra:
 
 * la funzione anonima a due parametri (`.x` e `.y`) è chiamata per ogni elemento della lista
@@ -286,7 +383,7 @@ Consultando l'help di `reduce()`, provare a comprendere il motivo dell'errore ne
 
 A volte è necessario inizializzare l'accumulatore con un valore diverso da quello del primo elemento della lista, ad esempio perché il risultato finale di `reduce` deve essere di tipo diverso dall'elemento della lista, o con un valore diverso da quello del primo elemento. In questi casi si può usare il parametro `.init` di `reduce()`, passandogli il valore iniziale della variabile di accumulo. Ad esempio, confrontare quanto segue:
 
-```{r}
+```{webr-r}
 reduce(1:10, ~ .x + .y)
 reduce(1:10, ~ .x + .y, .init=10)
 ```
@@ -295,7 +392,7 @@ La prima corrisponde a $\sum_{i=1}^{10} i$, la seconda a $\sum_{i=11}^{20} i$.
 
 È forse più utile quando il tipo desiderato in uscita è diverso. Ad esempio, supponiamo di voler accodare ad una lista, inizialmente vuota, una serie di coppie nome-valore in cui i nomi sono le prime 10 lettere, e i valori sono i primi 10 numeri interi. Usiamo `reduce2()` in modo da poter lavorare sui due vettori (numeri e lettere) in parallelo:
 
-```{r}
+```{webr-r}
 1:10 %>% 
   reduce2(LETTERS[.], \(acc, n, letter) {
     acc[[letter]] <- n; 
@@ -319,7 +416,7 @@ Nell'ultimo esempio:
 
 Accumulate si comporta come `reduce()`, ma restituisce una lista di valori intermedi. Ad esempio, calcoliamo il prodotto cumulativo di una serie di dati, osservando la differenza con `reduce()`:
 
-```{r}
+```{webr-r}
 c(1, 5, 3, 9) %>% 
   reduce(~ .x * .y)
 
@@ -332,7 +429,7 @@ Questa funzione è spesso utile come debug per `reduce()`, dato che consente di 
 :::{.callout-note title="Nota"}
 Invece che una funzione anonima avremmo potuto usare direttamente la funzione `*` che accetta due argomenti:
 
-```{r}
+```{webr-r}
 c(1, 5, 3, 9) %>% accumulate(`*`)
 ```
 :::
@@ -341,7 +438,7 @@ c(1, 5, 3, 9) %>% accumulate(`*`)
 
 `purrr` è particolarmente utile in combinazione con `mutate()`, per eseguire operazioni complesse su colonne di un data frame. Ad esempio, consideriamo il data frame `data` definito sopra. Vogliamo aggiungere alla colonna `valore` una valore in funzione della colonna `serie`. Dato che `if` non accetta vettori, dobbiamo usare `map()`:
 
-```{r}
+```{webr-r}
 data %>% 
   mutate(
     valore = map2_dbl(serie, valore, ~ {
@@ -352,35 +449,32 @@ data %>%
       }
     })
   ) %>% 
-  slice_head(n=6) %>% 
-  knitr::kable()
+  slice_head(n=6)
 ```
 
 Possiamo essere più sintetici e scrivere:
 
-```{r}
+```{webr-r}
 data %>% 
   mutate(
     valore = map2_dbl(serie, valore, ~ ifelse(.x == "x1", .y + 0.5, .y - 0.5))
   ) %>% 
-  slice_head(n=6) %>% 
-  knitr::kable()
+  slice_head(n=6)
 ```
 
 Però `ifelse()` **è vettorializzata**, quindi in realtà non c'è bisogno di `map()`:
 
-```{r}
+```{webr-r}
 data %>% 
   mutate(
     valore = ifelse(valore == "x1", valore + 0.5, valore - 0.5)
   ) %>% 
-  slice_head(n=6) %>% 
-  knitr::kable()
+  slice_head(n=6)
 ```
 
 Se invece avessimo più casi, allora dovremmo usare `map()`:
 
-```{r}
+```{webr-r}
 data %>% 
   mutate(
     i = 1:n(),
@@ -395,8 +489,7 @@ data %>%
       }
     })
   ) %>% 
-  slice_head(n=6) %>% 
-  knitr::kable()
+  slice_head(n=6)
 ```
 
 :::{.callout-note title="Conclusione"}
@@ -441,12 +534,11 @@ Qui riprendiamo le più comuni, cioè:
 
 Le operazioni più comuni sono il filtraggio e il riordino delle righe, anche chiamate *casi* o *osservazioni*:
 
-```{r}
+```{webr-r}
 data %>% 
   filter(serie == "x1") %>% 
   arrange(t) %>% 
-  slice_head(n=6) %>% 
-  knitr::kable()
+  slice_head(n=6) 
 ```
 
 Si noti anche la funzione `slice_head()` che restituisce le prime `n` righe di una tabella. Sono utili anche `slice_tail()` (ultime righe) e `slice_sample()` (un campione di righe estratte casualmente).
@@ -461,14 +553,13 @@ Si noti anche la funzione `slice_head()` che restituisce le prime `n` righe di u
 
 Le colonne di una tabella sono anche chiamate *variabili* o *campi*. Le operazioni più comuni sono la selezione, la creazione e la modifica di variabili:
 
-```{r}
+```{webr-r}
 data %>% 
   select(t, serie, valore) %>% 
   rename(`tempo (s)` = t) %>%
   mutate(`valore (mV)` = valore + 0.5) %>% 
   select(-valore) %>% 
-  slice_head(n=6) %>% 
-  knitr::kable()
+  slice_head(n=6)
 ```
 
 
@@ -482,20 +573,18 @@ In particolare, `select()` accetta una sintassi molto flessibile per specificare
 
 La funzione `relocate()` serve infine per spostare una colonna, con l'opzione di rinominarla:
 
-```{r}
+```{webr-r}
 data %>% 
   relocate(condizione=cond, .before=t) %>% 
-  slice_head(n=6) %>%
-  knitr::kable()
+  slice_head(n=6)
 ```
 
 Anche con più colonne contemporaneamente:
 
-```{r}
+```{webr-r}
 data %>% 
   relocate(c(serie, condizione=cond), .before=t) %>% 
-  slice_head(n=6) %>%
-  knitr::kable()
+  slice_head(n=6)
 ```
 
 
@@ -504,14 +593,13 @@ data %>%
 
 Il raggruppamento e la sommarizzazione sono operazioni molto comuni in statistica. Ad esempio, vogliamo calcolare la media e la deviazione standard di `valore` per ciascuna `serie`:
 
-```{r}
+```{webr-r}
 data %>% 
   group_by(serie) %>% 
   summarise(
     media = mean(valore),
     sd = sd(valore)
-  ) %>% 
-  knitr::kable()
+  )
 ```
 
 :::{.callout-note title="Esercizio"}
@@ -519,11 +607,23 @@ Calcolare media e deviazione standard per ciascuna serie utilizzando invece una 
 :::
 
 
+:::{.callout-tip collapse=true title="Soluzione"}
+```{webr-r}
+data %>% 
+  split(~serie) %>%
+  map(\(d) {
+    list(mean=mean(d$valore), sd=sd(d$valore))
+  }) %>%
+  str()
+```
+:::
+
+
 ### Unione di tabelle
 
 L'operazione più semplice tra due tabelle è unirle **una sopra l'altra**, cioè per righe. È il caso in cui si vogliano aggiungere delle osservazioni ad una tabella già esistente. Questa operazione si fa con `bind_rows()`. Per fare un esempio, cominciamo col separare la tabella `data` in due parti:
 
-```{r}
+```{webr-r}
 data1 <- data %>% 
   filter(t < 5)
 data2 <- data %>% 
@@ -532,20 +632,18 @@ data2 <- data %>%
 
 Se ora volgiamo riunire le due tabelle, possiamo fare:
 
-```{r}
+```{webr-r}
 data1 %>% 
   bind_rows(data2) %>% 
-  slice_tail(n=6) %>%
-  knitr::kable()
+  slice_tail(n=6)
 ```
 
 Se in una delle due tabelle mancano una o più colonne, i valori mancanti sono inseriti come `NA`:
 
-```{r}
+```{webr-r}
 data1 %>% 
   bind_rows(data2 %>% select(-serie)) %>%
-  slice_tail(n=6) %>%
-  knitr::kable()
+  slice_tail(n=6)
 ```
 
 L'operazione ortogonale a `bind_rows()` è `bind_cols()`, che unisce due tabelle per colonne. Questa operazione è ovviamente possibile solo se le due tabelle hanno lo stesso numero di righe, ma presenta possibili problemi logici: cosa succede se le due tabelle, pur avendo lo stesso numero di righe, hanno righe in ordine diverso? In questo caso, `bind_cols()` unisce le colonne in base all'ordine delle righe, non in base al contenuto, con **risultato inatteso e errato**.
@@ -576,7 +674,7 @@ In `dplyr` il *left join* si fa con `left_join()`, il *right join* con `right_jo
 
 Il caso più comune è il *left join*:
 
-```{r}
+```{webr-r}
 condizione <- tibble(
   ID = LETTERS[1:3],
   desc = c("freddo", "caldo", "tiepido")
@@ -586,8 +684,7 @@ data %>%
   left_join(condizione, by=c("cond"="ID")) %>% 
   relocate(condizione=desc, .after=t) %>% 
   select(-cond) %>%
-  slice_sample(n=6) %>% 
-  knitr::kable()
+  slice_sample(n=6)
 ```
 
 :::{.callout-note title="Nota"}
@@ -611,7 +708,7 @@ Raccogliere dati provenienti da diverse *sorgenti* in una tabella in formato *wi
 
 Se ad esempio stiamo raccogliendo ogni 0.1 s le misure di accelerazione da un sensore triassiale (assi $X, Y, Z$), è naturale avere una tabella con una riga per ciascun campionamento e una colonna per ciascun asse. Questo formato è detto *wide*:
 
-```{r}
+```{webr-r}
 accel <- tribble(
   ~ID, ~t, ~X, ~Y, ~Z,
   1, 1.0, 128, 120, 135,
@@ -624,7 +721,7 @@ accel
 
 Per mettere in grafico i dati con `ggplot2` dobbiamo trattare ogni asse (colonna) come una serie differente:
 
-```{r}
+```{webr-r}
 accel %>% 
   ggplot(aes(x=t)) +
   geom_line(aes(y=X, color="X")) +
@@ -637,19 +734,18 @@ Tuttavia, per analizzare i dati è spesso più comodo avere i dati in formato *l
 
 Per convertire i dati da *wide* a *long* si usa `pivot_longer()`. Questa funzione accetta come argomenti la tabella da trasformare, le colonne da mantenere invariate, e le colonne da trasformare in righe. Ad esempio, per trasformare la tabella `accel` in formato *long*:
 
-```{r}
+```{webr-r}
 accel %>% 
   pivot_longer(
     cols=-c(ID, t),
     names_to="asse", 
     values_to="accelerazione"
-  ) %>% 
-  knitr::kable()
+  )
 ```
 
 Realizzare il grafico con i dati in formato *long* è più semplice (si noti il riuso dell'estetica e che sono necessarie solo due geometrie al posto delle sei necessarie con i dati in formato *wide* per ottenere lo stesso grafico):
 
-```{r}
+```{webr-r}
 accel %>% 
   pivot_longer(
     cols=-c(ID, t),
@@ -663,7 +759,7 @@ accel %>%
 
 Lo stesso vantaggio si ha ad esempio per le sommarizzazioni:
 
-```{r}
+```{webr-r}
 accel %>% 
   pivot_longer(
     cols=-c(ID, t),
@@ -677,8 +773,7 @@ accel %>%
     sd = sd(accelerazione),
     min = min(accelerazione),
     max = max(accelerazione)
-  ) %>% 
-  knitr::kable()
+  )
 ```
 
 :::{.callout-note title="Conclusioni"}
