@@ -2,6 +2,11 @@
 title: "R-recap"
 subtitle: "Programmazione funzionale e manipolazione delle tabelle con Tidyverse"
 author: "Paolo Bosetti"
+abstract: |
+  Questo documento è una ricapitolazione delle librerie `purrr`, `dplyr` e `tidyr`
+  del Tidyverse, con esempi pratici e suggerimenti per l'uso. 
+  Si tratta di una guida pratica, non esaustiva, che si concentra sugli aspetti 
+  più comuni e utili delle due librerie, che saranno utili durante il corso.
 date: today
 lang: it
 format:
@@ -64,8 +69,9 @@ mtcars %>%
   map_dbl("r.squared") %>% 
   round(3)
 ```
-:::{.callout-note title="Esercizio"}
-Ottenere lo stesso risultato con una serie di cicli `for`: confrontare i due approcci.
+:::{.callout-note title="Esercizi"}
+* Ottenere lo stesso risultato con una serie di cicli `for`: confrontare i due approcci.
+* È possibile usare un'unica chiamata a `map()`? se sì, che vantaggi ci sono?
 :::
 
 ## Varianti
@@ -75,12 +81,12 @@ Ottenere lo stesso risultato con una serie di cicli `for`: confrontare i due app
 La funzione base `map` opera su un unico vettore o lista e **restituisce sempre una lista**. È cioè una mappa $n\rightarrow n$, dove $n$ è la lunghezza dell'input, uguale a quella dell'output:
 
 ```{r}
-runif(10) %>% 
+sample(10) %>% 
   map(~ .^2) %>% 
   str()
 ```
 
-Come si vede, il risultato di `map` è una **lista**  di 10 elementi, ciascuno dei quali è il quadrato di un elemento del vettore in ingresso generato da `runif(10)`.
+Come si vede, il risultato di `map` è una **lista**  di 10 elementi, ciascuno dei quali è il quadrato di un elemento del vettore in ingresso generato da `sample(10)`.
 
 Nei casi pratici spesso è necessario operare su due o più vettori in ingresso, e si desidera ottenere, anziché una lista, un vettore di uno specifico tipo. Per queste operazioni ci sono varianti di `map` che hanno il nome così costituito:
 
@@ -98,6 +104,16 @@ A volte è necessario iterare su una lista di elementi, ma non si desidera otten
 LETTERS[1:10] %>% 
   walk(~ cat(paste("Lettera", ., "\n")))
 ```
+
+:::{.callout-note title="Esercizio"}
+Consultare il cheat sheet, modificare l'ultimo chunk e ottenere una riga di messaggi come: 
+```
+Lettera 1: A
+Lettera 2: B
+Lettera 3: C
+...
+```
+:::
 
 
 ### Modifica
@@ -243,7 +259,6 @@ m <- m / length(v)
 for (e in v) {
   sd <- sd + (e - m)^2
 }
-sd
 sd <- sqrt(sd / (length(v)-1))
            
 list(mean=m, sd=sd)
@@ -302,7 +317,7 @@ Nell'ultimo esempio:
 
 ### Esempio: `accumulate`
 
-Accumulate si comporta come `reduce()`, ma restituisce una lista di valori intermedi. Ad esempio, calcoliamo il prodotto cumulativo di una serie di dati, osservando la differenza con reduce
+Accumulate si comporta come `reduce()`, ma restituisce una lista di valori intermedi. Ad esempio, calcoliamo il prodotto cumulativo di una serie di dati, osservando la differenza con `reduce()`:
 
 ```{r}
 c(1, 5, 3, 9) %>% 
