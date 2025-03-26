@@ -1,11 +1,27 @@
 [
   {
+    "listing": "/EsercitazioniAula.html",
+    "items": [
+      "/EsercitazioniAulaDARE/DARE_EsAula1_ ProdScalareFunz.html",
+      "/EsercitazioniAulaDARE/DARE_EsAula2_TrasformateAudio.html"
+    ]
+  },
+  {
     "listing": "/esercizi.html",
     "items": [
       "/esercizi/2_Modulazione in ampiezza.html",
       "/esercizi/3_Taratura dinamica/3_taratura dinamica.html",
       "/esercizi/4_Compensazione_dinamica.html",
       "/esercizi/4_Inv_armoniche_pure v2.html"
+    ]
+  },
+  {
+    "listing": "/EsercitazioniCasa.html",
+    "items": [
+      "/EsercitazioniCasaDARE/DARE_2_ModulazioneAmpiezza.html",
+      "/EsercitazioniCasaDARE/3_TaraturaDinamica/DARE_3_taratura dinamica.html",
+      "/EsercitazioniCasaDARE/DARE_4_Compensazione_dinamica.html",
+      "/EsercitazioniCasaDARE/DARE_4_Inv_armoniche_pure v2.html"
     ]
   }
 ]
