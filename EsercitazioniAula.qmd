@@ -1,0 +1,16 @@
+---
+title: "Esercitazioni in Aula"
+format: html
+date: "02/17/2025"
+date-modified: today
+listing:
+  type: table
+  contents: EsercitazioniAulaDARE
+  fields: [date, title, author, description, categories, reading-time]
+  sort-ui: [title, categories, description, date]
+  sort: title
+  filter-ui: true
+---
+
+# Applicazioni pratiche ed esercizi
+Queste esercitazioni saranno svolte in aula assieme al docente allo scopo di approfondire alcuni aspetti della teoria.

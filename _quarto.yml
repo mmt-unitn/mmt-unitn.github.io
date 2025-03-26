@@ -13,8 +13,12 @@ website:
         text: R-recap
       - href: teoria.qmd
         text: Teoria
-      - href: esercizi.qmd
-        text: Esercitazioni
+      - text: Esercitazioni
+        menu:
+        - href: EsercitazioniAula.qmd
+          text: In aula
+        - href: EsercitazioniCasa.qmd
+          text: A casa
       - about.qmd
 execute:
   freeze: auto

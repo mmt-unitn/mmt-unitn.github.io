@@ -93,6 +93,16 @@
       ],
       "Hash": "c39f4155b3ceb1a9a2799d700fbd4b6a"
     },
+    "audio": {
+      "Package": "audio",
+      "Version": "0.1-11",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R"
+      ],
+      "Hash": "4ea781155975a6d220888443f5e823dc"
+    },
     "backports": {
       "Package": "backports",
       "Version": "1.5.0",

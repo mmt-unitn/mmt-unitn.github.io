@@ -1,0 +1,307 @@
+---
+title: "EsAula2_ Trasformate Audio"
+author: "Mariolino De Cecco"
+date: "`r Sys.Date()`"
+format: 
+  html:
+    toc: TRUE
+    html-math-method: katex
+engine: knitr
+editor: 
+  markdown: 
+    wrap: sentence
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  fig.asp=9/16
+)
+library(tidyverse)
+library(patchwork)
+library(knitr)
+library(gsignal)
+library(latex2exp)
+library(plotly)
+library(tibble)
+library(dplyr)
+
+# Specifiche per l'esercitazione
+library(audio)
+
+library(pracma)
+
+library(magrittr)
+
+```
+
+## Funzioni
+
+```{r}
+# FUNZIONE: Prodotto scalare
+`%ps%` <- function(A, B) mean(A*B)
+
+# FUNZIONE: Norma di un vettore
+norm_ps <- function(A) sqrt(A %ps% A)
+
+# FUNZIONE: Prodotto scalare Normalizzato tra vettori decimati 'n' volte
+`%psDnN%` <- function(A, B, n){
+  n <- 5
+  A_decimato <- A[seq(1, length(A), by = n)] 
+  B_decimato <- B[seq(1, length(B), by = n)]
+  mean(A_decimato*B_decimato) / (norm_ps(A) * norm_ps(B))
+} # Fine funzione
+
+
+# FUNZIONE: Registra Audio
+registraAudio <- function(durata, file_audio, rate=44100){
+  # Esempio chiamata registrando 'Mi' come sillaba:
+  # S_Mi <- registraAudio(1, "registrazione.wav")
+  #
+  
+  x <- rep(NA_real_, rate * durata)
+  audio::wait(audio::record(x, rate, 1), durata)
+  audio::save.wave(x, file_audio)
+  audio::wait(audio::play(x), durata)
+  
+  
+  # Definiamo il segnale ed il suo spettro
+  Segnale <- tibble(
+    y = x,
+    t = seq_along(y) / rate,
+    f = 0:(length(y)-1) / max(t),
+    fft_y = fft(y),
+    intensity = Mod(fft_y) / length(y),  # Intensità normalizzata
+    phase = Arg(fft_y) / pi * 180    # Fase in gradi
+  )
+  
+  
+  # Smussiamo con una maschera gaussiana l'intensità dello spettro
+  # Ogni picco avrà infatti un'incertezza associata che, se modellata con una gaussiana, si può propagare proprio con la convoluzione con una maschera Gaussiana (pensare all'esempio di un solo picco)
+  # Definiamo la maschera
+  width <- 30
+  mean = 2*width
+  h <- dnorm(1:(4*width), mean = mean, sd = width)
+  
+  # Convoluzione 
+  intensitySmooth <- convolve(Segnale$intensity, h, type = "open")
+
+  # Aggiorniamo il tibble
+  Segnale <- Segnale %>%
+    mutate(
+      intensitySmooth = intensitySmooth[mean:(mean+length(t)-1)]
+    )
+  
+  Segnale # l'ultimo comando è ciò che la funzione restituisce
+} # Fine funzione
+
+```
+
+
+# Esercitazione sulla Trasformata di Fourier
+
+In questa esercitazione utilizzeremo registrazioni audio per capire cosa rappresenta lo spettro di un segnale e come poterlo impiegare.
+
+## Segnali audio 
+Il suono che percepiamo è una vibrazione dell’aria che si propaga sotto forma di onde di pressione. L’orecchio umano è in grado di captare queste onde in un intervallo di frequenze che va **da 20 Hz a 20.000 Hz** (20 kHz), sebbene *con l’età il limite superiore tenda a ridursi*. Questo intervallo rappresenta lo **spettro dell’udibile umano**, ed è il riferimento principale per la registrazione e l’elaborazione digitale dell’audio.
+
+## Frequenza di Campionamento e Aliasing
+Quando un segnale audio viene convertito in forma digitale, è necessario campionarlo, ovvero misurarlo a intervalli regolari di tempo. La frequenza di campionamento indica quante volte al secondo viene registrato un valore del segnale, ed è espressa in Hertz (Hz). Secondo il **teorema di Nyquist-Shannon**, per rappresentare fedelmente un suono con frequenza massima $f_{max}$, è necessario campionarlo con una frequenza almeno pari a due volte $f_{max}$
+
+Ad esempio, per coprire l’intero spettro udibile (fino a 20 kHz), si usa una **frequenza di campionamento di 44.1 kHz, come nello standard CD audio**. Se il campionamento è inferiore a $2 f_{max}$, si verifica l’aliasing, un effetto indesiderato in cui frequenze superiori al limite vengono riprodotte in modo errato nel segnale digitale, generando distorsioni. Per evitarlo, si utilizzano filtri anti-aliasing prima della digitalizzazione del suono.
+
+## Numero di Bit e Qualità del Suono
+Oltre alla frequenza di campionamento, un altro parametro cruciale è il numero di bit per campione, che determina la risoluzione dell’audio digitale. Questo valore influisce sulla dinamica del suono, ossia sulla capacità di rappresentare differenze di intensità:
+
+**8 bit** → Qualità bassa (usata in vecchi telefoni e sistemi audio rudimentali).
+**16 bit** → *Standard CD audio*, con un range dinamico sufficiente per la maggior parte delle applicazioni musicali.
+**24 bit** → Alta qualità, utilizzata in registrazioni professionali e studi di mastering.
+Un numero maggiore di bit riduce il rumore di quantizzazione, che è l’errore introdotto dalla rappresentazione numerica dei campioni.
+
+## Riconoscimento del Parlato e Template Matching
+Uno degli ambiti più affascinanti dell’elaborazione dei segnali audio è il riconoscimento del parlato. Tra i metodi più semplici per identificare parole o suoni vi è il template matching, che confronta un segnale audio con un insieme di esempi pre-registrati.
+
+Il procedimento base è il seguente:
+
+- **Pre-elaborazione**: il segnale viene ad esempio normalizzato e/o filtrato per eliminare rumori indesiderati.
+- **Estrazione delle caratteristiche**: si calcolano parametri come lo spettro.
+- **Confronto con modelli predefiniti**: ogni nuovo segnale viene confrontato con quelli memorizzati in un database, utilizzando **metriche di similarità** come la *distanza euclidea*, il *prodotto scalare*, la *cross-correlazione*. Spesso si impiega il Dynamic Time Warping (DTW) per compensare variazioni nella velocità di pronuncia.
+- **Decisione**: il sistema sceglie il modello più simile come risultato finale.
+
+Sebbene il template matching sia efficace per riconoscere parole isolate o piccoli vocabolari, tecniche più avanzate come **reti neurali** e **modelli statistici (HMM, deep learning)** sono oggi alla base del riconoscimento vocale moderno, come quello usato negli assistenti virtuali (Siri, Google Assistant, Alexa, ...).
+
+
+### Cross-correlazione
+
+Consideriamo due segnali $x$ ed $y$ che provengono da una stessa sorgente d'informazione (risultando quindi simili) e che differiscono per uno spostamento sull'asse $t$. Per calcolare lo scostamento temporale si può calcolare la correlazione incrociata per mostrare di quanto $y$ deve essere anticipato per renderlo identico/simile ad $x$. 
+
+La formula essenzialmente anticipa il segnale y  lungo l'asse t, calcolando l'integrale del prodotto per ogni possibile valore dello spostamento:
+
+$$ Corr_{x,y}(t)= \int_{-\infty }^{\infty } x(\tau ) \cdot y(t+\tau )\cdot d\tau $$
+Ciò che si ottiene, $Corr_{x,y}(t)$ è **anch'esso un segnale temporale**.
+
+Quando i due segnali coincidono temporalmente, il valore della cross-correlazione è massimizzato.
+
+Nel caso di segnali digitali, ovvero di vettori, si ottiene:
+
+$$ Corr_{x,y}[n]=  \sum_{i=-\infty }^{\infty } x[i] \cdot y[n+i] $$
+
+Ciò che si ottiene, $Corr_{x,y}[n]$ è **anch'esso un vettore** in cui per $n = 0$ si ottiene il prodotto scalare, per $n \neq 0$ il prodotto scalare tra un vettore e l'altro spostato di $n$ elementi.
+Se **rappresentiamo** $Corr_{x,y}[n]$essa ci evidenzierà per *quale ritardo* tra i due segnali $x$ ed $y$ essi risulteranno allineati. Nel caso dividiamo per il modulo di entrambi i segnali, i valori della cross-correlazione ci indicheranno anche *il valore della similarità* tra i segnali:
+- 0: segnali ortogonali
+- 1: segnali identici
+- -1: segnali opposti
+
+
+## Registriamo dei suoni
+
+Potranno essere:
+- alcune sillabe
+- note diverse di uno strumento musicale
+
+```{r}
+# Note sulle registrazioni:
+# Si1,2,3 + Po1,2,3,4,5,6,7 (il 3 è ritardato)
+message("Registra Suono o Sillaba")
+S_SI1 <- Segnale <- registraAudio(2, "registrazione_MI3.wav")
+
+with(Segnale, {
+  # Andamento temporale segnale audio
+  pp <- plot_ly() %>%
+   add_lines(t, y, name = "Onda audio", line = list(color = "blue")) %>%
+    layout(
+    title = "Il Segnale",
+    xaxis = list(title = "Tempo [s]")
+  )
+  pp
+}
+)
+  
+with(Segnale, {
+  # Spettro segnale audio
+  pp <- plot_ly() %>%
+   add_lines(f, intensity / norm_ps(intensity), name = "FFT", line = list(color = "cyan")) %>%
+   add_lines(f, intensitySmooth / norm_ps(intensitySmooth), name = "FFT smussata Gauss", line = list(color = "blue")) %>%
+     layout(
+     title = "Spettri dei due Segnali",
+     xaxis = list(title = "Frequenza [Hz]")
+   )
+  pp
+}
+)
+
+
+
+```
+
+
+
+
+
+## Confrontiamo gli spettri e valutiamo la similarità
+
+Per valutare la similarità tra due segnali audio:
+1. li ascoltiamo
+2. calcoliamo la **cross-correlazione nel dominio del tempo** tramite la funzione ccf(). Per impostazione predefinita, *ccf() restituisce la cross-correlazione normalizzata*, con valori compresi nell'intervallo [-1, 1]. 
+3. calcoliamo il **prodotto scalare normalizzato nel dominio della frequenza**
+4. mostriamo la *rappresentazione* del modulo degli spettri
+
+
+```{r}
+# I due segnali audio -----> SCOMMENTA
+# Segnale1 <- S_SI1
+# Segnale2 <- S_PO
+
+# Carica il 1° file audio
+  audio_wave1 <- load.wave("registrazione_MI_p.wav")
+  audio_wave2 <- load.wave("registrazione_SI_p.wav")
+  # Estraiamo frequenza di campionamento
+  fc <- audio_wave1$rate
+  
+  # Definiamo il 1° segnale ed il suo spettro
+  Segnale1 <- tibble(
+    y = as.numeric(audio_wave1),
+    t = seq_along(y) / fc,
+    f = 0:(length(y)-1) / max(t),
+    fft_y = fft(y),
+    intensity = Mod(fft_y) / length(y),  # Intensità normalizzata
+    phase = Arg(fft_y) / pi * 180    # Fase in gradi
+  )
+  
+    # Definiamo il 2° segnale ed il suo spettro
+  Segnale2 <- tibble(
+    y = as.numeric(audio_wave2),
+    t = seq_along(y) / fc,
+    f = 0:(length(y)-1) / max(t),
+    fft_y = fft(y),
+    intensity = Mod(fft_y) / length(y),  # Intensità normalizzata
+    phase = Arg(fft_y) / pi * 180    # Fase in gradi
+  )
+
+
+pp <- plot_ly() %>%
+  add_lines(Segnale1$t, Segnale1$y, name = "Onda audio 1", line = list(color = "blue")) %>%
+  add_lines(Segnale2$t, Segnale2$y, name = "Onda audio 2", line = list(color = "cyan")) %>%
+    layout(
+    title = "I due Segnali",
+    xaxis = list(title = "Tempo [s]")
+  )
+pp
+
+# 1. Ascoltiamo i due segnali con SoX:
+wait(audio::play(audio_wave1), 2)
+wait(audio::play(audio_wave2), 2)
+
+
+# 2. Cross-correlazione nel dominio del tempo
+ccf_result <- ccf(Segnale1$y, Segnale2$y, lag.max = length(Segnale1$y) %/% 2, main = "Cross-Correlation")
+# Valore massimo della correlazione ed il corrispondente shift (lag)
+max_cor <- max(ccf_result$acf)
+best_lag <- ccf_result$lag[which.max(ccf_result$acf)]
+# Stampiamo i risultati
+cat("Massima correlazione:", max_cor, "\n")
+cat("Miglior lag:", best_lag, "\n")
+
+
+# 3.a Prodotto scalare normalizzato tra spettri decimati
+pScalare <- Segnale1$intensity %psDnN% Segnale2$intensity
+cat("Prodotto scalare normalizzato:", pScalare, "\n")
+
+
+# 4.a Rappresentazione intensità degli spettri
+pp <- plot_ly() %>%
+  add_lines(Segnale1$f, Segnale1$intensity / norm_ps(Segnale1$intensity), name = "Si", line = list(color = "blue")) %>%
+  add_lines(Segnale2$f, Segnale2$intensity / norm_ps(Segnale2$intensity), name = "Po", line = list(color = "cyan")) %>%
+    layout(
+    title = "Spettri dei due Segnali",
+    xaxis = list(title = "Frequenza [Hz]")
+  )
+pp
+
+# 
+# # 3.b Prodotto scalare normalizzato tra spettri smussati e decimati
+# pScalareSmooth <- Segnale1$intensitySmooth %psDnN% Segnale2$intensitySmooth
+# cat("Prodotto scalare normalizzato tra FFT smussate:", pScalareSmooth, "\n")
+# 
+# # 4.b Rappresentazione intensità degli spettri smussati
+# pp <- plot_ly() %>%
+#   add_lines(Segnale1$f, Segnale1$intensitySmooth / norm_ps(Segnale1$intensitySmooth), name = "Si", line = list(color = "blue")) %>%
+#   add_lines(Segnale2$f, Segnale2$intensitySmooth / norm_ps(Segnale2$intensitySmooth), name = "Po", line = list(color = "cyan")) %>%
+#     layout(
+#     title = "Spettri dei due Segnali Smussati",
+#     xaxis = list(title = "Frequenza [Hz]")
+#   )
+# pp
+
+```
+
+
+::: {.callout-note title="Esercizi"}
+
+**Provare ad indagare**:
+
+- perché la cross-correlazione nel tempo impiega così tanto tempo rispetto al prodotto scalare degli spettri in frequenza? Quale conviene usare?
+- differenza tra suoni di strumenti musicali e sillabe pronunciate dalla stessa persona o persone diverse
+- il prodotto scalare normalizzato nel dominio della frequenza come cambia in funzione della maschera gaussiana?
+
+:::
+

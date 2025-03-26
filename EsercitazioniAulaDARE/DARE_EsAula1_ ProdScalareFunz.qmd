@@ -1,0 +1,224 @@
+---
+title: "EsAula1 - Prod scalare Funz"
+author: "Mariolino De Cecco e Paolo Bosetti"
+date: "`r Sys.Date()`"
+format: 
+  html:
+    toc: TRUE
+    html-math-method: katex
+engine: knitr
+editor: 
+  markdown: 
+    wrap: sentence
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  fig.asp=9/16
+)
+library(tidyverse)
+library(patchwork)
+library(knitr)
+library(gsignal)
+library(latex2exp)
+library(plotly)
+```
+
+# Esercitazione sulla Trasformata di Fourier
+
+In questa esercitazione vedremo come, tramite la definizione di prodotto scalare tra funzioni, sarà possibile ricavare le componenti armoniche presenti nei segnali e con esse ricostruire in maniera approssimata il segnale stesso.
+
+La trasformata di Fourier trasforma il segnale dal dominio del tempo al dominio della frequenza.
+In altre parole una funzione del tempo viene rappresentata, tramite opportuni coefficienti, in una funzione della frequenza evidenziando quali componenti armoniche compaiono nel segnale.
+
+Un segnale funzione del tempo s(t) rappresenta un segnale reale che varia in funzione del tempo senza soluzione di continuità.
+Un segnale discreto è un segnale campionato e quantizzato.
+Dunque rappresentabile tramite un vettore $s = \{s(1), s(2), \dots, S(N)\}$, dove $n = 1\dots N$ sono gli $N$ campioni acquisiti ad una certa frequenza di campionamento $f_c$.
+
+# Scomposizione di un vettore su di una base di versori orto-normali
+
+Per comprendere il concetto di scomposizione di un segnale tempovariante si può pensare al parallelo vettoriale: un vettore nel piano può essere scomposto secondo due direzioni mutuamente ortogonali.
+In tale maniera si ottiene la scomposizione mediante la semplice relazione del prodotto scalare :
+
+$$
+\mathbf{v} = \alpha \mathbf{e}_1 + \beta \mathbf{e}_2
+$$ {#eq-1}
+
+dove $\mathbf{e}_1$ ed $\mathbf{e}_2$ sono i versori delle direzioni mutuamente ortogonali ($\mathbf{e}_1 \cdot \mathbf{e}_2 = 0$).
+Grazie alla proprietà di ortogonalità della base posso scrivere infatti:
+
+$$
+\alpha = \mathbf{v}\cdot\mathbf{e}_1 =  (\alpha \mathbf{e}_1 + \beta \mathbf{e}_2)\cdot \mathbf{e}_1 \\
+\beta = \mathbf{v}\cdot\mathbf{e}_2
+$$ {#eq-2}
+
+che definisce l'operazione di scomposizione tramite la semplice operazione di prodotto scalare.
+L'@eq-1 suggerisce di rappresentare il vettore in una maniera diversa, ovvero considerando le sole componenti lungo i due versori:
+
+$$
+\mathbf{v}=[\alpha, \beta]
+$$
+
+tale rappresentazione consente di effettuare considerazioni sul vettore solamente tramite le sue componenti nelle direzioni della base ortogonale di vettori $\mathbf{e}_1$ ed $\mathbf{e}_2$.
+Ovvero il vettore può essere 'pensato' come una 'freccia' nel piano oppure come insieme di componenti.
+
+La relazione di eguaglianza espressa in @eq-1 garantisce la reversibilità, ovvero dati i parametri della trasformazione in componenti vettoriali lungo una coppia di direzioni ortogonali, è possibile risalire esattamente al vettore originario.
+
+Dalla @eq-1 e la @eq-2 si ottiene:
+
+$$
+\mathbf{v} = (\mathbf{v}\cdot\mathbf{e}_1) \mathbf{e}_1 + (\mathbf{v}\cdot \mathbf{e}_2) \mathbf{e}_2
+$$
+
+che riassume i concetti prima espressi.
+
+# Scomposizione di un segnale tempovariante continuo su di una base di funzioni orto-normali
+
+Per i segnali temporali vale un ragionamento analogo.
+Per semplicità considereremo lo sviluppo in serie invece della trasformata di Fourier in quanto da esso è poi possibile, tramite passaggio al limite, ricavare la formula della trasformata.
+
+Una **funzione periodica** gode della proprietà che $g(t)=g(t+nT)$ per ogni valore $n$ intero.
+$T$ è il periodo ed $f_0 = 1/T$ è la **frequenza fondamentale**, mentre $\omega = 2\pi f$ è la **pulsazione**.
+Essa può essere scomposta in serie di Fourier come segue.
+
+$$
+g(t)=\frac{1}{2}a_o + \sum_{n=1}^{\infty}a_n \cos(\omega_n t) + \sum_{n=1}^{\infty}b_n \sin(\omega_n t)
+$$ {#eq-sft}
+
+Dove $\omega_n = 2\pi n f_0$.
+
+I coefficienti $a_n$ e $b_n$ vengono ricavati secondo le seguenti relazioni:
+
+$$
+a_n = \frac{2}{T}\int_0^T g(\tau)\cos(\omega_nt)d\tau \\
+b_n = \frac{2}{T}\int_0^T g(\tau)\sin(\omega_nt)d\tau
+$$ {#eq-ab-coeffs}
+
+La @eq-sft vuol dire scomporre la funzione $g(t)$ secondo la base di funzioni ortogonali armoniche.
+
+### Definizione di prodotto scalare tra funzioni continue e discrete
+
+La @eq-sft corrisponde alla media delle componenti del prodotto elemento per elemento tra i due vettori.
+Dunque il prodotto scalare tra segnali/funzioni periodiche si definisce come:
+
+$$
+g(t)\bullet f(t)=\frac{1}{T}\int_0^T g(\tau)f^*(\tau)d\tau
+$$ {#eq-prodscal}
+
+dove con $f^*(t)$ si intende la funzione **complessa coniugata** di $f(t)$ che, nel caso di funzioni reali, coincide con se stessa.
+
+Nel caso di funzioni digitalizzate $g_k$ ed $f_k$ consistono nei due vettori $\{g(1), g(2),\dots, g(N)\}$ e $\{f(1), f(2),\dots, f(N)\}$ e quindi si definisce prodotto scalare tra i segnali digitalizzati:
+
+$$
+g_k\bullet f_k=\frac{1}{T}\sum_{i=1}^N g_i f_i = \\
+ \{g(1), g(2),\dots, g(N)\} \bullet \{f(1), f(2),\dots, f(N)\}^T / N
+$$ {#eq-decompose}
+
+Di seguito esempi in R di scomposizione di un'onda quadra su una base ortogonale e sua ricomposizione sulla stessa base.
+Poi scomposizione e ricomposizione secondo la serie di Fourier.
+Si noti che un'onda quadra che parte con fronte di salita esattamente con il primo campione risulta essere scomponibile solo mediante sinusoidi per cui dimenticheremo le componenti coseno.
+
+### Esempio
+
+Definiamo le funzioni **prodotto scalare tra segnali digitalizzati** e relativa **norma**.
+La prima funzione la definiamo come operatore `%ps%`:
+
+```{r}
+  # secondo le equazioni:
+`%ps%` <- function(A, B) mean(A*B)
+```
+
+Per la norma, definiamo la funzione `norm_ps` (dato che `norm` è già definita):
+
+```{r}
+norm_ps <- function(A) sqrt(A %ps% A)
+
+(1:5) %ps% (5:1)
+norm_ps(1:5)
+```
+
+Ora creiamo un segnale onda quadra (il segno dell'onda seno) campionato su 1000 punti tra 0 e 1, con frequenza f0 Hz:
+
+```{r fig.cap="Onda quadra e corrispondente sinusoide di pari frequenza e ampiezza"}
+f0 <- 8
+fc <- 1000
+Tm <- 1
+dt <- 1/fc
+
+sin_k <- function(t, f, k=1) sin(2*pi*f*k*t)
+cos_k <- function(t, f, k=1) cos(2*pi*f*k*t)
+
+Segnale <- tibble(
+  t = seq(dt, Tm, dt),
+  ys = sin_k(t, f0),
+  yq = sign(ys)
+)
+
+Segnale %>% 
+  pivot_longer(-t, names_to = "signal") %>% 
+  ggplot(aes(x=t, y=value, color=signal)) +
+  geom_line() 
+```
+
+Calcoliamo le prime K componenti della serie, secondo @eq-decompose:
+
+```{r}
+K <- 80
+f_fond <- 1 / Tm
+comps <- map_dbl(1:K, \(k) {
+  s <- sin_k(Segnale$t, f_fond, k)
+  Segnale$yq %ps% s/norm_ps(s) # si noti "s/norm_ps(s)" è un 'versore' avendo norma 1
+}) %>% zapsmall()
+
+comps
+```
+
+Approssimiamo l'onda quadra come somma delle prime `r K` componenti:
+
+```{r fig.cap="Onda quadra e sua approssimazione come composizione dei primi sette termini della serie di Fourier"}
+Segnale <- Segnale %>%
+  mutate(
+    yqk = rowSums(
+      sapply(1:K, function(k) {
+        s <- sin_k(t, f_fond, k)
+        comps[k] * s / norm_ps(s)
+      })
+    )
+  )
+
+Segnale
+
+
+
+pp <- plot_ly() %>%
+  add_lines(Segnale$t, Segnale$yq, name = "Onda quadra", line = list(color = "blue")) %>%
+  add_lines(Segnale$t, Segnale$yqk, name = "Onda approssimata", line = list(color = "red")) %>%
+  layout(
+    title = "Segnale ed approssimazione",
+    xaxis = list(title = "Time")
+  )
+pp  # Mostra il grafico
+
+```
+
+::: {.callout-note title="Esercizi"}
+
+Provare ad esercitarsi:
+
+1. Partire da $K=1$ e incrementare di 1 alla volta. Cosa si nota?
+
+2. Con $f_0=1$ aumentare $K$ di alcune centinaia e poi vicino a 500.  
+   Cosa succede? Esiste un numero $K$ per cui il segnale ricomposto diviene  
+   pressoché perfettamente un'onda quadra? Se si aumenta ulteriormente questo  
+   numero cosa succede e perchè? Fino a che frequenza si può arrivare?
+
+3. Mostrare in un grafico i coefficienti in funzione della frequenza.
+
+4. Verificare che le armoniche rappresentano una base ortonormale.
+
+5. Cambiare la funzione periodica da approssimare:  
+   - **Dente di sega a media nulla** (*Suggerimento:* usare l'operatore `%%`)  
+   - **Integrale del Dente di sega a media nulla** (*Suggerimento:* usare l'operatore `cumsum()`)  
+
+:::
+
