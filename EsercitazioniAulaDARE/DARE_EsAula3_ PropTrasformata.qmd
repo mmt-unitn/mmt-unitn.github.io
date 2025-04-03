@@ -1,0 +1,316 @@
+---
+title: "EsAula3 - Prop Trasformata"
+author: "Mariolino De Cecco"
+date: "`r Sys.Date()`"
+format: 
+  html:
+    toc: TRUE
+    html-math-method: katex
+engine: knitr
+editor: 
+  markdown: 
+    wrap: sentence
+draft: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  fig.asp=9/16
+)
+library(tidyverse)
+library(patchwork)
+library(knitr)
+library(gsignal)
+library(latex2exp)
+library(plotly)
+```
+
+# Esercitazione sulle proprietà della Trasformata di Fourier
+
+
+In questa esercitazione vedremo come, tramite la proprietà della trasformata, sarà possibile effettuare operazioni di filtraggio ed integrazione.
+
+La trasformata di Fourier trasforma il segnale dal dominio del tempo al dominio della frequenza.
+In altre parole una funzione del tempo viene rappresentata in un dominio funzione non più del tempo ma della frequenza o pulsazione $\omega$, tramite opportuni coefficienti complessi che rappresentano quanto della corrispondente armonica si trova nel segnale e con che fase.
+
+
+# Alcune proprietà della trasformata di Fourier
+
+La trasformata di Fourier gode delle proprietà elencate in @tbl-ftprop.
+
++------------------+-----------------------------------------------------------------+
+| Proprietà        | Relazione nel dominio del tempo e dello spettro                 |
++==================+=================================================================+
+| Linearità        | $a x(t) + b y(t)\rightarrow a X(\omega) + b Y(\omega)$          |
++------------------+-----------------------------------------------------------------+
+| Derivata         | $\dot x(t) \rightarrow i\omega X(\omega)$                       |
++------------------+-----------------------------------------------------------------+
+| Integrale        | $\int_0^t x(\tau)~d\tau \rightarrow \frac{1}{i\omega}X(\omega)$ |
++------------------+-----------------------------------------------------------------+
+| Variazione scala | $x(at)\rightarrow\frac{1}{|a|}X\left(\frac{\omega}{a}\right)$   |
++------------------+-----------------------------------------------------------------+
+| Anticipo/Ritardo | $x(t-\tau)\rightarrow X(\omega)~e^{-i\omega\tau}$               |
++------------------+-----------------------------------------------------------------+
+| Modulazione      | $x(t)~e^{-i\omega_0t}\rightarrow X(\omega-\omega_0)$            |
++------------------+-----------------------------------------------------------------+
+| Convoluzione     | $x(t) \otimes y(t)\rightarrow X(\omega)Y(\omega)$               |
++------------------+-----------------------------------------------------------------+
+| Prodotto         | $x(t)y(t)\rightarrow X(\omega)\otimes Y(\omega)$                |
++------------------+-----------------------------------------------------------------+
+
+: Proprietà della trasformata di Fourier {#tbl-ftprop .striped .hover}
+
+
+## Linearità: cosa succede se ho due segnali e li combino secondo una relazione lineare o NON lineare?
+
+Costruiamo due segnali con spettri separati in frequenza:
+```{r}
+# FUNZIONE: Generazione segnale sinusoidale con diverse armoniche
+signal <- function(t, pars, rad = FALSE) { 
+  stopifnot(is.data.frame(pars))
+  with(pars, {
+    if (!rad) {
+      phi <- phi/180*pi
+      f <- 2*pi*f
+    }
+    map_dbl(t, \(t) sum( map_vec(seq_along(w) , \(i) w[i]*sin(t*f[i] + phi[i] ))))
+  })
+}
+
+# Parametri fondamentali
+f0 <- 2
+fc <- 1000
+Tm <- 1
+dt <- 1/fc
+
+# Parametri dei segnali
+pars_1 <- tibble(
+  w = c(1, 0.5, 0.3), f = c(f0, 2*f0, 4*f0), phi = c(0, 0, 0))
+pars_2 <- tibble(
+  w = c(1, 0.5, 0.3), f = c(15*f0, 20*f0, 25*f0), phi = c(0, 10, 20))
+
+# Generiamo i segnali ed i loro spettri:
+Segnali <- tibble(
+  t = seq(dt, Tm, dt),
+  y1 = signal(t, pars_1),
+  y2 = signal(t, pars_2),
+  f = 0:(length(t)-1)/max(t),
+  fft1 = fft(y1),
+  intensity1 = Mod(fft1) / length(t)*2,
+  phase1 = Arg(fft1)/pi*180,
+  fft2 = fft(y2),
+  intensity2 = Mod(fft2) / length(t)*2,
+  phase2 = Arg(fft2)/pi*180
+)
+
+# Grafico a barre con plot_ly:
+pp <- plot_ly() %>%
+  add_lines(data = Segnali, x = ~f, y = ~intensity1, type = "bar", name = "Segnale 1", marker = list(color= "blue")) %>%
+  add_lines(data = Segnali, x = ~f, y = ~intensity2, type = "bar", name = "Segnale 2", marker = list(color= "cyan")) %>%
+  layout(
+    title = "Spettri dei due Segnali",
+    xaxis = list(title = "Frequenza [Hz]")
+  )
+pp
+
+```
+
+È evidente dai due spettri che sono separati in frequenza e quindi, se i due segnali vengono sommati gli spettri verranno anche essi semplicemente sommati e quindi rimarranno separati in frequenza. Tutto ciò grazie alla proprietà della linearità della trasformata.
+Andiamolo a verificare.
+
+Andiamo a costruire un terzo segnale `y3` mediante operatore lineare `+` ed un quarto `y4` mediante l'operatore non lineare `*`
+
+```{r}
+Segnali <- Segnali %>% 
+  mutate(
+    y3 = y1 + y2,
+    fft3 = fft(y3),
+    intensity3 = Mod(fft3) / length(t)*2,
+    phase3 = Arg(fft3)/pi*180,
+    y4 = y1 * y2,
+    fft4 = fft(y4),
+    intensity4 = Mod(fft4) / length(t)*2,
+    phase4 = Arg(fft4)/pi*180
+)
+
+pp <- plot_ly() %>%
+  add_lines(data = Segnali, x = ~f, y = ~intensity3, type = "bar", name = "Segnale y1+y2", marker = list(color= "blue")) %>%
+  add_lines(data = Segnali, x = ~f, y = ~intensity4, type = "bar", name = "Segnale y1*y2", marker = list(color= "red")) %>%
+  layout(
+    title = "Spettri dei due Segnali",
+    xaxis = list(title = "Frequenza [Hz]")
+  )
+pp
+
+
+```
+
+Dal grafico risultano evidenti diverse cose:
+
+- nello spettro del segnale `y3` si distinguono, inalterati, i due spettri dei segnali originali. Quindi ancora separati in frequenza;
+- nello spettro del segnale `y4` non si distinguono più due zone separate e, da 6 armoniche, se ne sono generate ben 14!
+
+:::{.callout-note title=Conclusione}
+Se un segnale di misura viene affetto da **Rumore Interferente a spettro separato da quello del segnale di misura** si potrà agire tramite operatori (filtri) in grado di separarli e recuperare quindi il segnale di misura quasi inalterato grazie alla proprietà di linearità della Trasformata. Se un segnale di misura viene affetto da Rumore Modificante a spettro separato da quello del segnale di misura questo non sarà possibile. 
+:::
+
+## Integrale
+Lo spettro del segnale integrato si trasforma secondo la relazione $\frac{1}{i\omega}$.
+
+Andiamolo a verificare ed usiamo questa proprietà per ricostruire un segnale integrato a partire da un'onda quadra.
+
+### Prodotto scalare tra segnali (su PC quindi digitalizzati)
+
+Definiamo le funzioni **prodotto scalare tra segnali digitalizzati** e relativa **norma**.
+La prima funzione la definiamo come operatore `%ps%`:
+
+```{r}
+  # secondo le equazioni:
+`%ps%` <- function(A, B) mean(A*B)
+```
+
+Per la norma, definiamo la funzione `norm_ps` (dato che `norm` è già definita):
+
+```{r}
+norm_ps <- function(A) sqrt(A %ps% A)
+
+(1:5) %ps% (5:1)
+norm_ps(1:5)
+```
+
+Creiamo un segnale onda quadra (il segno dell'onda seno) campionato su 1000 punti tra 0 e 1, con frequenza `f0` Hz:
+
+```{r fig.cap="Onda quadra e corrispondente sinusoide di pari frequenza e ampiezza"}
+f0 <- 2
+fc <- 1000
+Tm <- 1
+dt <- 1/fc
+
+sin_k <- function(t, f, k=1) sin(2*pi*f*k*t)
+cos_k <- function(t, f, k=1) cos(2*pi*f*k*t)
+
+Segnale <- tibble(
+  t = seq(dt, Tm, dt),
+  ys = sin_k(t, f0), # segnale sinusoidale
+  yq = sign(ys) # segnale onda quadra
+)
+
+Segnale %>% 
+  pivot_longer(-t, names_to = "signal") %>% 
+  ggplot(aes(x=t, y=value, color=signal)) +
+  geom_line() 
+```
+
+Calcoliamo le prime `K` componenti della serie:
+
+```{r}
+K <- 20
+f_fond <- 1 / Tm
+comps <- map_dbl(1:K, \(k) {
+  s <- sin_k(Segnale$t, f_fond, k)
+  Segnale$yq %ps% s/norm_ps(s) # si noti "s/norm_ps(s)" è un 'versore' avendo norma 1
+}) %>% zapsmall()
+
+comps
+```
+
+Approssimiamo l'onda quadra come somma delle prime `r K` componenti:
+
+```{r fig.cap="Onda quadra e sua approssimazione come composizione dei primi sette termini della serie di Fourier"}
+# Nota: La nuova colonna yqk è la somma elemento per elemento di K vettori di 
+# 1000 elementi ciascuno, pari a comp[k] * s / norm_ps(s)
+Segnale <- Segnale %>%
+  mutate(yqk = reduce(1:K, \(acc, k) {
+    s <- sin_k(t, f_fond, k)
+    acc + comps[k] * s / norm_ps(s)
+  }, .init = rep(0, n())))
+
+Segnale
+
+pp <- plot_ly() %>%
+  add_lines(Segnale$t, Segnale$yq, name = "Onda quadra", line = list(color = "blue")) %>%
+  add_lines(Segnale$t, Segnale$yqk, name = "Onda approssimata", line = list(color = "red")) %>%
+  layout(
+    title = "Segnale ed approssimazione",
+    xaxis = list(title = "Time")
+  )
+pp  # Mostra il grafico
+
+```
+
+### Segnale onda quadra integrato con `cumsum()` vediamo come cambia lo spettro
+
+```{r}
+
+# FUNZIONE: Integrale per segnali discreti: somma ricorsiva
+integrale <- function(vett) { 
+  temp <- cumsum(vett) / length(vett)
+  temp - mean(temp)}
+
+Segnale <- Segnale %>%
+  mutate(yqi = integrale(yq))
+
+# Troviamo le K componenti lungo le armoniche 'coseno' in quanto il segnale parte dal valore minimo
+f_fond <- 1 / Tm
+comps_i <- map_dbl(1:K, \(k) {
+  s <- cos_k(Segnale$t, f_fond, k)
+  Segnale$yqi %ps% s/norm_ps(s) # si noti "s/norm_ps(s)" è un 'versore' avendo norma 1
+}) %>% zapsmall()
+comps_i
+
+# Ricostruiamo il segnale con le K componenti trovate
+Segnale <- Segnale %>%
+  mutate(yqik = reduce(1:K, \(acc, k) {
+    s <- cos_k(t, f_fond, k)
+    acc + comps_i[k] * s / norm_ps(s)
+  }, .init = rep(0, n())))
+Segnale
+
+pp <- plot_ly() %>%
+  add_lines(Segnale$t, Segnale$yqi, name = "Onda quadra integrata", line = list(color = "blue")) %>%
+  add_lines(Segnale$t, Segnale$yqik, name = "Onda approssimata", line = list(color = "red")) %>%
+  layout(
+    title = "Segnale ed approssimazione",
+    xaxis = list(title = "Time")
+  )
+pp  # Mostra il grafico
+
+```
+
+
+Grafichiamo le componenti:
+
+```{r}
+pp <- plot_ly() %>%
+  add_lines(x = seq_along(comps), y = comps, name = "Componenti Onda quadra", marker = list(color= "blue")) %>%
+  add_lines(x = seq_along(comps_i), y = comps_i, name = "Componenti Onda quadra integrata", marker = list(color= "red")) 
+pp
+
+```
+
+
+
+
+
+
+::: {.callout-tip title="Esercizi"}
+
+Provare ad esercitarsi:
+
+1. Dallo spettro del segnale ad onda quadra avente componenti `comps` con la legge $1/iw$  trasformare direttamente ogni componente dello spettro quindi ottenere in modo diverso il segnale integrato `yqik_2`.
+
+**Suggerimento**: usare la routine opportunamente completata nei '...':
+```r
+comps_i2 <- map_dbl(seq_along(comps), \(k) ...)
+Segnale <- Segnale %>% 
+  mutate(
+    yqik_2 = reduce(1:K, function(acc, k) {
+      vec <- ...
+      acc + vec
+    }, .init=rep(0, n()))
+  )
+```
+
+:::
+
+
