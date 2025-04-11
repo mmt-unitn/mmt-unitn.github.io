@@ -1,10 +1,12 @@
 [
   {
-    "listing": "/EsercitazioniAula.html",
+    "listing": "/EsercitazioniCasa.html",
     "items": [
-      "/EsercitazioniAulaDARE/DARE_EsAula1_ ProdScalareFunz.html",
-      "/EsercitazioniAulaDARE/DARE_EsAula2_TrasformateAudio.html",
-      "/EsercitazioniAulaDARE/DARE_EsAula3_ PropTrasformata.html"
+      "/EsercitazioniCasaDARE/2_CostruzioneSegnaleFiltraggio/DARE_2_CostruzioneSegnaleFiltraggio.html",
+      "/EsercitazioniCasaDARE/DARE_2_ModulazioneAmpiezza.html",
+      "/EsercitazioniCasaDARE/3_TaraturaDinamica/DARE_3_taratura dinamica.html",
+      "/EsercitazioniCasaDARE/DARE_4_Compensazione_dinamica.html",
+      "/EsercitazioniCasaDARE/DARE_4_Inv_armoniche_pure v2.html"
     ]
   },
   {
@@ -17,12 +19,11 @@
     ]
   },
   {
-    "listing": "/EsercitazioniCasa.html",
+    "listing": "/EsercitazioniAula.html",
     "items": [
-      "/EsercitazioniCasaDARE/DARE_2_ModulazioneAmpiezza.html",
-      "/EsercitazioniCasaDARE/3_TaraturaDinamica/DARE_3_taratura dinamica.html",
-      "/EsercitazioniCasaDARE/DARE_4_Compensazione_dinamica.html",
-      "/EsercitazioniCasaDARE/DARE_4_Inv_armoniche_pure v2.html"
+      "/EsercitazioniAulaDARE/DARE_EsAula1_ ProdScalareFunz.html",
+      "/EsercitazioniAulaDARE/DARE_EsAula2_TrasformateAudio.html",
+      "/EsercitazioniAulaDARE/DARE_EsAula3_ PropTrasformata.html"
     ]
   }
 ]
